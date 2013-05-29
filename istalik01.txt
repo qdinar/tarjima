@@ -1,0 +1,133 @@
+<?php 
+mb_internal_encoding('UTF-8');
+header('Content-Type: text/html; charset=utf-8');
+ini_set('display_errors', '1');
+
+//echo $_POST['input'] 
+$input=htmlspecialchars( $_POST['input'] );
+
+$input_divided_by_dot=explode('.' , $input);
+for($k=0;$k<count($input_divided_by_dot);$k++){
+	$translation.=translation_of_sentence($input_divided_by_dot[$k]).'. ';
+}
+echo $translation;
+
+function translation_of_sentence($one_sentence){
+//return 'OK';
+}
+
+
+$input_divided_by_space=explode(' ' , $input);
+
+$prepositions=array('in', 'at' , 'to' );
+$adverbs=array('every', 'very' , 'too' );
+$blocks=array();
+$add_to_block=false;
+
+
+for($i=0;$i<count($input_divided_by_space);$i++){
+echo $input_divided_by_space[$i];
+echo '-';
+if (in_array($input_divided_by_space[$i],$prepositions)){
+echo 'prep';
+if(isset($block))$blocks[]=$block;
+$block=array();
+$block[]=$input_divided_by_space[$i];
+$add_to_block=true;
+}elseif(in_array($input_divided_by_space[$i],$adverbs)){
+echo 'adverb';
+if(isset($block))$blocks[]=$block;
+$block=array();
+$block[]=$input_divided_by_space[$i];
+$add_to_block=true;
+}else{
+
+if($add_to_block){
+$block[]=$input_divided_by_space[$i];
+}else{
+$blocks[]=$input_divided_by_space[$i];
+}
+
+}
+echo ';';
+}//for
+if(isset($block))$blocks[]=$block;
+
+/*
+echo '<pre>';
+var_dump($blocks);
+echo '</pre>';
+*/
+
+$blocks=array_reverse($blocks);
+
+for($i=0;$i<count($blocks);$i++){
+if(is_array($blocks[$i])){
+$block=array_reverse($blocks[$i]);
+$blocks[$i]=$block;
+}
+}
+
+/*
+echo '<pre>';
+var_dump($blocks);
+echo '</pre>';
+*/
+
+
+$tatar=array(
+'i'=>'мин',
+'you'=>'сез',
+'go'=>'бар',
+'walk'=>'бар',
+'to'=>'гә',
+'from'=>'дән',
+'school'=>'мәктәп',
+'town'=>'шәһәр',
+'every'=>'саен',
+'very'=>'бик',
+'day'=>'көн',
+'night'=>'төн',
+);
+
+for($i=0;$i<count($blocks);$i++){
+if(is_array($blocks[$i])){
+for($j=0;$j<count($blocks[$i]);$j++){
+$blocks[$i][$j]=$tatar[$blocks[$i][$j]];
+}
+}else{
+$blocks[$i]=$tatar[$blocks[$i]];
+}
+}
+
+/*
+echo '<pre>';
+var_dump($blocks);
+echo '</pre>';
+*/
+
+echo '<br>';
+for($i=0;$i<count($blocks);$i++){
+if(is_array($blocks[$i])){
+for($j=0;$j<count($blocks[$i]);$j++){
+echo $blocks[$i][$j];
+}
+echo ' ';
+}else{
+echo $blocks[$i];
+echo ' ';
+}
+}
+
+
+
+
+
+  ?>
+
+<form method="POST">
+
+<textarea name="input">i go to school every day. we go from park every morning.</textarea>
+
+<input type="submit">
+</form>
