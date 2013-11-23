@@ -45,6 +45,9 @@ echo implode('. ',$translation);
 <textarea name="input" style="width:500px;height:150px;">i go to school every day. we go from park every morning.
 they walk through park that is built last year.
 the boy that bought a bycicle walks through park.
+last year.
+they walk through park.
+they walked through park last year.
 </textarea>
 
 <input type="submit">

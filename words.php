@@ -1,7 +1,7 @@
 <?php
 
 $prepositions=array('in', 'at' , 'to', 'from', 'through' );
-$adverbs=array('every', 'very' , 'too', 'last' );
+$adverbs=array('every', 'very' , 'too' );
 $tatar=array(
 'i'=>'мин',
 'you'=>'сез',
@@ -9,6 +9,7 @@ $tatar=array(
 'go'=>'бар',
 'walk'=>'бар',
 'walks'=>'бар',
+'walked'=>'бар',
 'to'=>'гә',
 'in'=>'эчендә',
 'from'=>'дән',
