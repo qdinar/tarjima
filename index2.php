@@ -55,8 +55,7 @@ echo'<br/>';
 $test=array('last','know');
 echo implode ( tr_simple_block($test)  );
 
-echo'<br/>';
-
+/*
 function tr_past_p($pastp){
 	global $words;
 	if(is_array($pastp)){
@@ -64,12 +63,70 @@ function tr_past_p($pastp){
 	}else{
 		$s2[0]=$words[$pastp];
 	}
-	$s2[1]='гән';
+	$s2[1]='енгән';
 	return $s2;
 }
 
 $test='know';
 echo implode ( tr_past_p($test)  );
+
+echo'<br/>';
+
+*/
+
+function nstd_to_str($nstd){
+	if(is_array($nstd[0])){
+		$result=nstd_to_str($nstd[0]);
+	}else{
+		$result=$nstd[0];
+	}
+	if(is_array($nstd[1])){
+		$result.=nstd_to_str($nstd[1]);
+	}else{
+		$result.=$nstd[1];
+	}
+	return $result;
+}
+/*
+$test=array('last','know');
+$result=tr_past_p($test);
+echo nstd_to_str($result);
+
+echo'<br/>';
+
+$words['bug']='баг';
+$test=array($result,'bug');
+echo nstd_to_str($test);
+*/
+
+echo'<br/>';
+
+$words['ed']='енгән';
+
+$test=array($test,'ed');
+$result=tr_simple_block($test);
+echo nstd_to_str($result);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
