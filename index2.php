@@ -102,10 +102,11 @@ echo'<br/>';
 */
 
 function nstd_to_str($nstd){
+	$result='';
 	if(is_array($nstd[0])){
-		$result=nstd_to_str($nstd[0]);
+		$result.=nstd_to_str($nstd[0]);
 	}else{
-		$result=$nstd[0];
+		$result.=$nstd[0];
 	}
 	if(is_array($nstd[1])){
 		$result.=nstd_to_str($nstd[1]);
@@ -154,8 +155,8 @@ $result=tr_simple_block($test);
 echo nstd_to_str($result);
 
 echo'<br/>';
-$test2=array($test,'read');
-$result=tr_simple_block($test2);
+$test3=array($test,'read');
+$result=tr_simple_block($test3);
 echo nstd_to_str($result);
 
 echo'<br/>';
@@ -168,12 +169,11 @@ $test2=array($test2,'have');
 $result=tr_simple_block($test2);
 echo nstd_to_str($result);
 
-
-
-
-
-
-
+echo'<br/>';
+$test3=array($test3,'ed');
+$test3=array($test3,'have');
+$result=tr_simple_block($test3);
+echo nstd_to_str($result);
 
 
 
