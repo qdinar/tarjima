@@ -175,7 +175,13 @@ $test3=array($test3,'have');
 $result=tr_simple_block($test3);
 echo nstd_to_str($result);
 
+echo'<br/>';
+$words['he']='ул';
+$test3=array('he',$test3);
+$result=tr_simple_block($test3);
+echo nstd_to_str($result);
 
+$eng='he have read the last known bug';
 
 
 
