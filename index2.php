@@ -57,6 +57,11 @@ function tr_simple_block($simbl){
 			}else{
 				$s2[1]='лган';
 			}
+		}elseif($simbl[1]=='have'){
+			if(is_array($simbl[0])&&$simbl[0][1]=='ed'){
+				$s2[1]='ды';
+				$s2[0]=$s2[0][0];
+			}
 		}else{
 			$s2[1]=$words[$simbl[1]];
 		}
@@ -155,6 +160,11 @@ echo nstd_to_str($result);
 
 echo'<br/>';
 $test2=array('read','ed');
+$result=tr_simple_block($test2);
+echo nstd_to_str($result);
+
+echo'<br/>';
+$test2=array($test2,'have');
 $result=tr_simple_block($test2);
 echo nstd_to_str($result);
 
