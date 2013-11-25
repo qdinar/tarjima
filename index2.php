@@ -32,12 +32,34 @@ function tr_simple_block($simbl){
 	if(is_array($simbl[0])){
 		$s2[0]=tr_simple_block($simbl[0]);
 	}else{
-		$s2[0]=$words[$simbl[0]];
+		if($simbl[0]=='the'){
+			$s2[0]='теге';
+		}else{
+			$s2[0]=$words[$simbl[0]];
+		}
 	}
+	//add ны
+	if(
+		((is_array($simbl[1])&&$simbl[1][1]=='read')||$simbl[1]=='read')
+		&&
+		(is_array($simbl[0])&&$simbl[0][0]=='the')
+	){
+		$s2[0]=array($s2[0],'ны');
+	}
+	//
 	if(is_array($simbl[1])){
 		$s2[1]=tr_simple_block($simbl[1]);
 	}else{
-		$s2[1]=$words[$simbl[1]];
+		if($simbl[1]=='ed'){
+			//$s2[1]='лгән';
+			if((is_array($simbl[0])&&$simbl[0][1]=='know')||$simbl[0]=='know'){
+				$s2[1]='енгән';
+			}else{
+				$s2[1]='лган';
+			}
+		}else{
+			$s2[1]=$words[$simbl[1]];
+		}
 	}
 
 	return $s2;
@@ -101,11 +123,51 @@ echo nstd_to_str($test);
 
 echo'<br/>';
 
-$words['ed']='енгән';
+//$words['ed']='енгән';
 
 $test=array($test,'ed');
 $result=tr_simple_block($test);
 echo nstd_to_str($result);
+
+echo'<br/>';
+
+$words['bug']='баг';
+$test=array($test,'bug');
+$result=tr_simple_block($test);
+echo nstd_to_str($result);
+
+echo'<br/>';
+
+$words['read']='укы';
+$test2=array($test,'read');
+$result=tr_simple_block($test2);
+echo nstd_to_str($result);
+
+echo'<br/>';
+$test=array('the',$test);
+$result=tr_simple_block($test);
+echo nstd_to_str($result);
+
+echo'<br/>';
+$test2=array($test,'read');
+$result=tr_simple_block($test2);
+echo nstd_to_str($result);
+
+echo'<br/>';
+$test2=array('read','ed');
+$result=tr_simple_block($test2);
+echo nstd_to_str($result);
+
+
+
+
+
+
+
+
+
+
+
 
 
 
