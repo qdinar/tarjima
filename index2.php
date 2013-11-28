@@ -180,8 +180,31 @@ $words['he']='ул';
 $test3=array('he',$test3);
 $result=tr_simple_block($test3);
 echo nstd_to_str($result);
+//i have commited this with comment "subject is like others..."
 
-$eng='he have read the last known bug';
+//i have written here a blog post in tatar, that grammarians do not use morphems separately, but i use, and i use blocks of morphems: http://qdinar.wp.kukmara-rayon.ru/2013/11/25/grammatika-no-nicik-yasa-w-doros/ , https://vk.com/wall17077748_2708 , and i had said about that we need to write morphems separately...
+//and i have written that in english: http://qdb.wp.kukmara-rayon.ru/2013/11/26/right-correct-analysis-of-phrase-structure/
+
+//hethelastknowedbugreadedhave
+//{he [(has {[read (the {[(last know)n] bug})]*ed*})*s*]}
+//{he [({[(the {[(last know) ed] bug}) read] ed} have) s]}
+
+//echo'<br/>';
+//$engtext='he has read the last known bug';
+
+//the teacher whom we have met has read the bug that was mentioned, but not comments
+
+//https://github.com/qdinar/tarjima
+
+
+
+
+
+
+
+
+
+
 
 
 
