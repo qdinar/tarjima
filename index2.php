@@ -226,7 +226,18 @@ foreach($engtext as $word){
 echo'<br/>';
 print_r($engtext2);
 
+//make order!
+$engtext3=array();
+foreach($engtext2 as $key=>$word){
+	if($word=='have'&&$engtext2[$key+1]=='s'){
+		array_splice($engtext2,$key+1,1);
+		$engtext3[]=$engtext2;
+		$engtext3[]='s';
+	}
+}
 
+echo'<br/>';
+print_r($engtext3);
 
 
 
