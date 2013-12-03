@@ -196,12 +196,35 @@ echo nstd_to_str($result);
 
 //https://github.com/qdinar/tarjima
 
+$engtext='he has read the last known bug';
+$engtext=explode(' ', $engtext);
+$engtext2=array();
+
+//explode words into grammatical morphemes
+foreach($engtext as $word){
+	if(mb_substr($word,-1,1)=='s'){
+		if(mb_substr($word,0,mb_strlen($word)-1)=='ha'){
+			$engtext2[]='have';
+			$engtext2[]='s';
+		}
+	}elseif(mb_substr($word,-1,1)=='n'){
+		if(mb_substr($word,0,mb_strlen($word)-1)=='know'){
+			$engtext2[]='know';
+			$engtext2[]='ed';
+		}
+	}elseif(mb_substr($word,-1,1)=='d'){
+		if(mb_substr($word,0,mb_strlen($word)-1)=='rea'){
+			$engtext2[]='read';
+			$engtext2[]='ed';
+		}
+	}else{
+		$engtext2[]=$word;
+	}
+}
 
 
-
-
-
-
+echo'<br/>';
+print_r($engtext2);
 
 
 
