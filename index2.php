@@ -227,7 +227,7 @@ echo'<br/>';
 print_r($engtext2);
 
 //make order!
-$engtext3=array();
+/*$engtext3=array();
 foreach($engtext2 as $key=>$word){
 	if($word=='have'&&$engtext2[$key+1]=='s'){
 		array_splice($engtext2,$key+1,1);
@@ -238,11 +238,40 @@ foreach($engtext2 as $key=>$word){
 
 echo'<br/>';
 print_r($engtext3);
+*/
+
+function order($inparr){
+	$outparr=array();
+	foreach($inparr as $key=>$word){
+		if($word=='have'){
+			if($inparr[$key+1]=='s'){
+				array_splice($inparr,$key+1,1);
+				if(count($inparr)>1){
+					$inparr=order($inparr);
+				}
+				$outparr[]=$inparr;
+				$outparr[]='s';
+				return $outparr;
+			}else{
+				if($key==1){//have in 2nd place
+					array_splice($inparr,0,1);
+					if(count($inparr)>1){
+						$inparr=order($inparr);
+					}
+					$outparr[]='he';
+					$outparr[]=$inparr;
+					return $outparr;
+				}
+			}
+		}
+	}
+	return $inparr;
+	
+}
 
 
-
-
-
+echo'<br/>';
+print_r(order($engtext2));
 
 
 
