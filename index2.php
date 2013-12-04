@@ -50,7 +50,7 @@ function tr_simple_block($simbl){
 	if(is_array($simbl[1])){
 		$s2[1]=tr_simple_block($simbl[1]);
 	}else{
-		if($simbl[1]=='ed'){
+		if($simbl[1]=='ed-pp'){
 			//$s2[1]='лгән';
 			if((is_array($simbl[0])&&$simbl[0][1]=='know')||$simbl[0]=='know'){
 				$s2[1]='енгән';
@@ -58,7 +58,7 @@ function tr_simple_block($simbl){
 				$s2[1]='лган';
 			}
 		}elseif($simbl[1]=='have'){
-			if(is_array($simbl[0])&&$simbl[0][1]=='ed'){
+			if(is_array($simbl[0])&&$simbl[0][1]=='ed-pp'){
 				$s2[1]='ды';
 				$s2[0]=$s2[0][0];
 			}
@@ -129,9 +129,9 @@ echo nstd_to_str($test);
 
 echo'<br/>';
 
-//$words['ed']='енгән';
+//$words['ed-pp']='енгән';
 
-$test=array($test,'ed');
+$test=array($test,'ed-pp');
 $result=tr_simple_block($test);
 echo nstd_to_str($result);
 
@@ -160,7 +160,7 @@ $result=tr_simple_block($test3);
 echo nstd_to_str($result);
 
 echo'<br/>';
-$test2=array('read','ed');
+$test2=array('read','ed-pp');
 $result=tr_simple_block($test2);
 echo nstd_to_str($result);
 
@@ -170,7 +170,7 @@ $result=tr_simple_block($test2);
 echo nstd_to_str($result);
 
 echo'<br/>';
-$test3=array($test3,'ed');
+$test3=array($test3,'ed-pp');
 $test3=array($test3,'have');
 $result=tr_simple_block($test3);
 echo nstd_to_str($result);
@@ -186,8 +186,8 @@ echo nstd_to_str($result);
 //and i have written that in english: http://qdb.wp.kukmara-rayon.ru/2013/11/26/right-correct-analysis-of-phrase-structure/
 
 //hethelastknowedbugreadedhave
-//{he [(has {[read (the {[(last know)n] bug})]*ed*})*s*]}
-//{he [({[(the {[(last know) ed] bug}) read] ed} have) s]}
+//{he [(has {[read (the {[(last know)n] bug})]*ed-pp*})*s*]}
+//{he [({[(the {[(last know) ed-pp] bug}) read] ed-pp} have) s]}
 
 //echo'<br/>';
 //$engtext='he has read the last known bug';
@@ -210,12 +210,12 @@ foreach($engtext as $word){
 	}elseif(mb_substr($word,-1,1)=='n'){
 		if(mb_substr($word,0,mb_strlen($word)-1)=='know'){
 			$engtext2[]='know';
-			$engtext2[]='ed';
+			$engtext2[]='ed-pp';
 		}
 	}elseif(mb_substr($word,-1,1)=='d'){
 		if(mb_substr($word,0,mb_strlen($word)-1)=='rea'){
 			$engtext2[]='read';
-			$engtext2[]='ed';
+			$engtext2[]='ed-pp';
 		}
 	}else{
 		$engtext2[]=$word;
@@ -253,7 +253,7 @@ function order($inparr){
 				$outparr[]='s';
 				return $outparr;
 			}elseif($key==0){//have is 1st
-				if($inparr[2]=='ed'){
+				if($inparr[2]=='ed-pp'){
 					array_splice($inparr,0,1);//remove have
 					if(count($inparr)>1){
 						$inparr=order($inparr);
@@ -273,13 +273,13 @@ function order($inparr){
 					return $outparr;
 				}
 			}
-		}elseif($word=='ed'&&$key==1){
-			array_splice($inparr,1,1);//remove ed
+		}elseif($word=='ed-pp'&&$key==1){
+			array_splice($inparr,1,1);//remove ed-pp
 			if(count($inparr)>1){
 				$inparr=order($inparr);
 			}
 			$outparr[]=$inparr;
-			$outparr[]='ed';
+			$outparr[]='ed-pp';
 			return $outparr;
 		}elseif($word=='read'&&$key==0&&$inparr[1]=='the'){
 			array_splice($inparr,0,1);//remove verb
@@ -308,7 +308,7 @@ echo'<br/><pre>';
 print_r(order($engtext2));
 
 //he had read the last known bug
-//last knowed bug can be subject verb object, but it is not knowed, it is known, for that i will replace ed to ed-pp (past participle)
+//"last know ed bug" can be {subject verb object}, but it is not knowed, it is known, for that i will replace ed to ed-pp (past participle). no. i replace it to en. no. en is used itself in texts, change back.
 
 
 
