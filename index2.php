@@ -309,6 +309,12 @@ function order($inparr){
 			$outparr[]=$inparr;
 			$outparr[]=$word;
 			return $outparr;
+			//i see {last know ed-pp}. {(last know) n} or {last (know n)}? it is (usually) the 1st, but how to select with program?
+		}elseif($word=='last'&&$key==0&&$inparr[1]=='know'&&$inparr[2]=='ed-pp'&&count($inparr)==3){
+			array_splice($inparr,2,1);//remove ed-pp
+			$outparr[]=$inparr;
+			$outparr[]='ed-pp';
+			return $outparr;
 		}
 	}
 	return $inparr;
@@ -317,7 +323,7 @@ function order($inparr){
 
 
 echo'<br/><pre>';
-$dic=array('bug'=>array('type'=>'verb'),'read'=>array('type'=>'noun'));
+$dic=array('bug'=>array('type'=>'noun'),'read'=>array('type'=>'verb'));
 print_r(order($engtext2));
 
 
