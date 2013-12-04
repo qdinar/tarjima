@@ -245,16 +245,26 @@ function order($inparr){
 	foreach($inparr as $key=>$word){
 		if($word=='have'){
 			if($inparr[$key+1]=='s'){
-				array_splice($inparr,$key+1,1);
+				array_splice($inparr,$key+1,1);//remove s
 				if(count($inparr)>1){
 					$inparr=order($inparr);
 				}
 				$outparr[]=$inparr;
 				$outparr[]='s';
 				return $outparr;
+			}elseif($key==0){//have is 1st
+				if($inparr[2]=='ed'){
+					array_splice($inparr,0,1);//remove have
+					if(count($inparr)>1){
+						$inparr=order($inparr);
+					}
+					$outparr[]=$inparr;
+					$outparr[]='have';
+					return $outparr;
+				}
 			}else{
 				if($key==1){//have in 2nd place
-					array_splice($inparr,0,1);
+					array_splice($inparr,0,1);//remove he
 					if(count($inparr)>1){
 						$inparr=order($inparr);
 					}
@@ -263,6 +273,30 @@ function order($inparr){
 					return $outparr;
 				}
 			}
+		}elseif($word=='ed'&&$key==1){
+			array_splice($inparr,1,1);//remove ed
+			if(count($inparr)>1){
+				$inparr=order($inparr);
+			}
+			$outparr[]=$inparr;
+			$outparr[]='ed';
+			return $outparr;
+		}elseif($word=='read'&&$key==0&&$inparr[1]=='the'){
+			array_splice($inparr,0,1);//remove verb
+			if(count($inparr)>1){
+				$inparr=order($inparr);
+			}
+			$outparr[]=$inparr;
+			$outparr[]='read';
+			return $outparr;
+		}elseif($word=='the'&&$key==0){
+			array_splice($inparr,0,1);//remove the
+			if(count($inparr)>1){
+				$inparr=order($inparr);
+			}
+			$outparr[]='the';
+			$outparr[]=$inparr;
+			return $outparr;
 		}
 	}
 	return $inparr;
@@ -270,10 +304,11 @@ function order($inparr){
 }
 
 
-echo'<br/>';
+echo'<br/><pre>';
 print_r(order($engtext2));
 
-
+//he had read the last known bug
+//last knowed bug can be subject verb object, but it is not knowed, it is known, for that i will replace ed to ed-pp (past participle)
 
 
 
