@@ -241,6 +241,7 @@ print_r($engtext3);
 */
 
 function order($inparr){
+	global $dic;
 	$outparr=array();
 	foreach($inparr as $key=>$word){
 		if($word=='have'){
@@ -264,11 +265,11 @@ function order($inparr){
 				}
 			}else{
 				if($key==1){//have in 2nd place
-					array_splice($inparr,0,1);//remove he
+					$removedword=array_splice($inparr,0,1);//remove he
 					if(count($inparr)>1){
 						$inparr=order($inparr);
 					}
-					$outparr[]='he';
+					$outparr[]=$removedword[0];
 					$outparr[]=$inparr;
 					return $outparr;
 				}
@@ -281,14 +282,15 @@ function order($inparr){
 			$outparr[]=$inparr;
 			$outparr[]='ed-pp';
 			return $outparr;
-		}elseif($word=='read'&&$key==0&&$inparr[1]=='the'){
+		}elseif(isset($dic[$word])&&$dic[$word]['type']=='verb'&&$key==0&&$inparr[1]=='the'){
 			array_splice($inparr,0,1);//remove verb
 			if(count($inparr)>1){
 				$inparr=order($inparr);
 			}
 			$outparr[]=$inparr;
-			$outparr[]='read';
+			$outparr[]=$word;
 			return $outparr;
+			//i should make dictionary with (several) properties (instead of word-per-word translations) (i need it now because i need check whether morphem is verb)
 		}elseif($word=='the'&&$key==0){
 			array_splice($inparr,0,1);//remove the
 			if(count($inparr)>1){
@@ -296,6 +298,16 @@ function order($inparr){
 			}
 			$outparr[]='the';
 			$outparr[]=$inparr;
+			return $outparr;
+			//he had read the last known bug
+			//i see "last know ed bug", it can be {subject verb object}, but it is not "knowed", it is "known", for that i will replace ed to ed-pp (past participle). no. i replace it to en. no. en is used itself in texts, change back.
+		}elseif(isset($dic[$word])&&$dic[$word]['type']=='noun'&&$key==count($inparr)-1&&$inparr[$key-1]=='ed-pp'){
+			array_splice($inparr,$key,1);//remove noun
+			if(count($inparr)>1){
+				$inparr=order($inparr);
+			}
+			$outparr[]=$inparr;
+			$outparr[]=$word;
 			return $outparr;
 		}
 	}
@@ -305,10 +317,8 @@ function order($inparr){
 
 
 echo'<br/><pre>';
+$dic=array('bug'=>array('type'=>'verb'),'read'=>array('type'=>'noun'));
 print_r(order($engtext2));
-
-//he had read the last known bug
-//"last know ed bug" can be {subject verb object}, but it is not knowed, it is known, for that i will replace ed to ed-pp (past participle). no. i replace it to en. no. en is used itself in texts, change back.
 
 
 
