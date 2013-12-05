@@ -62,6 +62,9 @@ function tr_simple_block($simbl){
 				$s2[1]='ды';
 				$s2[0]=$s2[0][0];
 			}
+		}elseif($simbl[1]=='s'){
+			return $s2[0];
+			//i see 'ды' should be reordered...
 		}else{
 			$s2[1]=$words[$simbl[1]];
 		}
@@ -309,7 +312,7 @@ function order($inparr){
 			$outparr[]=$inparr;
 			$outparr[]=$word;
 			return $outparr;
-			//i see {last know ed-pp}. {(last know) n} or {last (know n)}? it is (usually) the 1st, but how to select with program?
+			//i see {last know ed-pp}. {(last know) n} or {last (know n)}? it is (usually) the 1st one, but how to select with program? if it is {last (know n)}, it would be {last (known bug)}...
 		}elseif($word=='last'&&$key==0&&$inparr[1]=='know'&&$inparr[2]=='ed-pp'&&count($inparr)==3){
 			array_splice($inparr,2,1);//remove ed-pp
 			$outparr[]=$inparr;
@@ -324,9 +327,16 @@ function order($inparr){
 
 echo'<br/><pre>';
 $dic=array('bug'=>array('type'=>'noun'),'read'=>array('type'=>'verb'));
-print_r(order($engtext2));
+$engtext2=order($engtext2);
+print_r($engtext2);
+echo'</pre>';
 
 
+echo'<br/>';
+$result=tr_simple_block($engtext2);
+echo'<pre>';
+print_r($result);
+//echo nstd_to_str($result);
 
 
 
