@@ -59,17 +59,24 @@ function tr_simple_block($simbl){
 			}
 		}elseif($simbl[1]=='have'){
 			if(is_array($simbl[0])&&$simbl[0][1]=='ed-pp'){
-				$s2[1]='ды';
-				$s2[0]=$s2[0][0];
+				//$s2[1]='ды';
+				//$s2[0]=$s2[0][0];//$s2[0][1]=translation of ed-pp becomes removed
+				$s2[1]='have';
 			}
 		}elseif($simbl[1]=='s'){
-			return $s2[0];
+			//return $s2[0];//$s2[1] should be translation of s but it becomes removed
 			//i see 'ды' should be reordered...
+			if($simbl[0][1][1]=='have'&&$simbl[0][1][0][1]=='ed-pp'){
+				$s2[0]/*hehave..*/[1]/*haveread..*/=$s2[0][1][0]/*read(pp)...*/[0]/*read...*/;
+				//have read ed-pp is translated like read
+				$s2[1]='ды';//past tense morphem is in place of s
+				//'ды' is reordered . subject is like adverbs etc, also in tatar...
+			}
 		}else{
 			$s2[1]=$words[$simbl[1]];
 		}
 	}
-
+	//var_dump($s2);echo'*';
 	return $s2;
 
 }
@@ -181,6 +188,9 @@ echo nstd_to_str($result);
 echo'<br/>';
 $words['he']='ул';
 $test3=array('he',$test3);
+/*echo'<pre>';
+print_r($test3);
+echo'</pre>';*/
 $result=tr_simple_block($test3);
 echo nstd_to_str($result);
 //i have commited this with comment "subject is like others..."
@@ -325,18 +335,21 @@ function order($inparr){
 }
 
 
-echo'<br/><pre>';
+//echo'<br/><pre>';
 $dic=array('bug'=>array('type'=>'noun'),'read'=>array('type'=>'verb'));
 $engtext2=order($engtext2);
-print_r($engtext2);
-echo'</pre>';
+//print_r($engtext2);
+//echo'</pre>';
+
+echo'<br/>';
+echo nstd_to_str($engtext2);
 
 
 echo'<br/>';
 $result=tr_simple_block($engtext2);
-echo'<pre>';
-print_r($result);
-//echo nstd_to_str($result);
+//echo'<pre>';
+//print_r($result);
+echo nstd_to_str($result);
 
 
 
