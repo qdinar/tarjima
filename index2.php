@@ -61,7 +61,15 @@ function tr_simple_block($simbl){
 			if(is_array($simbl[0])&&$simbl[0][1]=='ed-pp'){
 				//$s2[1]='ды';
 				//$s2[0]=$s2[0][0];//$s2[0][1]=translation of ed-pp becomes removed
-				$s2[1]='have';
+
+				//commented out previous way while reordering ды, and write this
+				//$s2[1]='have';
+
+				//i should translate this if this is imperative
+				//i can translate this {п куй}
+				//commented out previous code again
+				$s2[1]='куй';
+				$s2[0][1]='п';
 			}
 		}elseif($simbl[1]=='s'){
 			//return $s2[0];//$s2[1] should be translation of s but it becomes removed
@@ -188,9 +196,10 @@ echo nstd_to_str($result);
 echo'<br/>';
 $words['he']='ул';
 $test3=array('he',$test3);
-/*echo'<pre>';
-print_r($test3);
-echo'</pre>';*/
+$test3=array($test3,'s');
+//echo'<pre>';
+//print_r($test3);
+//echo'</pre>';
 $result=tr_simple_block($test3);
 echo nstd_to_str($result);
 //i have commited this with comment "subject is like others..."
