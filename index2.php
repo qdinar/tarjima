@@ -220,32 +220,56 @@ echo nstd_to_str($result);
 
 $engtext='he has read the last known bug';
 $engtext=explode(' ', $engtext);
-$engtext2=array();
 
 //explode words into grammatical morphemes
-foreach($engtext as $word){
-	if(mb_substr($word,-1,1)=='s'){
-		if(mb_substr($word,0,mb_strlen($word)-1)=='ha'){
-			$engtext2[]='have';
-			$engtext2[]='s';
+function explode_words_into_morphemes($engtext){
+	global $dic;
+	$engtext2=array();
+	foreach($engtext as $word){
+		if(mb_substr($word,-1,1)=='s'){
+			if(mb_substr($word,0,mb_strlen($word)-1)=='ha'){
+				$engtext2[]='have';
+				$engtext2[]='s';
+			}elseif(mb_substr($word,0,mb_strlen($word)-1)=='wa'){
+				$engtext2[]='be';
+				$engtext2[]='ed';
+			}
+		}elseif(mb_substr($word,-1,1)=='n'){
+			if(mb_substr($word,0,mb_strlen($word)-1)=='know'){
+				$engtext2[]='know';
+				$engtext2[]='ed-pp';
+			}
+		}elseif(mb_substr($word,-1,1)=='t'){
+			if(mb_substr($word,0,mb_strlen($word)-1)=='me'){
+				$engtext2[]='meet';
+				$engtext2[]='ed-pp';
+			}else{
+				$engtext2[]=$word;
+			}
+		}elseif(mb_substr($word,-2,2)=='ed'){
+			$engtext2[]=mb_substr($word,0,mb_strlen($word)-2);
+			if($engtext2[count($engtext2)-3]=='be'||$engtext2[count($engtext2)-3]=='have'){
+				$engtext2[]='ed-pp';
+			}else{
+				$engtext2[]='ed';
+			}
+		}elseif(mb_substr($word,-1,1)=='d'){
+			if(mb_substr($word,0,mb_strlen($word)-1)=='rea'){
+				$engtext2[]='read';
+				$engtext2[]='ed-pp';
+			}
+		}elseif(isset($dic[$word])&&$dic[$word]['type']=='verb'){
+			$engtext2[]=$word;
+			$engtext2[]='pr-si';//present simple
+		}else{
+			$engtext2[]=$word;
 		}
-	}elseif(mb_substr($word,-1,1)=='n'){
-		if(mb_substr($word,0,mb_strlen($word)-1)=='know'){
-			$engtext2[]='know';
-			$engtext2[]='ed-pp';
-		}
-	}elseif(mb_substr($word,-1,1)=='d'){
-		if(mb_substr($word,0,mb_strlen($word)-1)=='rea'){
-			$engtext2[]='read';
-			$engtext2[]='ed-pp';
-		}
-	}else{
-		$engtext2[]=$word;
 	}
+	return $engtext2;
 }
 
-
 echo'<br/>';
+$engtext2=explode_words_into_morphemes($engtext);
 print_r($engtext2);
 
 //make order!
@@ -360,9 +384,13 @@ $result=tr_simple_block($engtext2);
 //print_r($result);
 echo nstd_to_str($result);
 
-
-
-
+echo'<br/>';
+$engtext='the teacher whom we have met has read the bug that was mentioned';
+$engtext=explode(' ', $engtext);
+$dic['mention']=array('type'=>'verb');//i think about making two arrays - verbs and noun-likes
+$dic['have']=array('type'=>'verb');
+$engtext2=explode_words_into_morphemes($engtext);
+print_r($engtext2);
 
 
 
