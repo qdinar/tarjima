@@ -253,6 +253,14 @@ function explode_words_into_morphemes($engtext){
 			}else{
 				$engtext2[]='ed';
 			}
+		}elseif(mb_substr($word,-2,2)=='er'){//er in teacher is also almost grammatical...
+			$word1=mb_substr($word,0,mb_strlen($word)-2);
+			if(isset($dic[$word1])&&$dic[$word1]['type']=='verb'){
+				$engtext2[]=$word1;
+				$engtext2[]='er';
+			}else{
+				$engtext2[]=$word;
+			}
 		}elseif(mb_substr($word,-1,1)=='d'){
 			if(mb_substr($word,0,mb_strlen($word)-1)=='rea'){
 				$engtext2[]='read';
@@ -290,8 +298,30 @@ function order($inparr){
 	global $dic;
 	$outparr=array();
 	foreach($inparr as $key=>$word){
-		if($word=='have'){
-			if($inparr[$key+1]=='s'){
+		if($word=='s'){
+			if($inparr[$key-1]=='have'||$inparr[$key-1]=='be'){
+				//var_dump($inparr);
+				$subject=array_splice($inparr,0,$key-1);//all before has or is
+				//inparr is without subject now
+				array_splice($inparr,1,1);//remove s
+				if(count($subject)>2){//i have seen there should be >2 and will replace in other places
+					$subject=order($subject);
+				}elseif(count($subject)==1){
+					//i have seen that he is in array and fix
+					$subject=$subject[0];
+				}
+				if(count($inparr)>1){
+					$inparr=order($inparr);
+				}
+				$outparr[]=array();//outparr0
+				$outparr[0][]=$subject;
+				$outparr[0][]=$inparr;
+				$outparr[]='s';//outparr1
+				return $outparr;
+			}
+			//i have written this, but process goes into the 2nd "have"... i will just comment that out... for now... the s block of the have block... made, and the previous example have been broken... i see he is removed already... i will comment out the he block in have block also. done. previous example works, and i see "the" is already removed in new example. i think hard to fix, try to comment out the the block. done, the previous example is incorrect now. it has incorrect order {[the last known]bug}. then i have commented out block of last noun.
+		}elseif($word=='have'){
+			/*if($inparr[$key+1]=='s'){
 				array_splice($inparr,$key+1,1);//remove s
 				if(count($inparr)>1){
 					$inparr=order($inparr);
@@ -299,10 +329,10 @@ function order($inparr){
 				$outparr[]=$inparr;
 				$outparr[]='s';
 				return $outparr;
-			}elseif($key==0){//have is 1st
+			}else*/if($key==0){//have is 1st
 				if($inparr[2]=='ed-pp'){
 					array_splice($inparr,0,1);//remove have
-					if(count($inparr)>1){
+					if(count($inparr)>2){
 						$inparr=order($inparr);
 					}
 					$outparr[]=$inparr;
@@ -310,7 +340,7 @@ function order($inparr){
 					return $outparr;
 				}
 			}else{
-				if($key==1){//have in 2nd place
+				/*if($key==1){//have in 2nd place
 					$removedword=array_splice($inparr,0,1);//remove he
 					if(count($inparr)>1){
 						$inparr=order($inparr);
@@ -318,11 +348,11 @@ function order($inparr){
 					$outparr[]=$removedword[0];
 					$outparr[]=$inparr;
 					return $outparr;
-				}
+				}*/
 			}
 		}elseif($word=='ed-pp'&&$key==1){
 			array_splice($inparr,1,1);//remove ed-pp
-			if(count($inparr)>1){
+			if(count($inparr)>2){
 				$inparr=order($inparr);
 			}
 			$outparr[]=$inparr;
@@ -330,16 +360,16 @@ function order($inparr){
 			return $outparr;
 		}elseif(isset($dic[$word])&&$dic[$word]['type']=='verb'&&$key==0&&$inparr[1]=='the'){
 			array_splice($inparr,0,1);//remove verb
-			if(count($inparr)>1){
+			if(count($inparr)>2){
 				$inparr=order($inparr);
 			}
 			$outparr[]=$inparr;
 			$outparr[]=$word;
 			return $outparr;
 			//i should make dictionary with (several) properties (instead of word-per-word translations) (i need it now because i need check whether morphem is verb)
-		}elseif($word=='the'&&$key==0){
+		/*}elseif($word=='the'&&$key==0){
 			array_splice($inparr,0,1);//remove the
-			if(count($inparr)>1){
+			if(count($inparr)>2){
 				$inparr=order($inparr);
 			}
 			$outparr[]='the';
@@ -347,16 +377,16 @@ function order($inparr){
 			return $outparr;
 			//he had read the last known bug
 			//i see "last know ed bug", it can be {subject verb object}, but it is not "knowed", it is "known", for that i will replace ed to ed-pp (past participle). no. i replace it to en. no. en is used itself in texts, change back.
-		}elseif(isset($dic[$word])&&$dic[$word]['type']=='noun'&&$key==count($inparr)-1&&$inparr[$key-1]=='ed-pp'){
+		*//*}elseif(isset($dic[$word])&&$dic[$word]['type']=='noun'&&$key==count($inparr)-1&&$inparr[$key-1]=='ed-pp'){
 			array_splice($inparr,$key,1);//remove noun
-			if(count($inparr)>1){
+			if(count($inparr)>2){
 				$inparr=order($inparr);
 			}
 			$outparr[]=$inparr;
 			$outparr[]=$word;
 			return $outparr;
 			//i see {last know ed-pp}. {(last know) n} or {last (know n)}? it is (usually) the 1st one, but how to select with program? if it is {last (know n)}, it would be {last (known bug)}...
-		}elseif($word=='last'&&$key==0&&$inparr[1]=='know'&&$inparr[2]=='ed-pp'&&count($inparr)==3){
+		*/}elseif($word=='last'&&$key==0&&$inparr[1]=='know'&&$inparr[2]=='ed-pp'&&count($inparr)==3){
 			array_splice($inparr,2,1);//remove ed-pp
 			$outparr[]=$inparr;
 			$outparr[]='ed-pp';
@@ -368,11 +398,11 @@ function order($inparr){
 }
 
 
-//echo'<br/><pre>';
+echo'<br/><pre>';
 $dic=array('bug'=>array('type'=>'noun'),'read'=>array('type'=>'verb'));
 $engtext2=order($engtext2);
-//print_r($engtext2);
-//echo'</pre>';
+print_r($engtext2);
+echo'</pre>';
 
 echo'<br/>';
 echo nstd_to_str($engtext2);
@@ -389,9 +419,17 @@ $engtext='the teacher whom we have met has read the bug that was mentioned';
 $engtext=explode(' ', $engtext);
 $dic['mention']=array('type'=>'verb');//i think about making two arrays - verbs and noun-likes
 $dic['have']=array('type'=>'verb');
+$dic['teach']=array('type'=>'verb');
 $engtext2=explode_words_into_morphemes($engtext);
 print_r($engtext2);
 
+echo'<br/><pre>';
+$engtext2=order($engtext2);
+print_r($engtext2);
+//just tried order and i see totally incorrect,
+//this, but with ed-pp-s etc: {the [(teacher whom we have met have read the bug that was mentioned) s]}
+//now i am going to edit the order()
+echo'</pre>';
 
 
 
