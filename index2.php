@@ -298,7 +298,17 @@ function order($inparr){
 	global $dic;
 	$outparr=array();
 	foreach($inparr as $key=>$word){
-		if($word=='s'){
+		if($word=='s'||$word=='pr-si'){
+			for($i=0,$dependentcl=0;$i<$key;$i++){
+				if($inparr[$i]=='whom'){
+					$dependentcl++;
+				}elseif($inparr[$i]=='s'||$inparr[$i]=='pr-si'){
+					$dependentcl--;
+				}
+			}
+			if($dependentcl!=0){
+				continue;
+			}
 			if($inparr[$key-1]=='have'||$inparr[$key-1]=='be'){
 				//var_dump($inparr);
 				$subject=array_splice($inparr,0,$key-1);//all before has or is
@@ -320,6 +330,7 @@ function order($inparr){
 				return $outparr;
 			}
 			//i have written this, but process goes into the 2nd "have"... i will just comment that out... for now... the s block of the have block... made, and the previous example have been broken... i see he is removed already... i will comment out the he block in have block also. done. previous example works, and i see "the" is already removed in new example. i think hard to fix, try to comment out the the block. done, the previous example is incorrect now. it has incorrect order {[the last known]bug}. then i have commented out block of last noun.
+			//if i just try to order with the, and stop it after checking its top/main word is "s", that will not work if i will check correctly ie not only for "s", but also for present and past simple. no, it will work, but incorrectly. the first "have" is going to be processed first, but it is not main, it is only of dependent clause. i will try to make correctly now, not after trying to order "the".
 		}elseif($word=='have'){
 			/*if($inparr[$key+1]=='s'){
 				array_splice($inparr,$key+1,1);//remove s
