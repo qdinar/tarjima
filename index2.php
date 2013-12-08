@@ -302,7 +302,7 @@ function order($inparr){
 			for($i=0,$dependentcl=0;$i<$key;$i++){
 				if($inparr[$i]=='whom'){
 					$dependentcl++;
-				}elseif($inparr[$i]=='s'||$inparr[$i]=='pr-si'){
+				}elseif($inparr[$i]=='s'||$inparr[$i]=='pr-si'||$inparr[$i]=='ed'){
 					$dependentcl--;
 				}
 			}
@@ -385,7 +385,7 @@ function order($inparr){
 			if(count($inparrtry)>2){
 				$inparrtry=order($inparrtry);
 			}
-			if($inparrtry[1]=='s'||$inparrtry[1]=='pr-si'){
+			if($inparrtry[1]=='s'||$inparrtry[1]=='pr-si'||$inparrtry[1]=='ed'){
 				continue;
 			}
 			$outparr[]='the';
@@ -393,7 +393,25 @@ function order($inparr){
 			return $outparr;
 			//he had read the last known bug
 			//i see "last know ed bug", it can be {subject verb object}, but it is not "knowed", it is "known", for that i will replace ed to ed-pp (past participle). no. i replace it to en. no. en is used itself in texts, change back.
-		/*}elseif(isset($dic[$word])&&$dic[$word]['type']=='noun'&&$key==count($inparr)-1&&$inparr[$key-1]=='ed-pp'){
+		}elseif($word=='whom'||$word=='that'){
+			$inparrtry=$inparr;
+			$main=array_splice($inparrtry,0,$key);
+			$depcl=0;//dependent clause count
+			foreach($inparrtry as $wordtry){
+				if($wordtry=='s'||$wordtry=='pr-si'||$wordtry=='ed'){
+					$depcl--;
+				}elseif($wordtry=='whom'||$wordtry=='that'){
+					$depcl++;
+				}
+			}
+			if($depcl==-1){
+				continue;
+			}
+			//i have ordered (separated and set in hierarchy) dependent clauses of the example
+			$outparr[]=$inparrtry;
+			$outparr[]=$main;
+			return $outparr;
+		}elseif(isset($dic[$word])&&$dic[$word]['type']=='noun'&&$key==count($inparr)-1&&$inparr[$key-1]=='ed-pp'){
 			array_splice($inparr,$key,1);//remove noun
 			if(count($inparr)>2){
 				$inparr=order($inparr);
@@ -402,7 +420,7 @@ function order($inparr){
 			$outparr[]=$word;
 			return $outparr;
 			//i see {last know ed-pp}. {(last know) n} or {last (know n)}? it is (usually) the 1st one, but how to select with program? if it is {last (know n)}, it would be {last (known bug)}...
-		*/}elseif($word=='last'&&$key==0&&$inparr[1]=='know'&&$inparr[2]=='ed-pp'&&count($inparr)==3){
+		}elseif($word=='last'&&$key==0&&$inparr[1]=='know'&&$inparr[2]=='ed-pp'&&count($inparr)==3){
 			array_splice($inparr,2,1);//remove ed-pp
 			$outparr[]=$inparr;
 			$outparr[]='ed-pp';
