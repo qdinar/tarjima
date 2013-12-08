@@ -298,17 +298,33 @@ function order($inparr){
 	global $dic;
 	$outparr=array();
 	foreach($inparr as $key=>$word){
-		if($word=='s'||$word=='pr-si'){
+		if($word=='s'||$word=='pr-si'||$word=='ed'){
 			for($i=0,$dependentcl=0;$i<$key;$i++){
-				if($inparr[$i]=='whom'){
+				if($inparr[$i]=='whom'||$inparr[$i]=='that'){
 					$dependentcl++;
 				}elseif($inparr[$i]=='s'||$inparr[$i]=='pr-si'||$inparr[$i]=='ed'){
 					$dependentcl--;
 				}
 			}
 			//checking whether this is of dependent clause
+			//if($dependentcl!=0){
+			//	continue;
+			//}
+			//comment the above block out, this does not process "who block"s like "whom we have met".
+			//but i see contrary: it goes out if there are "who"s != "is"es... no, it is correct, because last "is" not counted
 			if($dependentcl!=0){
-				continue;
+				for($i=$key;$i<count($inparr);$i++){
+					if($inparr[$i]=='whom'||$inparr[$i]=='that'){
+						$dependentcl++;
+					}elseif($inparr[$i]=='s'||$inparr[$i]=='pr-si'||$inparr[$i]=='ed'){
+						$dependentcl--;
+					}
+				}
+				//i should count that there is 1 "who" and 1 "is", but if they are equal , also should work, so just reused the previous "for" block code
+				if($dependentcl!=0){
+					continue;
+				}
+				//now i see "whom we have met" is converted into "[(whom we) (have met)] pr-si". (that is incorrect). and see a "bug": "met" is "[(meet) ed-pp]" (redundant array).
 			}
 			if($inparr[$key-1]=='have'||$inparr[$key-1]=='be'){
 				//var_dump($inparr);
@@ -327,7 +343,7 @@ function order($inparr){
 				$outparr[]=array();//outparr0
 				$outparr[0][]=$subject;
 				$outparr[0][]=$inparr;
-				$outparr[]='s';//outparr1
+				$outparr[]=$word;//outparr1
 				return $outparr;
 			}
 			//i have written this, but process goes into the 2nd "have"... i will just comment that out... for now... the s block of the have block... made, and the previous example have been broken... i see he is removed already... i will comment out the he block in have block also. done. previous example works, and i see "the" is already removed in new example. i think hard to fix, try to comment out the the block. done, the previous example is incorrect now. it has incorrect order {[the last known]bug}. then i have commented out block of last noun.
