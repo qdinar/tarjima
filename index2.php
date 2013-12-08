@@ -315,7 +315,7 @@ function order($inparr){
 				$subject=array_splice($inparr,0,$key-1);//all before has or is
 				//inparr is without subject now
 				array_splice($inparr,1,1);//remove s
-				if(count($subject)>2){//i have seen there should be >2 and will replace in other places
+				if(count($subject)>1){//i have seen there should be >2 and will replace in other places
 					$subject=order($subject);
 				}elseif(count($subject)==1){
 					//i have seen that he is in array and fix
@@ -344,7 +344,7 @@ function order($inparr){
 			}else*/if($key==0){//have is 1st
 				if($inparr[2]=='ed-pp'){
 					array_splice($inparr,0,1);//remove have
-					if(count($inparr)>2){
+					if(count($inparr)>1){
 						$inparr=order($inparr);
 					}
 					$outparr[]=$inparr;
@@ -364,7 +364,7 @@ function order($inparr){
 			}
 		}elseif($word=='ed-pp'&&$key==1){
 			array_splice($inparr,1,1);//remove ed-pp
-			if(count($inparr)>2){
+			if(count($inparr)>1){
 				$inparr=order($inparr);
 			}
 			$outparr[]=$inparr;
@@ -372,7 +372,7 @@ function order($inparr){
 			return $outparr;
 		}elseif(isset($dic[$word])&&$dic[$word]['type']=='verb'&&$key==0&&$inparr[1]=='the'){
 			array_splice($inparr,0,1);//remove verb
-			if(count($inparr)>2){
+			if(count($inparr)>1){
 				$inparr=order($inparr);
 			}
 			$outparr[]=$inparr;
@@ -382,10 +382,11 @@ function order($inparr){
 		}elseif($word=='the'&&$key==0){
 			$inparrtry=$inparr;
 			array_splice($inparrtry,0,1);//remove the
-			if(count($inparrtry)>2){
+			if(count($inparrtry)>1){
 				$inparrtry=order($inparrtry);
 			}
 			if($inparrtry[1]=='s'||$inparrtry[1]=='pr-si'||$inparrtry[1]=='ed'){
+				unset($inparrtry);
 				continue;
 			}
 			$outparr[]='the';
@@ -393,7 +394,7 @@ function order($inparr){
 			return $outparr;
 			//he had read the last known bug
 			//i see "last know ed bug", it can be {subject verb object}, but it is not "knowed", it is "known", for that i will replace ed to ed-pp (past participle). no. i replace it to en. no. en is used itself in texts, change back.
-		}elseif($word=='whom'||$word=='that'){
+		}elseif(($word=='whom'||$word=='that')&&$key>0){
 			$inparrtry=$inparr;
 			$main=array_splice($inparrtry,0,$key);
 			$depcl=0;//dependent clause count
@@ -405,15 +406,27 @@ function order($inparr){
 				}
 			}
 			if($depcl==-1){
+				unset($inparrtry);
 				continue;
+			}else{
+				unset($inparr);
 			}
 			//i have ordered (separated and set in hierarchy) dependent clauses of the example
+			//"if(count($inparrtry)>2){" - this was correct when it was "1"! because 2 words can be in incorrect order! will replace back!
+			//ini_set('memory_limit','512M');
+			if(count($inparrtry)>1){
+				$inparrtry=order($inparrtry);
+			}
+			if(count($main)>1){
+				$main=order($main);
+			}
+			//and i get "Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 65488 bytes) in C:\xampp\htdocs\tarjima\index2.php on line 413" after writing the 2 "if" blocks above. try to unset a copy of array. has not helped. will edit php.ini... actually i add ini_set... tried 256M and it says: "Allowed memory size of 268435456 bytes exhausted (tried to allocate 24 bytes)". tried 512M and i see: "Allowed memory size of 536870912 bytes exhausted (tried to allocate 65488 bytes)". i think it goes into infinit recursion... adding the "&&$key>0" in "elseif" above have fixed this.
 			$outparr[]=$inparrtry;
 			$outparr[]=$main;
 			return $outparr;
 		}elseif(isset($dic[$word])&&$dic[$word]['type']=='noun'&&$key==count($inparr)-1&&$inparr[$key-1]=='ed-pp'){
 			array_splice($inparr,$key,1);//remove noun
-			if(count($inparr)>2){
+			if(count($inparr)>1){
 				$inparr=order($inparr);
 			}
 			$outparr[]=$inparr;
