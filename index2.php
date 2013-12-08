@@ -306,6 +306,7 @@ function order($inparr){
 					$dependentcl--;
 				}
 			}
+			//checking whether this is of dependent clause
 			if($dependentcl!=0){
 				continue;
 			}
@@ -330,7 +331,7 @@ function order($inparr){
 				return $outparr;
 			}
 			//i have written this, but process goes into the 2nd "have"... i will just comment that out... for now... the s block of the have block... made, and the previous example have been broken... i see he is removed already... i will comment out the he block in have block also. done. previous example works, and i see "the" is already removed in new example. i think hard to fix, try to comment out the the block. done, the previous example is incorrect now. it has incorrect order {[the last known]bug}. then i have commented out block of last noun.
-			//if i just try to order with the, and stop it after checking its top/main word is "s", that will not work if i will check correctly ie not only for "s", but also for present and past simple. no, it will work, but incorrectly. the first "have" is going to be processed first, but it is not main, it is only of dependent clause. i will try to make correctly now, not after trying to order "the".
+			//if i just try to order with the, and stop it after checking its top/main word is "s", that will not work if i will check correctly ie not only for "s", but also for present and past simple. no, it will work, but incorrectly. the first "have" is going to be processed first, but it is not main, it is only of dependent clause. i will try to make correctly now, not after trying to order "the". done. ordering "the" is done.
 		}elseif($word=='have'){
 			/*if($inparr[$key+1]=='s'){
 				array_splice($inparr,$key+1,1);//remove s
@@ -378,17 +379,21 @@ function order($inparr){
 			$outparr[]=$word;
 			return $outparr;
 			//i should make dictionary with (several) properties (instead of word-per-word translations) (i need it now because i need check whether morphem is verb)
-		/*}elseif($word=='the'&&$key==0){
-			array_splice($inparr,0,1);//remove the
-			if(count($inparr)>2){
-				$inparr=order($inparr);
+		}elseif($word=='the'&&$key==0){
+			$inparrtry=$inparr;
+			array_splice($inparrtry,0,1);//remove the
+			if(count($inparrtry)>2){
+				$inparrtry=order($inparrtry);
+			}
+			if($inparrtry[1]=='s'||$inparrtry[1]=='pr-si'){
+				continue;
 			}
 			$outparr[]='the';
-			$outparr[]=$inparr;
+			$outparr[]=$inparrtry;
 			return $outparr;
 			//he had read the last known bug
 			//i see "last know ed bug", it can be {subject verb object}, but it is not "knowed", it is "known", for that i will replace ed to ed-pp (past participle). no. i replace it to en. no. en is used itself in texts, change back.
-		*//*}elseif(isset($dic[$word])&&$dic[$word]['type']=='noun'&&$key==count($inparr)-1&&$inparr[$key-1]=='ed-pp'){
+		/*}elseif(isset($dic[$word])&&$dic[$word]['type']=='noun'&&$key==count($inparr)-1&&$inparr[$key-1]=='ed-pp'){
 			array_splice($inparr,$key,1);//remove noun
 			if(count($inparr)>2){
 				$inparr=order($inparr);
