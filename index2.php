@@ -299,11 +299,13 @@ function order($inparr){
 	$outparr=array();
 	foreach($inparr as $key=>$word){
 		if($word=='s'||$word=='pr-si'||$word=='ed'){
-			for($i=0,$dependentcl=0;$i<$key;$i++){
+			for($i=0,$dependentcl=0,$whoes=0,$ises=0;$i<$key;$i++){
 				if($inparr[$i]=='whom'||$inparr[$i]=='that'){
 					$dependentcl++;
+					$whoes++;
 				}elseif($inparr[$i]=='s'||$inparr[$i]=='pr-si'||$inparr[$i]=='ed'){
 					$dependentcl--;
+					$ises++;
 				}
 			}
 			//checking whether this is of dependent clause
@@ -312,7 +314,7 @@ function order($inparr){
 			//}
 			//comment the above block out, this does not process "who block"s like "whom we have met".
 			//but i see contrary: it goes out if there are "who"s != "is"es... no, it is correct, because last "is" not counted
-			if($dependentcl!=0){
+			/*if($dependentcl!=0){
 				for($i=$key;$i<count($inparr);$i++){
 					if($inparr[$i]=='whom'||$inparr[$i]=='that'){
 						$dependentcl++;
@@ -321,10 +323,36 @@ function order($inparr){
 					}
 				}
 				//i should count that there is 1 "who" and 1 "is", but if they are equal , also should work, so just reused the previous "for" block code
+				//equal count of who-s and is-s will not work if the whole sentence is like noun, for that i will make proper algorithm. add $whoes and $ises for counting. will comment out this block.
 				if($dependentcl!=0){
 					continue;
 				}
 				//now i see "whom we have met" is converted into "[(whom we) (have met)] pr-si". (that is incorrect). and see a "bug": "met" is "[(meet) ed-pp]" (redundant array).
+				//have fixed the second bug.
+			}*/
+			if($dependentcl!=0){
+				//ie whoes should be = to ises before this word like "is". only in that case process this further. this is for processing main/top verb ending. else ie if whoes are more than ises, this one belongs to one of them, and is not the main/top verb ending.
+				//but, in case there are only 1 who and 1 is , this is dependent clause ready to be ordered
+				//so i should count whoes and ises to end of array
+				//if they are already more than 1, no need to count them further... but in "who" clause , the "who" should be before "is"...
+				if($whoes==1 && $ises==0){
+					//if $whoes=1 and $ises=0 , may be it is dependent clause.
+					//i have made commit, but there are comments and corresponding code would be in next commit. so that was wrong commit. also i synced it. then i wanted to delete it. i rolled back in gui, github for windows, synced, but it does not work. then i searcehd and asked in irc. i have found an incorrect way. i created new commit with name "test" and reverted it back in command line. and the revert commit has appeared in github site, and the wrong commit is not deleted. then i have asked and read again and have managed to delete them: i have rolled back last 2 commits in gui, then "git push origin master -f". hm, deleted commits are still viewable by their addresses.
+					//this is dependent clause if no "who" is here further
+					$maybeadepcl=true;
+					for($i=$key+1;$i<count($inparr);$i++){
+						if($inparr[$i]=='whom'||$inparr[$i]=='that'){
+							//there is another dep. clause
+							$maybeadepcl=false;
+							break;
+						}
+					}
+					if(!$maybeadepcl){
+						continue;
+					}
+				}else{
+					continue;
+				}
 			}
 			if($inparr[$key-1]=='have'||$inparr[$key-1]=='be'){
 				//var_dump($inparr);
@@ -378,7 +406,7 @@ function order($inparr){
 					return $outparr;
 				}*/
 			}
-		}elseif($word=='ed-pp'&&$key==1){
+		}elseif($word=='ed-pp'&&$key==1&&count($inparr)>2){
 			array_splice($inparr,1,1);//remove ed-pp
 			if(count($inparr)>1){
 				$inparr=order($inparr);
