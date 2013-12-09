@@ -356,7 +356,10 @@ function order($inparr){
 			}
 			//i think, is it [(whom {we {(meet ed-pp) have]}) pr-si] or [(we {[(whom meet) ed-pp] have}) pr-si]
 			//i think, as [red (big book)] and [big (red book)] are possible, i will make this the 1st way. no...
-			//maybe, it should be even {[(we {[meet ed-pp] have}) pr-si] whom}
+			//maybe, it should be even {[(we {[meet ed-pp] have}) pr-si] whom} . no, i do not think so...
+			//i am going to use the second way, it seems more correct to me (ie with (whom meet) )...
+			//and another way is {[we (whom {[meet ed-pp] have})] pr-si}
+			//and another way is {we [(whom {[meet ed-pp] have}) pr-si]}
 			//btw, i have made {[he ({[(the bug) read] ed-pp} have)] s},
 			//but should not it be {[({he [(the bug) read]} ed-pp) have]s} ? - i think no
 			if($inparr[$key-1]=='have'||$inparr[$key-1]=='be'){
