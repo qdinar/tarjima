@@ -354,6 +354,11 @@ function order($inparr){
 					continue;
 				}
 			}
+			//i think, is it [(whom {we {(meet ed-pp) have]}) pr-si] or [(we {[(whom meet) ed-pp] have}) pr-si]
+			//i think, as [red (big book)] and [big (red book)] are possible, i will make this the 1st way. no...
+			//maybe, it should be even {[(we {[meet ed-pp] have}) pr-si] whom}
+			//btw, i have made {[he ({[(the bug) read] ed-pp} have)] s},
+			//but should not it be {[({he [(the bug) read]} ed-pp) have]s} ? - i think no
 			if($inparr[$key-1]=='have'||$inparr[$key-1]=='be'){
 				//var_dump($inparr);
 				$subject=array_splice($inparr,0,$key-1);//all before has or is
