@@ -439,8 +439,11 @@ function order($inparr){
 			//he had read the last known bug
 			//i see "last know ed bug", it can be {subject verb object}, but it is not "knowed", it is "known", for that i will replace ed to ed-pp (past participle). no. i replace it to en. no. en is used itself in texts, change back.
 		}elseif(($word=='whom'||$word=='that')&&$key>0){
+			//this code separates : teacher | whom ...
 			$inparrtry=$inparr;
 			$main=array_splice($inparrtry,0,$key);
+			//main will be all before "whom" ie "teacher" in last example
+			//inparrtry will be whom and all after it
 			$depcl=0;//dependent clause count
 			foreach($inparrtry as $wordtry){
 				if($wordtry=='s'||$wordtry=='pr-si'||$wordtry=='ed'){
@@ -449,10 +452,14 @@ function order($inparr){
 					$depcl++;
 				}
 			}
+			//is es and who es are counted inside {who and all after it}
 			if($depcl==-1){
+				//if there is one s without who pair, this is not just a who block
+				//do not process, go out
 				unset($inparrtry);
 				continue;
 			}else{
+				//depcl probably = 0 , this is who block
 				unset($inparr);
 			}
 			//i have ordered (separated and set in hierarchy) dependent clauses of the example
