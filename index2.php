@@ -357,29 +357,48 @@ function order($inparr){
 			//i think, is it [(whom {we {(meet ed-pp) have]}) pr-si] or [(we {[(whom meet) ed-pp] have}) pr-si]
 			//i think, as [red (big book)] and [big (red book)] are possible, i will make this the 1st way. no...
 			//maybe, it should be even {[(we {[meet ed-pp] have}) pr-si] whom} . no, i do not think so...
-			//i am going to use the second way, it seems more correct to me (ie with (whom meet) )...
+			//i am going to use the second way, it seems more correct to me (ie with (whom meet) )... no...
 			//and another way is {[we (whom {[meet ed-pp] have})] pr-si}
 			//and another way is {we [(whom {[meet ed-pp] have}) pr-si]}
+			//i will make it 1st way... i should make only 1 commit from these .. but i have made 2 already. i will left them, and will try to not hurry with commiting further...
 			//btw, i have made {[he ({[(the bug) read] ed-pp} have)] s},
 			//but should not it be {[({he [(the bug) read]} ed-pp) have]s} ? - i think no
 			if($inparr[$key-1]=='have'||$inparr[$key-1]=='be'){
 				//var_dump($inparr);
+				if($inparr[0]=='whom'||$inparr[0]=='that'){
+					$whoword=array_splice($inparr,0,1);
+					$whoword=$whoword[0];
+					$key--;
+				}
 				$subject=array_splice($inparr,0,$key-1);//all before has or is
 				//inparr is without subject now
 				array_splice($inparr,1,1);//remove s
-				if(count($subject)>1){//i have seen there should be >2 and will replace in other places
+				if(count($subject)>1){//i have seen there should be >2 and will replace in other places <- this was mistake
 					$subject=order($subject);
 				}elseif(count($subject)==1){
 					//i have seen that he is in array and fix
 					$subject=$subject[0];
+				}elseif(count($subject)==0){
+					unset($subject);
 				}
 				if(count($inparr)>1){
 					$inparr=order($inparr);
 				}
 				$outparr[]=array();//outparr0
-				$outparr[0][]=$subject;
-				$outparr[0][]=$inparr;
-				$outparr[]=$word;//outparr1
+				if(isset($whoword)){
+					$outparr[0][]=$whoword;
+					if(isset($subject)){
+						$outparr[0][]=array();
+						$outparr[0][1][]=$subject;
+						$outparr[0][1][]=$inparr;
+					}else{
+						$outparr[0][]=$inparr;
+					}
+				}else{
+					$outparr[0][]=$subject;
+					$outparr[0][]=$inparr;
+				}
+				$outparr[]=$word;//outparr1//s or ed or pr-si
 				return $outparr;
 			}
 			//i have written this, but process goes into the 2nd "have"... i will just comment that out... for now... the s block of the have block... made, and the previous example have been broken... i see he is removed already... i will comment out the he block in have block also. done. previous example works, and i see "the" is already removed in new example. i think hard to fix, try to comment out the the block. done, the previous example is incorrect now. it has incorrect order {[the last known]bug}. then i have commented out block of last noun.
