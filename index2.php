@@ -54,6 +54,8 @@ function tr_simple_block($simbl){
 			//$s2[1]='лгән';
 			if((is_array($simbl[0])&&$simbl[0][1]=='know')||$simbl[0]=='know'){
 				$s2[1]='енгән';
+			}elseif((is_array($simbl[0])&&$simbl[0][1]=='mention')||$simbl[0]=='mention'){
+				$s2[1]='ынган';
 			}else{
 				$s2[1]='лган';
 			}
@@ -525,11 +527,11 @@ function order($inparr){
 }
 
 
-echo'<br/><pre>';
+//echo'<br/><pre>';
 $dic=array('bug'=>array('type'=>'noun'),'read'=>array('type'=>'verb'));
 $engtext2=order($engtext2);
-print_r($engtext2);
-echo'</pre>';
+//print_r($engtext2);
+//echo'</pre>';
 
 echo'<br/>';
 echo nstd_to_str($engtext2);
@@ -550,15 +552,35 @@ $dic['teach']=array('type'=>'verb');
 $engtext2=explode_words_into_morphemes($engtext);
 print_r($engtext2);
 
-echo'<br/><pre>';
+//echo'<br/>';
+//echo'<pre>';
 $engtext2=order($engtext2);
-print_r($engtext2);
+//print_r($engtext2);
 //just tried order and i see totally incorrect,
 //this, but with ed-pp-s etc: {the [(teacher whom we have met have read the bug that was mentioned) s]}
 //now i am going to edit the order()
+//echo'</pre>';
+
+echo'<br/>';
+$words['whom']='кемне';
+$words['we']='без';
+$words['pr-si']='а';
+$words['teach']='укыт';
+$words['er']='учы';
+$words['that']='кайсы';
+$words['mention']='искәал';
+$words['be']='бул';
+$words['ed']='ды';
+$words['meet']='очрат';
+$result=tr_simple_block($engtext2);
+echo'<pre>';
+print_r($result);
 echo'</pre>';
-
-
+echo nstd_to_str($result);
+//it is now: тегекемнебезочратпкуйаукытучытегекайсыискәаллганбулдыбагныукыды
+//should be: (теге)без очраткан укытучы (теге)искә алынган багны укыды
+//лган is fixed now
+//going to fix кайсыискәалынганбулды, to искәалынган
 
 
 
