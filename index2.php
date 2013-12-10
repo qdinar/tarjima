@@ -73,7 +73,7 @@ function tr_simple_block($simbl){
 				$s2[1]='куй';
 				$s2[0][1]='п';
 			}
-		}elseif($simbl[1]=='s'){
+		}elseif($simbl[1]=='s'||$simbl[1]=='ed'){
 			//return $s2[0];//$s2[1] should be translation of s but it becomes removed
 			//i see 'ды' should be reordered...
 			if($simbl[0][1][1]=='have'&&$simbl[0][1][0][1]=='ed-pp'){
@@ -81,6 +81,34 @@ function tr_simple_block($simbl){
 				//have read ed-pp is translated like read
 				$s2[1]='ды';//past tense morphem is in place of s
 				//'ды' is reordered . subject is like adverbs etc, also in tatar...
+			}elseif($simbl[0][0]=='that'){
+				if($simbl[0][1][1]=='be'&&$simbl[0][1][0][1]=='ed-pp'){
+					$verb=$s2[0][1][0][0];
+					$verbending=$s2[0][1][0][1];
+					$s2[0]=$verb;
+					$s2[1]=$verbending;
+					//кайсыискәалынганбулды->искәалынган
+					/*Array
+					(
+						[0] => Array
+							(
+								[0] => кайсы
+								[1] => Array
+									(
+										[0] => Array
+											(
+												[0] => искәал
+												[1] => ынган
+											)
+
+										[1] => бул
+									)
+
+							)
+
+						[1] => ды
+					)*/
+				}
 			}
 		}else{
 			$s2[1]=$words[$simbl[1]];
@@ -581,7 +609,7 @@ echo nstd_to_str($result);
 //should be: (теге)без очраткан укытучы (теге)искә алынган багны укыды
 //лган is fixed now
 //going to fix кайсыискәалынганбулды, to искәалынган
-
+//done. i think it should have been кайсыискәалынганиде or кайсыискәалынганбулган but that is not important now
 
 
 
