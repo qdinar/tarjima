@@ -403,7 +403,7 @@ function order($inparr){
 			}
 			//i have written this, but process goes into the 2nd "have"... i will just comment that out... for now... the s block of the have block... made, and the previous example have been broken... i see he is removed already... i will comment out the he block in have block also. done. previous example works, and i see "the" is already removed in new example. i think hard to fix, try to comment out the the block. done, the previous example is incorrect now. it has incorrect order {[the last known]bug}. then i have commented out block of last noun.
 			//if i just try to order with the, and stop it after checking its top/main word is "s", that will not work if i will check correctly ie not only for "s", but also for present and past simple. no, it will work, but incorrectly. the first "have" is going to be processed first, but it is not main, it is only of dependent clause. i will try to make correctly now, not after trying to order "the". done. ordering "the" is done.
-		}elseif($word=='have'){
+		}elseif($word=='have'||$word=='be'){
 			/*if($inparr[$key+1]=='s'){
 				array_splice($inparr,$key+1,1);//remove s
 				if(count($inparr)>1){
@@ -419,7 +419,7 @@ function order($inparr){
 						$inparr=order($inparr);
 					}
 					$outparr[]=$inparr;
-					$outparr[]='have';
+					$outparr[]=$word;
 					return $outparr;
 				}
 			}else{
@@ -497,6 +497,8 @@ function order($inparr){
 			}
 			if(count($main)>1){
 				$main=order($main);
+			}elseif(count($main)==1){
+				$main=$main[0];
 			}
 			//and i get "Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 65488 bytes) in C:\xampp\htdocs\tarjima\index2.php on line 413" after writing the 2 "if" blocks above. try to unset a copy of array. has not helped. will edit php.ini... actually i add ini_set... tried 256M and it says: "Allowed memory size of 268435456 bytes exhausted (tried to allocate 24 bytes)". tried 512M and i see: "Allowed memory size of 536870912 bytes exhausted (tried to allocate 65488 bytes)". i think it goes into infinit recursion... adding the "&&$key>0" in "elseif" above have fixed this.
 			$outparr[]=$inparrtry;
