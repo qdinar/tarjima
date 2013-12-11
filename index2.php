@@ -73,7 +73,13 @@ function tr_simple_block($simbl){
 				$s2[1]='куй';
 				$s2[0][1]='п';
 			}
-		}elseif($simbl[1]=='s'||$simbl[1]=='ed'){
+		}elseif($simbl[1]=='s'||$simbl[1]=='ed'||$simbl[1]=='pr-si'){
+			//if($simbl[0][0]=='whom'){
+			//	echo'*';
+			//}
+			//echo'*<pre>';
+			//print_r($simbl);
+			//echo'</pre>';
 			//return $s2[0];//$s2[1] should be translation of s but it becomes removed
 			//i see 'ды' should be reordered...
 			if($simbl[0][1][1]=='have'&&$simbl[0][1][0][1]=='ed-pp'){
@@ -81,8 +87,13 @@ function tr_simple_block($simbl){
 				//have read ed-pp is translated like read
 				$s2[1]='ды';//past tense morphem is in place of s
 				//'ды' is reordered . subject is like adverbs etc, also in tatar...
-			}elseif($simbl[0][0]=='that'){
-				if($simbl[0][1][1]=='be'&&$simbl[0][1][0][1]=='ed-pp'){
+			}elseif($simbl[0][0]=='that'||$simbl[0][0]=='whom'){
+				//if($simbl[0][0]=='whom'){
+				//	echo'*';
+				//}
+				if(($simbl[0][1][1]=='be'||$simbl[0][1][1]=='have')&&$simbl[0][1][0][1]=='ed-pp'){
+				//if (($simbl[0]/*whom..met*/[1]/*we..met*/[1]/*havemet*/=='be'||$simbl[0][1][1]=='have')&&$simbl[0][1][0]/*we*/[1]=='ed-pp'){
+					//echo'*';
 					$verb=$s2[0][1][0][0];
 					$verbending=$s2[0][1][0][1];
 					$s2[0]=$verb;
@@ -92,22 +103,57 @@ function tr_simple_block($simbl){
 					(
 						[0] => Array
 							(
-								[0] => кайсы
+								[0] => that
 								[1] => Array
 									(
 										[0] => Array
 											(
-												[0] => искәал
-												[1] => ынган
+												[0] => mention
+												[1] => ed-pp
 											)
 
-										[1] => бул
+										[1] => be
 									)
 
 							)
 
-						[1] => ды
+						[1] => ed
 					)*/
+				//}elseif($simbl[0][0]=='whom'){
+					//echo'*';
+				}elseif(($simbl[0]/*whom..met*/[1]/*we...met*/[1]/*havemet*/[1]/*have*/=='have'||$simbl[0][1][1][1]=='be')&&$simbl[0][1][1][0]/*met*/[1]/*ed-pp*/=='ed-pp'){
+					/*Array
+					(
+						[0] => Array
+							(
+								[0] => whom
+								[1] => Array
+									(
+										[0] => we
+										[1] => Array
+											(
+												[0] => Array
+													(
+														[0] => meet
+														[1] => ed-pp
+													)
+
+												[1] => have
+											)
+
+									)
+
+							)
+
+						[1] => pr-si
+					)
+					*/
+					//echo'*';
+					$subject=$s2[0][1][0];
+					$verb=$s2[0][1][1][0][0];
+					$s2[0][0]=$subject;
+					$s2[0][1]=$verb;
+					$s2[1]='кан';//this works, but probably is buggy with other sentences
 				}
 			}
 		}else{
@@ -603,16 +649,19 @@ $words['meet']='очрат';
 $result=tr_simple_block($engtext2);
 echo'<pre>';
 print_r($result);
+//var_dump($result);
 echo'</pre>';
 echo nstd_to_str($result);
 //it is now: тегекемнебезочратпкуйаукытучытегекайсыискәаллганбулдыбагныукыды
 //should be: (теге)без очраткан укытучы (теге)искә алынган багны укыды
 //лган is fixed now
 //going to fix кайсыискәалынганбулды, to искәалынган
+//that means thatwasmentioned->mentioned
 //done. i think it should have been кайсыискәалынганиде or кайсыискәалынганбулган but that is not important now
-
-
-
+//going to change кемнебезочратпкуйа to безочраткан
+//ie whomwehavemet->wemet
+//done, example is translated, теге-s (translation of the) are left
+//result: тегебезочратканукытучытегеискәалынганбагныукыды
 
 
 
