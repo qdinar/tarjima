@@ -155,6 +155,8 @@ function tr_simple_block($simbl){
 					$s2[0][1]=$verb;
 					$s2[1]='кан';//this works, but probably is buggy with other sentences
 				}
+			}else{
+				$s2[1]=$words[$simbl[1]];
 			}
 		}else{
 			$s2[1]=$words[$simbl[1]];
@@ -521,6 +523,7 @@ function order($inparr){
 			return $outparr;
 		}elseif(isset($dic[$word])&&$dic[$word]['type']=='verb'&&$key==0&&$inparr[1]=='the'){
 			array_splice($inparr,0,1);//remove verb
+			//this will work incorrectly with "read the bug through tracker"
 			if(count($inparr)>1){
 				$inparr=order($inparr);
 			}
@@ -528,6 +531,51 @@ function order($inparr){
 			$outparr[]=$word;
 			return $outparr;
 			//i should make dictionary with (several) properties (instead of word-per-word translations) (i need it now because i need check whether morphem is verb)
+		}elseif(isset($dic[$word])&&$dic[$word]['type']=='verb'&&$key==0){//this is not 'have' nor 'be'
+			//i am going to make "go to school every day"
+			//are there any dependent clauses? is not it something like "go to school {that was closed on monday}"?
+			//if it is , is not it "go {to school that was closed} {on monday}"?
+			//how to choose?
+			foreach($inparr as $isitthat){
+				if($isitthat=='that'||$isitthat=='whom'){
+					$thereisathat=true;
+					break;
+				}
+			}
+			if(!isset($thereisathat)){
+				for($i=count($inparr)-1;$i>=0;$i--){
+					if($inparr[$i]=='every'||$inparr[$i]=='to'){//preposition or adverb
+						$verb=array_splice($inparr,0,$i);
+						if(count($verb)>1){
+							$verb=order($verb);
+							//"i go to school every day" is almost ordered now, need to (write code to) order "to school" and remove excessive array from "(go)"
+						}else{
+							$verb=$verb[0];
+						}
+						if($inparr[0]=='to'){//preposition
+							$prep=array_splice($inparr,0,1);
+							$prep=$prep[0];
+							if(count($inparr)>1){//inparr is now "school" or "good school"
+								$inparr=order($inparr);
+							}else{
+								$inparr=$inparr[0];
+							}
+							$tmpa=array();
+							$tmpa[]=$inparr;
+							$tmpa[]=$prep;
+							$inparr=$tmpa;
+							unset($tmpa);
+							//$inparr[0]=$inparr;
+							//$inparr[1]=$prep;
+							//this (above and commented out) code does not work, gives strange result (sthool go) instead of ((school to) go)
+							//"i go to school every day" is "ordered" completely
+						}
+						$outparr[]=$inparr;
+						$outparr[]=$verb;
+						return $outparr;
+					}
+				}
+			}
 		}elseif($word=='the'&&$key==0){
 			$inparrtry=$inparr;
 			array_splice($inparrtry,0,1);//remove the
@@ -560,7 +608,7 @@ function order($inparr){
 			//is es and who es are counted inside {who and all after it}
 			if($depcl==-1){
 				//if there is one s without who pair, this is not just a who block
-				//do not process, go out
+				//do not process, go out to next word
 				unset($inparrtry);
 				continue;
 			}else{
@@ -681,10 +729,25 @@ print_r($engtext2);
 //i see no ordering (is made). pr-si is used by order(), so i should add it in explode_words_into_morphemes()... for this situation... should only add in $dic
 //$dic['go']['type']='verb';//has not changed anything <-this was incorrect place
 //pr-si (is) added, but (there is) still no order
-//fixed, pr-si is ordered
+//fixed, pr-si is ordered and "i" is ordered
 echo'</pre>';
 
-
+//i go to school is ordered, try to translate it
+$words['i']='мин';
+$words['every']='һәр';
+$words['day']='көн';
+$words['to']='кә';
+$words['go']='бар';
+$result=tr_simple_block($engtext2);
+echo'<pre>';
+print_r($result);
+//i see pr-si is disappeared
+echo'</pre>';
+//echo'<br/>';
+echo nstd_to_str($result);
+//минһәркөнмәктәпкәбара
+//мин һәр көн мәктәп кә бар а
+//should be мин һәр көн мәктәп кә бар а м or мин көн саен мәктәп кә бар а м
 
 
 
