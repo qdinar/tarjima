@@ -439,7 +439,7 @@ function order($inparr){
 			//i will make it 1st way... i should make only 1 commit from these .. but i have made 2 already. i will left them, and will try to not hurry with commiting further...
 			//btw, i have made {[he ({[(the bug) read] ed-pp} have)] s},
 			//but should not it be {[({he [(the bug) read]} ed-pp) have]s} ? - i think no
-			if($inparr[$key-1]=='have'||$inparr[$key-1]=='be'){
+			if($inparr[$key-1]=='have'||$inparr[$key-1]=='be'||isset($dic[$inparr[$key-1]])&&$dic[$inparr[$key-1]]['type']=='verb'){
 				//var_dump($inparr);
 				if($inparr[0]=='whom'||$inparr[0]=='that'){
 					$whoword=array_splice($inparr,0,1);
@@ -479,6 +479,8 @@ function order($inparr){
 			}
 			//i have written this, but process goes into the 2nd "have"... i will just comment that out... for now... the s block of the have block... made, and the previous example have been broken... i see he is removed already... i will comment out the he block in have block also. done. previous example works, and i see "the" is already removed in new example. i think hard to fix, try to comment out the the block. done, the previous example is incorrect now. it has incorrect order {[the last known]bug}. then i have commented out block of last noun.
 			//if i just try to order with the, and stop it after checking its top/main word is "s", that will not work if i will check correctly ie not only for "s", but also for present and past simple. no, it will work, but incorrectly. the first "have" is going to be processed first, but it is not main, it is only of dependent clause. i will try to make correctly now, not after trying to order "the". done. ordering "the" is done.
+			//else{
+			//}
 		}elseif($word=='have'||$word=='be'){
 			/*if($inparr[$key+1]=='s'){
 				array_splice($inparr,$key+1,1);//remove s
@@ -647,10 +649,10 @@ $words['be']='бул';
 $words['ed']='ды';
 $words['meet']='очрат';
 $result=tr_simple_block($engtext2);
-echo'<pre>';
-print_r($result);
+//echo'<pre>';
+//print_r($result);
 //var_dump($result);
-echo'</pre>';
+//echo'</pre>';
 echo nstd_to_str($result);
 //it is now: тегекемнебезочратпкуйаукытучытегекайсыискәаллганбулдыбагныукыды
 //should be: (теге)без очраткан укытучы (теге)искә алынган багны укыды
@@ -662,8 +664,25 @@ echo nstd_to_str($result);
 //ie whomwehavemet->wemet
 //done, example is translated, теге-s (translation of the) are left
 //result: тегебезочратканукытучытегеискәалынганбагныукыды
+//now i will try examples from index.php
+//i go to school every day
+//this file is index2.php and index.php is older translator and its technology is other...
 
+echo'<br/>';
+$engtext='i go to school every day';
+$engtext=explode(' ', $engtext);
+$dic['go']['type']='verb';
+$engtext2=explode_words_into_morphemes($engtext);
+print_r($engtext2);
 
+echo'<pre>';
+$engtext2=order($engtext2);
+print_r($engtext2);
+//i see no ordering (is made). pr-si is used by order(), so i should add it in explode_words_into_morphemes()... for this situation... should only add in $dic
+//$dic['go']['type']='verb';//has not changed anything <-this was incorrect place
+//pr-si (is) added, but (there is) still no order
+//fixed, pr-si is ordered
+echo'</pre>';
 
 
 
