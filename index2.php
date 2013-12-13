@@ -161,12 +161,25 @@ function tr_simple_block($simbl){
 					$new_s2=array();
 					$new_s2[]=$s2;
 					$new_s2[]='м';
+					$s2=$new_s2;
+					unset($new_s2);
+				}elseif($simbl[0][0]=='we'){
+					$new_s2=array();
+					$new_s2[]=$s2;
+					$new_s2[]='быз';
+					$s2=$new_s2;
+					unset($new_s2);
 				}
-				$s2=$new_s2;
-				unset($new_s2);
 			}
 		}else{
 			$s2[1]=$words[$simbl[1]];
+			if($simbl[0][1]=='from'){
+				if($simbl[1]=='go'){
+					$s2[1]='кайт';
+				//}elseif($simbl[1][1]=='go'){
+				//	$s2[1][1]='кайт';
+				}
+			}
 		}
 	}
 	//var_dump($s2);echo'*';
@@ -551,7 +564,7 @@ function order($inparr){
 			}
 			if(!isset($thereisathat)){
 				for($i=count($inparr)-1;$i>=0;$i--){
-					if($inparr[$i]=='every'||$inparr[$i]=='to'){//preposition or adverb
+					if($inparr[$i]=='every'||$inparr[$i]=='to'||$inparr[$i]=='from'){//preposition or adverb
 						$verb=array_splice($inparr,0,$i);
 						if(count($verb)>1){
 							$verb=order($verb);
@@ -559,7 +572,7 @@ function order($inparr){
 						}else{
 							$verb=$verb[0];
 						}
-						if($inparr[0]=='to'){//preposition
+						if($inparr[0]=='to'||$inparr[0]=='from'){//preposition
 							$prep=array_splice($inparr,0,1);
 							$prep=$prep[0];
 							if(count($inparr)>1){//inparr is now "school" or "good school"
@@ -795,11 +808,34 @@ echo nstd_to_str($result);
 //and software ideas are not patented in russia and patenting requires money in usa, and my this code in php itself is almost useless, almost not reusable, gpl license would only guard code, but not ideas ({ideas are guarded from patenting} by publishing), so i have not set license like gpl for this
 // (and even code cannot be well guarded with gpl, because it is open and can be copied, though , even closed source programs can be disassembled etc )
 
+//just a next example from index php. no new grammar, only lexems
 
 
+echo'<br/>';
+$engtext='we go from park every morning';
+$engtext=explode(' ', $engtext);
+//$dic['go']['type']='verb';
+$engtext2=explode_words_into_morphemes($engtext);
+print_r($engtext2);
 
+echo'<pre>';
+$engtext2=order($engtext2);
+print_r($engtext2);
+echo'</pre>';
 
-
+//i go to school is ordered, try to translate it
+$words['morning']='иртә';
+$words['from']='тан';
+$words['park']='парк';
+$result=tr_simple_block($engtext2);
+echo'<pre>';
+print_r($result);
+echo'</pre>';
+echo nstd_to_str($result);
+//result:безһәриртәпарктанбарабыз
+//better might be: безһәриртәпарктан кайтабыз which means we return / go back / come back ... but it depends on meaning, context
+//and, "безһәриртәпарктанбарабыз" also and usually means "we go through park ..."
+//for that, i am going to fix this. done. безһәриртәпарктанкайтабыз
 
 
 
