@@ -175,9 +175,10 @@ function tr_simple_block($simbl){
 			$s2[1]=$words[$simbl[1]];
 			if($simbl[0][1]=='from'){
 				if($simbl[1]=='go'){
-					$s2[1]='кайт';
+					//$s2[1]='кайт';
 				//}elseif($simbl[1][1]=='go'){
 				//	$s2[1][1]='кайт';
+					$s2[0][1]='тарафыннан';
 				}
 			}
 		}
@@ -836,6 +837,9 @@ echo nstd_to_str($result);
 //better might be: безһәриртәпарктан кайтабыз which means we return / go back / come back ... but it depends on meaning, context
 //and, "безһәриртәпарктанбарабыз" also and usually means "we go through park ..."
 //for that, i am going to fix this. done. безһәриртәпарктанкайтабыз
+//i commited. but this is not correct. english text does not have "return" meaning
+//better to translate без ... чыгабыз or ... без ... чыгып барабыз or без ... тарафыннан барабыз
+//i am going to make the last translation. done
 
 
 
