@@ -47,6 +47,22 @@ function tr_simple_block($simbl){
 		$s2[0]=array($s2[0],'ны');
 	}
 	//
+	if($simbl[0][1]=='from'){
+		if($simbl[1]=='go'){
+			//$s2[1]='кайт';
+		//}elseif($simbl[1][1]=='go'){
+		//	$s2[1][1]='кайт';
+			$s2[0][1]='тарафыннан';//instead of тан in dic
+		}
+	}
+	if($simbl[0]=='last'&&$simbl[1]=='year'){
+		//echo'*';
+		//var_dump($s2);
+		$s2[0]='узган';//instead of соңгы in dic
+		//does not work, i do not know why. found. == instead of =.
+		//var_dump($s2);
+	}
+	//
 	if(is_array($simbl[1])){
 		$s2[1]=tr_simple_block($simbl[1]);
 	}else{
@@ -56,6 +72,8 @@ function tr_simple_block($simbl){
 				$s2[1]='енгән';
 			}elseif((is_array($simbl[0])&&$simbl[0][1]=='mention')||$simbl[0]=='mention'){
 				$s2[1]='ынган';
+			}elseif((is_array($simbl[0])&&$simbl[0][1]=='build')||$simbl[0]=='build'){
+				$s2[1]='лгән';
 			}else{
 				$s2[1]='лган';
 			}
@@ -170,17 +188,13 @@ function tr_simple_block($simbl){
 					$s2=$new_s2;
 					unset($new_s2);
 				}
+				if($simbl[1]=='pr-si'){
+					//i was going to fix йөреа to йөри but have found important order bug
+					//$simbl[0][1]
+				}
 			}
 		}else{
 			$s2[1]=$words[$simbl[1]];
-			if($simbl[0][1]=='from'){
-				if($simbl[1]=='go'){
-					//$s2[1]='кайт';
-				//}elseif($simbl[1][1]=='go'){
-				//	$s2[1][1]='кайт';
-					$s2[0][1]='тарафыннан';
-				}
-			}
 		}
 	}
 	//var_dump($s2);echo'*';
@@ -332,6 +346,9 @@ function explode_words_into_morphemes($engtext){
 			}elseif(mb_substr($word,0,mb_strlen($word)-1)=='wa'){
 				$engtext2[]='be';
 				$engtext2[]='ed';
+			}elseif(mb_substr($word,0,mb_strlen($word)-1)=='i'){
+				$engtext2[]='be';
+				$engtext2[]='pr-si';
 			}
 		}elseif(mb_substr($word,-1,1)=='n'){
 			if(mb_substr($word,0,mb_strlen($word)-1)=='know'){
@@ -341,6 +358,9 @@ function explode_words_into_morphemes($engtext){
 		}elseif(mb_substr($word,-1,1)=='t'){
 			if(mb_substr($word,0,mb_strlen($word)-1)=='me'){
 				$engtext2[]='meet';
+				$engtext2[]='ed-pp';
+			}elseif(mb_substr($word,0,mb_strlen($word)-1)=='buil'){
+				$engtext2[]='build';
 				$engtext2[]='ed-pp';
 			}else{
 				$engtext2[]=$word;
@@ -513,8 +533,9 @@ function order($inparr){
 				$outparr[]=$inparr;
 				$outparr[]='s';
 				return $outparr;
-			}else*/if($key==0){//have is 1st
-				if($inparr[2]=='ed-pp'){
+			}else*/
+			if($key==0){//have is 1st
+				if($inparr[2]=='ed-pp'){//have(0) do(1) ed(2)
 					array_splice($inparr,0,1);//remove have
 					if(count($inparr)>1){
 						$inparr=order($inparr);
@@ -523,8 +544,8 @@ function order($inparr){
 					$outparr[]=$word;
 					return $outparr;
 				}
-			}else{
-				/*if($key==1){//have in 2nd place
+			}/*else{
+				if($key==1){//have in 2nd place
 					$removedword=array_splice($inparr,0,1);//remove he
 					if(count($inparr)>1){
 						$inparr=order($inparr);
@@ -532,9 +553,11 @@ function order($inparr){
 					$outparr[]=$removedword[0];
 					$outparr[]=$inparr;
 					return $outparr;
-				}*/
-			}
+				}
+			}*/
 		}elseif($word=='ed-pp'&&$key==1&&count($inparr)>2){
+			//seems 'built last year' should come here but it does not.
+			//probably it goes to the "verb & key=0" in external recursion
 			array_splice($inparr,1,1);//remove ed-pp
 			if(count($inparr)>1){
 				$inparr=order($inparr);
@@ -552,7 +575,7 @@ function order($inparr){
 			$outparr[]=$word;
 			return $outparr;
 			//i should make dictionary with (several) properties (instead of word-per-word translations) (i need it now because i need check whether morphem is verb)
-		}elseif(isset($dic[$word])&&$dic[$word]['type']=='verb'&&$key==0){//this is not 'have' nor 'be'
+		}elseif(isset($dic[$word])&&$dic[$word]['type']=='verb'&&$key==0&&$inparr[1]!='ed-pp'){//this is not 'have' nor 'be'
 			//i am going to make "go to school every day"
 			//are there any dependent clauses? is not it something like "go to school {that was closed on monday}"?
 			//if it is , is not it "go {to school that was closed} {on monday}"?
@@ -565,15 +588,17 @@ function order($inparr){
 			}
 			if(!isset($thereisathat)){
 				for($i=count($inparr)-1;$i>=0;$i--){
-					if($inparr[$i]=='every'||$inparr[$i]=='to'||$inparr[$i]=='from'){//preposition or adverb
+					if($inparr[$i]=='every'||$inparr[$i]=='to'||$inparr[$i]=='from'||$inparr[$i]=='through'||$inparr[$i]=='last'){//preposition or adverb
 						$verb=array_splice($inparr,0,$i);
+						//'built last year' is probably broken here, it should not come here
+						//i have added &&$inparr[1]!='ed-pp' in if condition (16 lines upper) and it is fixed
 						if(count($verb)>1){
 							$verb=order($verb);
 							//"i go to school every day" is almost ordered now, need to (write code to) order "to school" and remove excessive array from "(go)"
 						}else{
 							$verb=$verb[0];
 						}
-						if($inparr[0]=='to'||$inparr[0]=='from'){//preposition
+						if($inparr[0]=='to'||$inparr[0]=='from'||$inparr[0]=='through'){//preposition
 							$prep=array_splice($inparr,0,1);
 							$prep=$prep[0];
 							if(count($inparr)>1){//inparr is now "school" or "good school"
@@ -596,6 +621,13 @@ function order($inparr){
 						return $outparr;
 					}
 				}
+			}else{
+				//echo'*';
+				//walk through park that is built last year
+				//what if it is 'walk through park that is built last year by hands'?
+				//{[walk through park that is built last year] [by hands]}
+				//or {walk [through (park {that [is ({built last year} {by hands})]})]}?
+				//i am going to do with the first way
 			}
 		}elseif($word=='the'&&$key==0){
 			$inparrtry=$inparr;
@@ -810,21 +842,15 @@ echo nstd_to_str($result);
 // (and even code cannot be well guarded with gpl, because it is open and can be copied, though , even closed source programs can be disassembled etc )
 
 //just a next example from index php. no new grammar, only lexems
-
-
 echo'<br/>';
 $engtext='we go from park every morning';
 $engtext=explode(' ', $engtext);
-//$dic['go']['type']='verb';
 $engtext2=explode_words_into_morphemes($engtext);
 print_r($engtext2);
-
 echo'<pre>';
 $engtext2=order($engtext2);
 print_r($engtext2);
 echo'</pre>';
-
-//i go to school is ordered, try to translate it
 $words['morning']='иртә';
 $words['from']='тан';
 $words['park']='парк';
@@ -841,11 +867,37 @@ echo nstd_to_str($result);
 //better to translate без ... чыгабыз or ... без ... чыгып барабыз or без ... тарафыннан барабыз
 //i am going to make the last translation. done
 
-
-
-
-
-
+//just a next example from index php. i thought also no new grammar, only lexems... but no, "that" clause should be ordered correctly
+echo'<br/>';
+$engtext='they walk through park that is built last year';
+$engtext=explode(' ', $engtext);
+$dic['walk']['type']='verb';
+$engtext2=explode_words_into_morphemes($engtext);
+print_r($engtext2);
+echo'<pre>';
+$dic['build']['type']='verb';
+$engtext2=order($engtext2);
+print_r($engtext2);
+echo'</pre>';
+$words['build']='төзе';
+$words['they']='алар';
+$words['walk']='йөре';
+$words['through']='аша';
+$words['year']='ел';
+$result=tr_simple_block($engtext2);
+echo'<pre>';
+print_r($result);
+echo'</pre>';
+echo nstd_to_str($result);
+//after some editions i have аларсоңгыелтөзелганпаркашабара
+//need to fix: соңгы->узган (last). done
+//and may be йөри instead of бара (walk). changed $words['walk'], but need to fix ending, йөреа -> йөри (i would and sometimes do spell it йөрей)
+//and may be ясалган instead of төзелгән (built)
+//need to fix ган->гән (if төзелгән). done
+//i was going to fix йөреа to йөри but have found important order bug:
+// {[they ({that is built last year} {walk through park})] pr-si}
+//should be:
+// {[they ( {through park that is built last year} walk )] pr-si}
 
 
 
