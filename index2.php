@@ -157,6 +157,13 @@ function tr_simple_block($simbl){
 				}
 			}else{
 				$s2[1]=$words[$simbl[1]];
+				if($simbl[0][0]=='i'){
+					$new_s2=array();
+					$new_s2[]=$s2;
+					$new_s2[]='м';
+				}
+				$s2=$new_s2;
+				unset($new_s2);
 			}
 		}else{
 			$s2[1]=$words[$simbl[1]];
@@ -765,11 +772,13 @@ echo nstd_to_str($result);
 // but they can be:
 // {he [go es}}
 // i am not sure which is correct...
-// i have searched in google images for "grammar dependency" and i have found a program named nltk written in python. it is aldo hosted in github. but i do not know whether it can give sentence as nested arrays (probably can give that in some form, because i have seen that it can give that as image), and as i see from their book, they do not separate morphems and do not make binary tree as i do (but they set some things as branches in one level: {fine fat trout}, {saw [a man] [in the park]}). also i am not sure whether they set dependent clauses in (parent) tree.
+// i have searched in google images for "grammar dependency" and i have found a program named nltk written in python. it is aldo hosted in github. but i do not know whether it can give sentence as nested arrays (probably can give that in some form, because i have seen that it can give that as image), and as i see from their book, they do not separate morphems and do not make binary tree as i do (but they set some things as branches , more than 2, in one level: {fine fat trout}, {saw [a man] [in the park]}). also i am not sure whether they set dependent clauses in (parent) tree.
 //but that program has lots of things already done, as i understand...
 // continue about my example. so, in this case i am going to use other order with that. may be i should use same structure for them all.
 //so i should either make {[(мин бар) а] мын}
 //or edit previous orders to make them as {he [go es}} and make latest example as {мин [(бар а) мын]}.
+//i am going to order as i did ie {[(мин бар) а] мын}. done.
+//минһәркөнмәктәпкәбарам
 
 //i have installed yesterday visual studio express 2013 to try help with university c++ (home?) task to a person...
 //and i am sitting in win8
@@ -785,8 +794,6 @@ echo nstd_to_str($result);
 //though i could save them in some level of secret, if god wants
 //and software ideas are not patented in russia and patenting requires money in usa, and my this code in php itself is almost useless, almost not reusable, gpl license would only guard code, but not ideas ({ideas are guarded from patenting} by publishing), so i have not set license like gpl for this
 // (and even code cannot be well guarded with gpl, because it is open and can be copied, though , even closed source programs can be disassembled etc )
-
-
 
 
 
