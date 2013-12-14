@@ -27,7 +27,7 @@ $words=array('good'=>'әйбәт','school'=>'мәктәп');
 
 function tr_simple_block($simbl){
 
-	global $words;
+	global $words,$dic;
 	$s2=array();
 	if(is_array($simbl[0])){
 		$s2[0]=tr_simple_block($simbl[0]);
@@ -172,35 +172,87 @@ function tr_simple_block($simbl){
 					$s2[0][0]=$subject;
 					$s2[0][1]=$verb;
 					$s2[1]='кан';//this works, but probably is buggy with other sentences
-				}
-			}else{
-				$s2[1]=$words[$simbl[1]];
-				if($simbl[0][0]=='i'){
-					$new_s2=array();
-					$new_s2[]=$s2;
-					$new_s2[]='м';
-					$s2=$new_s2;
-					unset($new_s2);
-				}elseif($simbl[0][0]=='we'){
-					$new_s2=array();
-					$new_s2[]=$s2;
-					$new_s2[]='быз';
-					$s2=$new_s2;
-					unset($new_s2);
-				}
-				if($simbl[1]=='pr-si'){
-					//i was going to fix йөреа to йөри but have found important order bug
-					//that is fixed. continue
-					if($simbl[0][1][1]=='walk'){
-						$s2[1]='й';
+				//}else{
+					//$s2[1]=$words[$simbl[1]];
+				}elseif($dic[$simbl[0][1][1]]['type']=='verb'){
+					// кайсы бер велосипед сатыпал ды -> велосипед сатыпал ган
+					/*Array
+					(
+						[0] => Array
+							(
+								[0] => that
+								[1] => Array
+									(
+										[0] => Array
+											(
+												[0] => a
+												[1] => bycicle
+											)
+
+										[1] => buy
+									)
+
+							)
+
+						[1] => ed
+					)*/
+					$s2[0]=$s2[0][1];
+					$s2[1]='ган';
+					if($simbl[0][1][0][0]=='a'){
+						$s2[0][0]=$s2[0][0][1];
+						/*Array
+						(
+							[0] => Array
+								(
+									[0] => Array
+										(
+											[0] => бер
+											[1] => велосипед
+										)
+
+									[1] => сатыпал
+								)
+
+							[1] => ган
+						)*/
 					}
-					
 				}
+			//}else{
+				//$s2[1]=$words[$simbl[1]];
+				//echo'*';
+				//var_dump($simbl);
 			}
-		}else{
-			$s2[1]=$words[$simbl[1]];
+		//}else{
+			//$s2[1]=$words[$simbl[1]];
 		}
 	}
+	if(!isset($s2[1])){
+		$s2[1]=$words[$simbl[1]];
+	}
+	if($simbl[1]=='s'||$simbl[1]=='ed'||$simbl[1]=='pr-si'){
+		if($simbl[0][0]=='i'){
+			$new_s2=array();
+			$new_s2[]=$s2;
+			$new_s2[]='м';
+			$s2=$new_s2;
+			unset($new_s2);
+		}elseif($simbl[0][0]=='we'){
+			$new_s2=array();
+			$new_s2[]=$s2;
+			$new_s2[]='быз';
+			$s2=$new_s2;
+			unset($new_s2);
+		}
+		if($simbl[1]=='pr-si'||$simbl[1]=='s'){
+			//i was going to fix йөреа to йөри but have found important order bug
+			//that is fixed. continue
+			if($simbl[0][1][1]=='walk'){
+				$s2[1]='й';
+			}
+			
+		}
+	}
+
 	//var_dump($s2);echo'*';
 	return $s2;
 
@@ -353,6 +405,9 @@ function explode_words_into_morphemes($engtext){
 			}elseif(mb_substr($word,0,mb_strlen($word)-1)=='i'){
 				$engtext2[]='be';
 				$engtext2[]='pr-si';
+			}else{
+				$engtext2[]=mb_substr($word,0,mb_strlen($word)-1);
+				$engtext2[]='s';
 			}
 		}elseif(mb_substr($word,-1,1)=='n'){
 			if(mb_substr($word,0,mb_strlen($word)-1)=='know'){
@@ -366,6 +421,15 @@ function explode_words_into_morphemes($engtext){
 			}elseif(mb_substr($word,0,mb_strlen($word)-1)=='buil'){
 				$engtext2[]='build';
 				$engtext2[]='ed-pp';
+			}elseif(mb_substr($word,0,mb_strlen($word)-1)=='bough'){
+				$engtext2[]='buy';
+				//$engtext2[]='ed-pp';//or ed ?
+				//may be i will replace ed to ed-ps. no. i have tried it , but i have seen then the next elseif block , i will try that way
+				if($engtext2[count($engtext2)-3]=='be'||$engtext2[count($engtext2)-3]=='have'){
+					$engtext2[]='ed-pp';
+				}else{
+					$engtext2[]='ed';
+				}
 			}else{
 				$engtext2[]=$word;
 			}
@@ -464,10 +528,15 @@ function order($inparr){
 					//this is dependent clause if no "who" is here further
 					$maybeadepcl=true;
 					for($i=$key+1;$i<count($inparr);$i++){
-						if($inparr[$i]=='whom'||$inparr[$i]=='that'){
+						if($inparr[$i]=='whom'||$inparr[$i]=='that'
+						||$inparr[$i]=='s'||$inparr[$i]=='pr-si'||$inparr[$i]=='ed'){
 							//there is another dep. clause
 							$maybeadepcl=false;
 							break;
+							//with 'the boy ...' example i see this check is not enough
+							//the boy that buy ed a bycicle walk s through park
+							//this is not dependent clause
+							//total 1 that, 2 ises... so just check for another "is". done, it is good.
 						}
 					}
 					if(!$maybeadepcl){
@@ -570,7 +639,7 @@ function order($inparr){
 			$outparr[]=$inparr;
 			$outparr[]='ed-pp';
 			return $outparr;
-		}elseif(isset($dic[$word])&&$dic[$word]['type']=='verb'&&$key==0&&$inparr[1]=='the'){
+		}elseif(isset($dic[$word])&&$dic[$word]['type']=='verb'&&$key==0&&($inparr[1]=='the'||$inparr[1]=='a')){
 			array_splice($inparr,0,1);//remove verb
 			//this will work incorrectly with "read the bug through tracker"
 			if(count($inparr)>1){
@@ -950,9 +1019,33 @@ echo nstd_to_str($result);
 //"йөреа" is fixed. example is ready. аларузганелтөзелгәнпаркашайөрей
 
 
-
-
-
+//next example from index.php
+echo'<br/>';
+$engtext='the boy that bought a bicycle walks through park';
+$engtext=explode(' ', $engtext);
+$dic['buy']['type']='verb';
+$engtext2=explode_words_into_morphemes($engtext);
+print_r($engtext2);
+echo'<pre>';
+//$dic['build']['type']='verb';
+$engtext2=order($engtext2);
+print_r($engtext2);
+echo'</pre>';
+$words['buy']='сатыпал';
+$words['boy']='малай';
+$words['s']='а';
+$words['a']='бер';
+$words['bicycle']='велосипед';
+$result=tr_simple_block($engtext2);
+echo'<pre>';
+print_r($result);
+echo'</pre>';
+echo nstd_to_str($result);
+//тегекайсыбервелосипедсатыпалдымалайпаркашайөрей
+//should be:
+//теге велосипед сатыпал ган малай парк аша йөре й
+//ie need to fix: кайсы бер велосипед сатыпал ды -> велосипед сатыпал ган
+//done
 
 
 
