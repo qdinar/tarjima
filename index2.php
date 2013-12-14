@@ -47,7 +47,7 @@ function tr_simple_block($simbl){
 		$s2[0]=array($s2[0],'ны');
 	}
 	//
-	if($simbl[0][1]=='from'){
+	if(isset($simbl[0][1])&&$simbl[0][1]=='from'){
 		if($simbl[1]=='go'){
 			//$s2[1]='кайт';
 		//}elseif($simbl[1][1]=='go'){
@@ -190,7 +190,11 @@ function tr_simple_block($simbl){
 				}
 				if($simbl[1]=='pr-si'){
 					//i was going to fix йөреа to йөри but have found important order bug
-					//$simbl[0][1]
+					//that is fixed. continue
+					if($simbl[0][1][1]=='walk'){
+						$s2[1]='й';
+					}
+					
 				}
 			}
 		}else{
@@ -558,6 +562,7 @@ function order($inparr){
 		}elseif($word=='ed-pp'&&$key==1&&count($inparr)>2){
 			//seems 'built last year' should come here but it does not.
 			//probably it goes to the "verb & key=0" in external recursion
+			//that is fixed
 			array_splice($inparr,1,1);//remove ed-pp
 			if(count($inparr)>1){
 				$inparr=order($inparr);
@@ -575,12 +580,12 @@ function order($inparr){
 			$outparr[]=$word;
 			return $outparr;
 			//i should make dictionary with (several) properties (instead of word-per-word translations) (i need it now because i need check whether morphem is verb)
-		}elseif(isset($dic[$word])&&$dic[$word]['type']=='verb'&&$key==0&&$inparr[1]!='ed-pp'){//this is not 'have' nor 'be'
+		}elseif(isset($dic[$word])&&$dic[$word]['type']=='verb'&&$key==0&&$inparr[1]!='ed-pp'&&$inparr[1]!='er'){//this is not 'have' nor 'be'
 			//i am going to make "go to school every day"
 			//are there any dependent clauses? is not it something like "go to school {that was closed on monday}"?
 			//if it is , is not it "go {to school that was closed} {on monday}"?
 			//how to choose?
-			foreach($inparr as $isitthat){
+			foreach($inparr as $thatskey=>$isitthat){
 				if($isitthat=='that'||$isitthat=='whom'){
 					$thereisathat=true;
 					break;
@@ -628,19 +633,57 @@ function order($inparr){
 				//{[walk through park that is built last year] [by hands]}
 				//or {walk [through (park {that [is ({built last year} {by hands})]})]}?
 				//i am going to do with the first way
+				//probably i need to choose every case differently... "last year" also can be ordered differently. "last year" should be set the second way. i even needed not to add "by hands" to make an example.
+				//{{walk through park that is built} last year}
+				//or {walk (through {park [that is {built last year}]})}
+				//i will suppose that there is only one 'that' and all after it is related to it, and i am going to join blocks with prepositions or adverbs before it except the one that is most near to "that" to verb first, then add preposition block with 'that'...
+				for($i=$thatskey;$i>=0;$i--){
+					if($inparr[$i]=='through'){//preposition
+						break;
+					}
+				}
+				$thatsblock=array_splice($inparr,$i);
+				//inparr is "verb block" now
+				if(count($inparr)>1){
+					$inparr=order($inparr);
+				}else{
+					$inparr=$inparr[0];
+				}
+				if(count($thatsblock)>1){
+					$thatsblock=order($thatsblock);
+				}else{
+					$thatsblock=$thatsblock[0];
+				}
+				$outparr[]=$thatsblock;
+				$outparr[]=$inparr;
+				//return 0; // i see teacher whom ... has come here and have been broken. and it is (the 0) - it is not correct. i have added &&$inparr[1]!='er' in condition and it does not come here and is fixed.
+				return $outparr;
+				//get: {[(that is ...)(through park)] walk} - not correct... but that is not fail of this code.
 			}
-		}elseif($word=='the'&&$key==0){
+		}elseif(($word=='the'||$word=='through')&&$key==0){
 			$inparrtry=$inparr;
 			array_splice($inparrtry,0,1);//remove the
 			if(count($inparrtry)>1){
 				$inparrtry=order($inparrtry);
 			}
 			if($inparrtry[1]=='s'||$inparrtry[1]=='pr-si'||$inparrtry[1]=='ed'){
+				//why is this? the | know n - process , the | know s - go out - that is impossible.. may be to go out from incorrect ordering. i have tried to search in github site for "unset($inparrtry);" but it shows just index2.php , not commit. then i have looked at script output for "the"s and i see error messages at top of page... the teacher... example is broken
+				//i have remembered this. this makes a try ordering.
+				//the {teacher ...}
+				//it was ordered as {[... have] s}
+				//so the teacher... was going out of there. but now it does not.
+				//that is fixed, by adding !=er at condition
 				unset($inparrtry);
 				continue;
 			}
-			$outparr[]='the';
-			$outparr[]=$inparrtry;
+			if($word=='the'){
+				$outparr[]=$word;
+				$outparr[]=$inparrtry;
+			}else{
+				$outparr[]=$inparrtry;
+				$outparr[]=$word;
+			}
+			//'they walk through ...' is ordered properly now... going to fix 'the teacher ...'. done
 			return $outparr;
 			//he had read the last known bug
 			//i see "last know ed bug", it can be {subject verb object}, but it is not "knowed", it is "known", for that i will replace ed to ed-pp (past participle). no. i replace it to en. no. en is used itself in texts, change back.
@@ -704,11 +747,12 @@ function order($inparr){
 }
 
 
-//echo'<br/><pre>';
+//echo'<br/>';
+echo'<pre>';
 $dic=array('bug'=>array('type'=>'noun'),'read'=>array('type'=>'verb'));
 $engtext2=order($engtext2);
-//print_r($engtext2);
-//echo'</pre>';
+print_r($engtext2);
+echo'</pre>';
 
 echo'<br/>';
 echo nstd_to_str($engtext2);
@@ -730,13 +774,13 @@ $engtext2=explode_words_into_morphemes($engtext);
 print_r($engtext2);
 
 //echo'<br/>';
-//echo'<pre>';
+echo'<pre>';
 $engtext2=order($engtext2);
-//print_r($engtext2);
+print_r($engtext2);
 //just tried order and i see totally incorrect,
 //this, but with ed-pp-s etc: {the [(teacher whom we have met have read the bug that was mentioned) s]}
 //now i am going to edit the order()
-//echo'</pre>';
+echo'</pre>';
 
 echo'<br/>';
 $words['whom']='кемне';
@@ -820,6 +864,7 @@ echo nstd_to_str($result);
 // i am not sure which is correct...
 // i have searched in google images for "grammar dependency" and i have found a program named nltk written in python. it is aldo hosted in github. but i do not know whether it can give sentence as nested arrays (probably can give that in some form, because i have seen that it can give that as image), and as i see from their book, they do not separate morphems and do not make binary tree as i do (but they set some things as branches , more than 2, in one level: {fine fat trout}, {saw [a man] [in the park]}). also i am not sure whether they set dependent clauses in (parent) tree.
 //but that program has lots of things already done, as i understand...
+//i think i will also use 3 branches at one level in cases like "book, table, pen"
 // continue about my example. so, in this case i am going to use other order with that. may be i should use same structure for them all.
 //so i should either make {[(мин бар) а] мын}
 //or edit previous orders to make them as {he [go es}} and make latest example as {мин [(бар а) мын]}.
@@ -898,6 +943,40 @@ echo nstd_to_str($result);
 // {[they ({that is built last year} {walk through park})] pr-si}
 //should be:
 // {[they ( {through park that is built last year} walk )] pr-si}
+//after coding get: {[(that is ...)(through park)] walk} - inner ordering should be fixed
+//seems because of code that is for "bug that was mentioned"
+//this just should not come into it. fixed. but i have seen that other examples are broken...
+//'they walk through ...' is ordered properly now... going to fix 'the teacher ...'. done.
+//"йөреа" is fixed. example is ready. аларузганелтөзелгәнпаркашайөрей
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
