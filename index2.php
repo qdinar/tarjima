@@ -251,6 +251,12 @@ function tr_simple_block($simbl){
 			}
 			
 		}
+		if($s2[1]=='ды'){
+			if($s2[0][1][1][1]=='йөре'){
+				$s2[1]='де';
+			}
+			
+		}
 	}
 
 	//var_dump($s2);echo'*';
@@ -435,7 +441,7 @@ function explode_words_into_morphemes($engtext){
 			}
 		}elseif(mb_substr($word,-2,2)=='ed'){
 			$engtext2[]=mb_substr($word,0,mb_strlen($word)-2);
-			if($engtext2[count($engtext2)-3]=='be'||$engtext2[count($engtext2)-3]=='have'){
+			if(isset($engtext2[count($engtext2)-3])&&($engtext2[count($engtext2)-3]=='be'||$engtext2[count($engtext2)-3]=='have')){
 				$engtext2[]='ed-pp';
 			}else{
 				$engtext2[]='ed';
@@ -1050,7 +1056,7 @@ echo nstd_to_str($result);
 //i am 29 years old, my name is dinar qurbanov
 //i have been thinking about machine translation and language structure nearly since 1997
 //today is 2013-december-15
-//some my dependency analysis graphs/images/diagrams (i do not know english well and lazy to ask in chat...) of {nearly 1998 } - {spring of 2001}
+//some my dependency analysis graphs/images/diagrams (i do not know english well and lazy to ask in chat...) of {nearly 1999 } - {spring of 2001}
 //http://qdb.narod.ru/tattyazmagif/qaradaft03.gif
 //http://qdb.narod.ru/tattyazmagif/qaradaft57.gif
 //http://qdb.narod.ru/tattyazmagif/qaradaft58.gif
@@ -1064,16 +1070,75 @@ echo nstd_to_str($result);
 //https://groups.google.com/forum/#!searchin/nltk-users/translation/nltk-users/hhwtaJVhPR8/5tYNNHLuRs0J
 //"... I am new to NLTK and looking forward to develop a translation service from english to kannada ..."
 //answer: "... NLTK will only provide about 1% of the support you need for building such a system ..."
-//i do not agree with that. i have applied to the list/forum, to say about great translation possibilities
+//i do not agree with that. i have applied to (join) the list/forum, to say about great translation possibilities
 //also want to say about that in apertium mailing lists, that there is great possibility with nltk
 //and i think, even may be apertium should be "dropped", especially for language pairs where much and long distance word reordering between them in translation. but i do not know apertium well, but as i know, it does not use dependency structure
+//i see apertium has "cascaded interchunk" possibility...
 
 
+//next example from index.php
+echo'<br/>';
+$engtext='last year';
+$engtext=explode(' ', $engtext);
+//$dic['buy']['type']='verb';
+$engtext2=explode_words_into_morphemes($engtext);
+print_r($engtext2);
+echo'<pre>';
+//$dic['build']['type']='verb';
+$engtext2=order($engtext2);
+print_r($engtext2);
+echo'</pre>';
+//$words['buy']='сатыпал';
+$result=tr_simple_block($engtext2);
+echo'<pre>';
+print_r($result);
+echo'</pre>';
+echo nstd_to_str($result);
+//just works...
 
 
+//next example from index.php
+echo'<br/>';
+$engtext='they walk through park';
+$engtext=explode(' ', $engtext);
+//$dic['buy']['type']='verb';
+$engtext2=explode_words_into_morphemes($engtext);
+print_r($engtext2);
+echo'<pre>';
+//$dic['build']['type']='verb';
+$engtext2=order($engtext2);
+print_r($engtext2);
+echo'</pre>';
+//$words['buy']='сатыпал';
+$result=tr_simple_block($engtext2);
+echo'<pre>';
+print_r($result);
+echo'</pre>';
+echo nstd_to_str($result);
+//just works...
 
 
+//next example from index.php
+echo'<br/>';
+$engtext='they walked through park last year';
+$engtext=explode(' ', $engtext);
+//$dic['buy']['type']='verb';
+$engtext2=explode_words_into_morphemes($engtext);
+print_r($engtext2);
+echo'<pre>';
+//$dic['build']['type']='verb';
+$engtext2=order($engtext2);
+print_r($engtext2);
+echo'</pre>';
+//$words['buy']='сатыпал';
+$result=tr_simple_block($engtext2);
+echo'<pre>';
+print_r($result);
+echo'</pre>';
+echo nstd_to_str($result);
+//fixed some errors and it works
 
+//all examples from index.php are translated
 
 
 
