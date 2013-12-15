@@ -1045,13 +1045,28 @@ echo nstd_to_str($result);
 //should be:
 //теге велосипед сатыпал ган малай парк аша йөре й
 //ie need to fix: кайсы бер велосипед сатыпал ды -> велосипед сатыпал ган
-//done
+//done. тегевелосипедсатыпалганмалайпаркашайөрей
 
+//i am 29 years old, my name is dinar qurbanov
+//i have been thinking about machine translation and language structure nearly since 1997
+//today is 2013-december-15
+//some my dependency analysis graphs/images/diagrams (i do not know english well and lazy to ask in chat...) of {nearly 1998 } - {spring of 2001}
+//http://qdb.narod.ru/tattyazmagif/qaradaft03.gif
+//http://qdb.narod.ru/tattyazmagif/qaradaft57.gif
+//http://qdb.narod.ru/tattyazmagif/qaradaft58.gif
+//http://qdb.narod.ru/tattyazmagif/qaradaft60.gif
 
-
-
-
-
+//i have known out about apertium project near 1-2 years ago, and have seen 2-3 weeks ago that they do not make long-distance reordering of words in english to qazaq translation. as i understand, they cannot do that with apertium. i have asked about this mikel forcada, one of apertium developers..., in #apertium irc chat, which is in freenode.net
+//several days ago i have found nltk.org project and see nobody is going to make machine translation with it.
+//i am astonished/amazed/surprized
+//proofs: NLTK Project Ideas http://wu.ourproject.org/moin/projects/nltk/ProjectIdeas - nothing
+//searched for "translation" in dev and users mailing lists - almost nothing
+//https://groups.google.com/forum/#!searchin/nltk-users/translation/nltk-users/hhwtaJVhPR8/5tYNNHLuRs0J
+//"... I am new to NLTK and looking forward to develop a translation service from english to kannada ..."
+//answer: "... NLTK will only provide about 1% of the support you need for building such a system ..."
+//i do not agree with that. i have applied to the list/forum, to say about great translation possibilities
+//also want to say about that in apertium mailing lists, that there is great possibility with nltk
+//and i think, even may be apertium should be "dropped", especially for language pairs where much and long distance word reordering between them in translation. but i do not know apertium well, but as i know, it does not use dependency structure
 
 
 
