@@ -1075,6 +1075,7 @@ echo nstd_to_str($result);
 //and i think, even may be apertium should be "dropped", especially for language pairs where much and long distance word reordering between them in translation. but i do not know apertium well, but as i know, it does not use dependency structure
 //i see apertium has "cascaded interchunk" possibility...
 
+//thank to god for that i am making this super-duper translator ... it seems very good technology for me , because it seems it can be better than google translate and apertium , if become made completely at some degree... i will check other translators with languages similar to tatar and will show results , if god wants ...
 
 //next example from index.php
 echo'<br/>';
@@ -1139,6 +1140,98 @@ echo nstd_to_str($result);
 //fixed some errors and it works
 
 //all examples from index.php are translated
+
+//i want to translate these sentences, from https://en.wikipedia.org/wiki/DDR3_SDRAM :
+//From Wikipedia, the free encyclopedia
+//This article is about DDR3 SDRAM.
+//For graphics DDR3, see GDDR3.
+//For the video game, see Dance Dance Revolution 3rdMix.
+//In computing, DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007.
+//It is the higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips.
+//DDR3 SDRAM is neither forward nor backward compatible with any earlier type of random access memory (RAM) due to different signaling voltages, timings, and other factors.
+//DDR3 is a DRAM interface specification.
+//The actual DRAM arrays that store the data are similar to earlier types, with similar performance.
+
+echo'<br/>';
+$engtext='From Wikipedia, the free encyclopedia';
+$engtext=explode(' ', $engtext);
+//$dic['buy']['type']='verb';
+include 'function_explode_words_into_morphemes_2.php';
+$engtext2=explode_words_into_morphemes_2($engtext);
+//i want to do something with commas and capital letters
+print_r($engtext2);
+echo'<pre>';
+//$dic['build']['type']='verb';
+include 'function_order_2.php';
+$engtext2=order_2($engtext2);
+print_r($engtext2);
+echo'</pre>';
+$words['wikipedia']='википедия';
+$words['free']='бушлай';
+$words['encyclopedia']='энциклопедия';
+$words[',']=',';
+include 'function_tr_simple_block_2.php';
+$result=tr_simple_block_2($engtext2);
+echo'<pre>';
+print_r($result);
+echo'</pre>';
+
+function nstd_to_str_2($nstd){
+	$result='';
+	if(!isset($nstd[0]['w'])){
+		$result.=nstd_to_str_2($nstd[0]);
+	}else{
+		$result.=$nstd[0]['w'];
+	}
+	if(!isset($nstd[1]['w'])){
+		$result.=nstd_to_str_2($nstd[1]);
+	}else{
+		$result.=$nstd[1]['w'];
+	}
+	return $result;
+}
+
+echo nstd_to_str_2($result);
+
+//i have made new versions of functions, (they are in separate php files,) working with arrays with several properties, among them string of word, instead of just strings of words.
+//additional properties hold/store/save first letter capitalisation now
+//i need to order comma...
+//{from [wikipedia, the free encyclopedia]}
+//no, i need to order "from" first ...
+//then i should have {[(the {free encyclopedia}) wikipedia] from} ...
+//{wikipedia, the free encyclopedia} can mean also {wikipedia and the free encyclopedia}...
+//but after "from" it does not... usually
+//after some editions i have
+//тегебушлайэнциклопедиявикипедиядан
+//it sounds like "that well known free encyclopedia" , like a little too proudly, for me , and i am not very sure that this is correct translation, i have asked about this in ##english in freenode, and as i have understood, this is what it means , or, it should have been "The Free Encyclopedia" - another name of Wikipedia, that is written in logo. anyway it means that.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
