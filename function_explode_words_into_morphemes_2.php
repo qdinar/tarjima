@@ -1,16 +1,18 @@
 <?php
 //explode words into grammatical morphemes
 function explode_words_into_morphemes_2($engtext){
-	global $dic;
+	global $dic,$firstletterofsentenceiscapital;
 	$engtext2=array();
-	$i=0;$thereiscomma=false;$firstiscapital=false;
-	foreach($engtext as $word){
+	$i=0;$thereiscomma=false;$firstiscapital=false;$firstletterofsentenceiscapital=true;
+	foreach($engtext as $key=>$word){
 		if(substr($word,-1)==','){
 			$thereiscomma=true;
 			$word=substr($word,0,strlen($word)-1);
 		}
 		if(ctype_upper(substr($word,0,1))){
-			$firstiscapital=true;
+			if($key>0){
+				$firstiscapital=true;
+			}
 			$word=strtolower($word);
 		}
 		if(mb_substr($word,-1,1)=='s'){

@@ -237,7 +237,12 @@ function tr_simple_block_2($simbl){
 	if(isset($s2[1]['w'])&&$s2[1]['w']=='тан'&&isset($s2[0][1]['w'])&&(mb_substr($s2[0][1]['w'],-1)=='а'||mb_substr($s2[0][1]['w'],-1)=='я')){
 		$s2[1]['w']='дан';
 	}
-
+	if(isset($simbl[0]['firstiscapital'])){
+		$s2[0]['firstiscapital']=$simbl[0]['firstiscapital'];
+	}
+	if(isset($simbl[1]['firstiscapital'])){
+		$s2[1]['firstiscapital']=$simbl[1]['firstiscapital'];
+	}
 	//var_dump($s2);echo'*';
 	return $s2;
 

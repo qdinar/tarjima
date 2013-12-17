@@ -281,11 +281,11 @@ function order_2($inparr){
 				continue;
 			}
 			if($word['w']=='the'){
-				$outparr[0]['w']=$word['w'];
+				$outparr[0]=$word;
 				$outparr[1]=$inparrtry;
 			}else{
 				$outparr[0]=$inparrtry;
-				$outparr[1]['w']=$word['w'];
+				$outparr[1]=$word;
 			}
 			//'they walk through ...' is ordered properly now... going to fix 'the teacher ...'. done
 			return $outparr;

@@ -1157,6 +1157,7 @@ $engtext='From Wikipedia, the free encyclopedia';
 $engtext=explode(' ', $engtext);
 //$dic['buy']['type']='verb';
 include 'function_explode_words_into_morphemes_2.php';
+//$firstletterofsentenceiscapital=true;
 $engtext2=explode_words_into_morphemes_2($engtext);
 //i want to do something with commas and capital letters
 print_r($engtext2);
@@ -1178,19 +1179,32 @@ echo'</pre>';
 
 function nstd_to_str_2($nstd){
 	$result='';
+	global $firstletterofsentenceiscapital;
+	global $nstd_to_str_2_firstwordisready;
 	if(!isset($nstd[0]['w'])){
 		$result.=nstd_to_str_2($nstd[0]);
 	}else{
-		$result.=$nstd[0]['w'];
+		$word=$nstd[0]['w'];
+		if(isset($nstd[0]['firstiscapital'])&&$nstd[0]['firstiscapital']==true||!$nstd_to_str_2_firstwordisready){
+			$word=mb_strtoupper(mb_substr($word,0,1)).mb_substr($word,1);
+		}
+		$result.=$word;
+		$nstd_to_str_2_firstwordisready=true;
 	}
 	if(!isset($nstd[1]['w'])){
 		$result.=nstd_to_str_2($nstd[1]);
 	}else{
-		$result.=$nstd[1]['w'];
+		$word=$nstd[1]['w'];
+		if(isset($nstd[1]['firstiscapital'])&&$nstd[1]['firstiscapital']==true||!$nstd_to_str_2_firstwordisready){
+			$word=mb_strtoupper(mb_substr($word,0,1)).mb_substr($word,1);
+		}
+		$result.=$word;
+		$nstd_to_str_2_firstwordisready=true;
 	}
 	return $result;
 }
 
+$nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
 
 //i have made new versions of functions, (they are in separate php files,) working with arrays with several properties, among them string of word, instead of just strings of words.
@@ -1204,8 +1218,9 @@ echo nstd_to_str_2($result);
 //after some editions i have
 //тегебушлайэнциклопедиявикипедиядан
 //it sounds like "that well known free encyclopedia" , like a little too proudly, for me , and i am not very sure that this is correct translation, i have asked about this in ##english in freenode, and as i have understood, this is what it means , or, it should have been "The Free Encyclopedia" - another name of Wikipedia, that is written in logo. anyway it means that.
-
-
+//i have read about commas near a week ago , and i think, comma separated clause in this case means unimportant , additional information, explanation. i think that is ok in the tatar translation.
+//one capital letter marker is lost; none is in translation; need to mark first letter of sentence;
+//fixed. ТегебушлайэнциклопедияВикипедиядан
 
 
 
