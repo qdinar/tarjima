@@ -109,14 +109,14 @@ function order_2($inparr){
 					$outparr[0][]=$subject;
 					$outparr[0][]=$inparr;
 				}
-				$outparr[]=$word['w'];//outparr1//s or ed or pr-si
+				$outparr[]=$word;//outparr1//s or ed or pr-si
 				return $outparr;
 			}
 			//i have written this, but process goes into the 2nd "have"... i will just comment that out... for now... the s block of the have block... made, and the previous example have been broken... i see he is removed already... i will comment out the he block in have block also. done. previous example works, and i see "the" is already removed in new example. i think hard to fix, try to comment out the the block. done, the previous example is incorrect now. it has incorrect order {[the last known]bug}. then i have commented out block of last noun.
 			//if i just try to order with the, and stop it after checking its top/main word is "s", that will not work if i will check correctly ie not only for "s", but also for present and past simple. no, it will work, but incorrectly. the first "have" is going to be processed first, but it is not main, it is only of dependent clause. i will try to make correctly now, not after trying to order "the". done. ordering "the" is done.
 			//else{
 			//}
-		}elseif($word['w']=='have'||$word['w']=='be'){
+		//}elseif($word['w']=='have'||$word['w']=='be'){
 			/*if($inparr[$key+1]=='s'){
 				array_splice($inparr,$key+1,1);//remove s
 				if(count($inparr)>1){
@@ -126,7 +126,7 @@ function order_2($inparr){
 				$outparr[]='s';
 				return $outparr;
 			}else*/
-			if($key==0){//have is 1st
+			/*if($key==0){//have is 1st
 				if($inparr[2]['w']=='ed-pp'){//have(0) do(1) ed(2)
 					array_splice($inparr,0,1);//remove have
 					if(count($inparr)>1){
@@ -136,7 +136,7 @@ function order_2($inparr){
 					$outparr[]=$word['w'];
 					return $outparr;
 				}
-			}/*else{
+			}*//*else{
 				if($key==1){//have in 2nd place
 					$removedword=array_splice($inparr,0,1);//remove he
 					if(count($inparr)>1){
@@ -184,7 +184,21 @@ function order_2($inparr){
 			$outparr[]=$inparr;
 			$outparr[]=$noun;
 			return $outparr;
-		}elseif(isset($dic[$word['w']])&&$dic[$word['w']]['type']=='verb'&&$key==0&&$inparr[1]['w']!='ed-pp'&&$inparr[1]['w']!='er'){//this is not 'have' nor 'be'
+		}elseif(isset($dic[$word['w']])&&$dic[$word['w']]['type']=='verb'&&$key==0&&$inparr[1]['w']!='ed-pp'&&$inparr[1]['w']!='er'){
+			if($word['w']=='have'||$word['w']=='be'){
+				if($key==0){//have is 1st
+					if($inparr[2]['w']=='ed-pp'){//have(0) do(1) ed(2)
+						array_splice($inparr,0,1);//remove have
+						if(count($inparr)>1){
+							$inparr=order_2($inparr);
+						}
+						$outparr[]=$inparr;
+						$outparr[]=$word;
+						return $outparr;
+					}
+				}
+			}
+			//this is not 'have' nor 'be' <-this is not true now...
 			//i am going to make "go to school every day"
 			//are there any dependent clauses? is not it something like "go to school {that was closed on monday}"?
 			//if it is , is not it "go {to school that was closed} {on monday}"?
@@ -197,7 +211,7 @@ function order_2($inparr){
 			}
 			if(!isset($thereisathat)){
 				for($i=count($inparr)-1;$i>=0;$i--){
-					if($inparr[$i]['w']=='every'||$inparr[$i]['w']=='to'||$inparr[$i]['w']=='from'||$inparr[$i]['w']=='through'||$inparr[$i]['w']=='last'){//preposition or adverb
+					if($inparr[$i]['w']=='every'||$inparr[$i]['w']=='to'||$inparr[$i]['w']=='from'||$inparr[$i]['w']=='through'||$inparr[$i]['w']=='last'||$inparr[$i]['w']=='about'){//preposition or adverb
 						$verb=array_splice($inparr,0,$i);
 						//'built last year' is probably broken here, it should not come here
 						//i have added &&$inparr[1]['w']!='ed-pp' in if condition (16 lines upper) and it is fixed
@@ -207,7 +221,7 @@ function order_2($inparr){
 						}else{
 							$verb=$verb[0];
 						}
-						if($inparr[0]['w']=='to'||$inparr[0]['w']=='from'||$inparr[0]['w']=='through'){//preposition
+						if($inparr[0]['w']=='to'||$inparr[0]['w']=='from'||$inparr[0]['w']=='through'||$inparr[0]['w']=='about'){//preposition
 							$prep=array_splice($inparr,0,1);
 							$prep=$prep[0];
 							if(count($inparr)>1){//inparr is now "school" or "good school"

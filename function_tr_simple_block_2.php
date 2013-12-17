@@ -16,7 +16,7 @@ function tr_simple_block_2($simbl){
 	}
 	//add ны
 	if(
-		((!isset($simbl[1]['w'])&&$simbl[1][1]['w']=='read')||(isset($simbl[1]['w'])&&$simbl[1]['w']=='read'))
+		((isset($simbl[1][1]['w'])&&$simbl[1][1]['w']=='read')||(isset($simbl[1]['w'])&&$simbl[1]['w']=='read'))
 		&&
 		(!isset($simbl[0]['w'])&&$simbl[0][0]['w']=='the')
 	){
@@ -81,7 +81,7 @@ function tr_simple_block_2($simbl){
 				//have read ed-pp is translated like read
 				$s2[1]['w']='ды';//past tense morphem is in place of s
 				//'ды' is reordered . subject is like adverbs etc, also in tatar...
-			}elseif($simbl[0][0]['w']=='that'||$simbl[0][0]['w']=='whom'){
+			}elseif(isset($simbl[0][0]['w'])&&($simbl[0][0]['w']=='that'||$simbl[0][0]['w']=='whom')){
 				//if($simbl[0][0]['w']=='whom'){
 				//	echo'*';
 				//}
@@ -206,13 +206,13 @@ function tr_simple_block_2($simbl){
 		$s2[1]['w']=$words[$simbl[1]['w']];
 	}
 	if(isset($simbl[1]['w'])&&($simbl[1]['w']=='s'||$simbl[1]['w']=='ed'||$simbl[1]['w']=='pr-si')){
-		if($simbl[0][0]['w']=='i'){
+		if(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='i'){
 			$new_s2=array();
 			$new_s2[0]['w']=$s2;
 			$new_s2[1]['w']='м';
 			$s2=$new_s2;
 			unset($new_s2);
-		}elseif($simbl[0][0]['w']=='we'){
+		}elseif(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='we'){
 			$new_s2=array();
 			$new_s2[0]['w']=$s2;
 			$new_s2[1]['w']='быз';

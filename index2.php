@@ -1071,6 +1071,7 @@ echo nstd_to_str($result);
 //"... I am new to NLTK and looking forward to develop a translation service from english to kannada ..."
 //answer: "... NLTK will only provide about 1% of the support you need for building such a system ..."
 //i do not agree with that. i have applied to (join) the list/forum, to say about great translation possibilities
+//my membership is still pending at 17 dec, may be they have thought that i am spammer. i had written in application message "i want and should to say something about machine translation".
 //also want to say about that in apertium mailing lists, that there is great possibility with nltk
 //and i think, even may be apertium should be "dropped", especially for language pairs where much and long distance word reordering between them in translation. but i do not know apertium well, but as i know, it does not use dependency structure
 //i see apertium has "cascaded interchunk" possibility...
@@ -1222,8 +1223,30 @@ echo nstd_to_str_2($result);
 //one capital letter marker is lost; none is in translation; need to mark first letter of sentence;
 //fixed. ТегебушлайэнциклопедияВикипедиядан
 
-
-
+echo'<br/>';
+$engtext='This article is about DDR3 SDRAM.';
+$engtext=explode(' ', $engtext);
+//$dic['buy']['type']='verb';
+$engtext2=explode_words_into_morphemes_2($engtext);
+print_r($engtext2);
+echo'<pre>';
+$dic['be']['type']='verb';
+$engtext2=order_2($engtext2);
+print_r($engtext2);
+echo'</pre>';
+$words['this']='бу';
+$words['article']='мәкалә';
+$words['about']='турында';
+$words['ddr3']='ddr3';
+$words['sdram']='sdram';
+$result=tr_simple_block_2($engtext2);
+echo'<pre>';
+print_r($result);
+echo'</pre>';
+$nstd_to_str_2_firstwordisready=false;
+echo nstd_to_str_2($result);
+//i have БумәкаләDdr3Sdramтурындабула after some edition, it is almost ready...
+//it should be БумәкаләDDR3SDRAMтурында.
 
 
 

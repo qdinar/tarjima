@@ -3,10 +3,13 @@
 function explode_words_into_morphemes_2($engtext){
 	global $dic,$firstletterofsentenceiscapital;
 	$engtext2=array();
-	$i=0;$thereiscomma=false;$firstiscapital=false;$firstletterofsentenceiscapital=true;
+	$i=0;$thereiscomma=false;$thereisdot=false;$firstiscapital=false;$firstletterofsentenceiscapital=true;
 	foreach($engtext as $key=>$word){
 		if(substr($word,-1)==','){
 			$thereiscomma=true;
+			$word=substr($word,0,strlen($word)-1);
+		}elseif(substr($word,-1)=='.'){
+			$thereisdot=true;
 			$word=substr($word,0,strlen($word)-1);
 		}
 		if(ctype_upper(substr($word,0,1))){
@@ -26,8 +29,13 @@ function explode_words_into_morphemes_2($engtext){
 				$engtext2[]='be';
 				$engtext2[]='pr-si';
 			}else{
-				$engtext2[]=mb_substr($word,0,mb_strlen($word)-1);
-				$engtext2[]='s';
+				$tryverb=mb_substr($word,0,mb_strlen($word)-1);
+				if(isset($dic[$tryverb])&&$dic[$tryverb]['type']=='verb'){
+					$engtext2[]=$tryverb;
+					$engtext2[]='s';
+				}else{
+					$engtext2[]=$word;
+				}
 			}
 		}elseif(mb_substr($word,-1,1)=='n'){
 			if(mb_substr($word,0,mb_strlen($word)-1)=='know'){
