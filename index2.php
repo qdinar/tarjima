@@ -1072,6 +1072,10 @@ echo nstd_to_str($result);
 //answer: "... NLTK will only provide about 1% of the support you need for building such a system ..."
 //i do not agree with that. i have applied to (join) the list/forum, to say about great translation possibilities
 //my membership is still pending at 17 dec, may be they have thought that i am spammer. i had written in application message "i want and should to say something about machine translation".
+//their latest commit in github is of 3 days ago, this makes me hopeful
+//indeed. "subscription request is approved". i am sorry for i have hurriedly written about that here...
+//i have posted in the forum: https://groups.google.com/forum/#!topic/nltk-users/lcyWvCQBUmc "i think it is easy to make high quality translator with nltk".
+
 //also want to say about that in apertium mailing lists, that there is great possibility with nltk
 //and i think, even may be apertium should be "dropped", especially for language pairs where much and long distance word reordering between them in translation. but i do not know apertium well, but as i know, it does not use dependency structure
 //i see apertium has "cascaded interchunk" possibility...
