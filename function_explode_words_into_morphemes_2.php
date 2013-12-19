@@ -2,8 +2,14 @@
 //explode words into grammatical morphemes
 function explode_words_into_morphemes_2($engtext){
 	global $dic,$firstletterofsentenceiscapital;
+	//global $thereisdotatendofsentence;
 	$engtext2=array();
-	$i=0;$thereiscomma=false;$thereisdot=false;$firstiscapital=false;$firstletterofsentenceiscapital=true;
+	$i=0;
+	$thereiscomma=false;
+	$thereisdot=false;
+	$firstiscapital=false;
+	$firstletterofsentenceiscapital=true;
+	$thisisabbreviation=false;
 	foreach($engtext as $key=>$word){
 		if(substr($word,-1)==','){
 			$thereiscomma=true;
@@ -11,11 +17,20 @@ function explode_words_into_morphemes_2($engtext){
 		}elseif(substr($word,-1)=='.'){
 			$thereisdot=true;
 			$word=substr($word,0,strlen($word)-1);
+			//if($key=count($engtext)-1){
+				//$thereisdotatendofsentence=true;
+			//}
 		}
 		if(ctype_upper(substr($word,0,1))){
 			if($key>0){
 				$firstiscapital=true;
 			}
+		}
+		if(ctype_upper(substr($word,1,1))){
+			$thisisabbreviation=true;
+			$firstiscapital=false;
+		}
+		if(!$thisisabbreviation&&$firstiscapital==true||$key==0){
 			$word=strtolower($word);
 		}
 		if(mb_substr($word,-1,1)=='s'){
@@ -91,12 +106,20 @@ function explode_words_into_morphemes_2($engtext){
 			$engtext2[]=',';
 			$thereiscomma=false;
 		}
+		if($thereisdot){
+			$engtext2[]='.';
+			$thereisdot=false;
+		}
 		for($j=$i;$j<count($engtext2);$j++){
 			$engtext2[$j]=array('w'=>$engtext2[$j]);
 		}
 		if($firstiscapital){
 			$firstiscapital=false;
 			$engtext2[$i]['firstiscapital']=true;
+		}
+		if($thisisabbreviation){
+			$thisisabbreviation=false;
+			$engtext2[$i]['thisisabbreviation']=true;
 		}
 		$i=count($engtext2);
 	}

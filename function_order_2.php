@@ -3,6 +3,21 @@
 function order_2($inparr){
 	global $dic;
 	$outparr=array();
+
+
+	if($inparr[count($inparr)-1]['w']=='.'){
+		$dot=array_splice($inparr,-1);
+		if(count($inparr)>1){
+			$inparr=order_2($inparr);
+		}
+		$dot=$dot[0];
+		$outparr[]=$inparr;
+		$outparr[]=$dot;
+		return $outparr;
+	}
+
+
+
 	foreach($inparr as $key=>$word){
 		if($word['w']=='s'||$word['w']=='pr-si'||$word['w']=='ed'){
 			for($i=0,$dependentcl=0,$whoes=0,$ises=0;$i<$key;$i++){
@@ -363,4 +378,6 @@ function order_2($inparr){
 	return $inparr;
 	
 }
+
+
 ?>

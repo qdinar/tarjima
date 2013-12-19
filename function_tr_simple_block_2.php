@@ -197,6 +197,13 @@ function tr_simple_block_2($simbl){
 				//$s2[1]['w']=$words[$simbl[1]['w']];
 				//echo'*';
 				//var_dump($simbl);
+			}elseif($simbl[0][1][1]['w']=='be'){
+				//remove "була" - copula "is" translation
+				$subj=$s2[0][0];
+				$obj=$s2[0][1][0];
+				$s2[0]=$subj;
+				$s2[1]=$obj;
+				unset($subj,$obj);
 			}
 		//}else{
 			//$s2[1]['w']=$words[$simbl[1]['w']];
@@ -227,7 +234,7 @@ function tr_simple_block_2($simbl){
 			}
 			
 		}
-		if($s2[1]['w']=='ды'){
+		if(isset($s2[1]['w'])&&$s2[1]['w']=='ды'){
 			if($s2[0][1][1][1]['w']=='йөре'){
 				$s2[1]['w']='де';
 			}

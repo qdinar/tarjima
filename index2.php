@@ -1241,8 +1241,10 @@ echo'</pre>';
 $words['this']='бу';
 $words['article']='мәкалә';
 $words['about']='турында';
-$words['ddr3']='ddr3';
-$words['sdram']='sdram';
+$words['DDR3']='DDR3';
+$words['SDRAM']='SDRAM';
+//$words['be']='be';//this was бул , set upper. fixing... бул is not correct. "бул" is "become"... though sometimes "be" is translated as "бул"... comment this out, do not change
+$words['.']='.';
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
 print_r($result);
@@ -1251,8 +1253,10 @@ $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
 //i have БумәкаләDdr3Sdramтурындабула after some edition, it is almost ready...
 //it should be БумәкаләDDR3SDRAMтурында.
-
-
+//i have set dot as if it is a morphem, it is at "top" level. now dot appears in translation
+//була is removed
+//abbreviation captital letters are preserved/passed
+//this example is done...
 
 
 
