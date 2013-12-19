@@ -16,7 +16,28 @@ function order_2($inparr){
 		return $outparr;
 	}
 
-
+	foreach($inparr as $key=>$word){
+		if($word['w']==','){
+			if(isset($dic[$inparr[$key+1]['w']])&&$dic[$inparr[$key+1]['w']]['type']=='verb'){
+				$verb=array_splice($inparr,$key+1);
+				array_splice($inparr,$key);//remove comma
+				//inparr is "for ..." now,  of "for ... , see ..."
+				if(count($inparr)>1){
+					$inparr=order_2($inparr);
+				}else{
+					$inparr=$inparr[0];
+				}
+				if(count($verb)>1){
+					$verb=order_2($verb);
+				}else{
+					$verb=$verb[0];
+				}
+				$outparr[]=$inparr;
+				$outparr[]=$verb;
+				return $outparr;
+			}
+		}
+	}
 
 	foreach($inparr as $key=>$word){
 		if($word['w']=='s'||$word['w']=='pr-si'||$word['w']=='ed'){
@@ -173,32 +194,43 @@ function order_2($inparr){
 			$outparr[]=$inparr;
 			$outparr[]='ed-pp';
 			return $outparr;
-		}elseif(isset($dic[$word['w']])&&$dic[$word['w']]['type']=='verb'&&$key==0&&($inparr[1]['w']=='the'||$inparr[1]['w']=='a')){
+		}elseif(isset($dic[$word['w']])
+				&&$dic[$word['w']]['type']=='verb'
+				&&$key==0
+				&&($inparr[1]['w']=='the'
+					||$inparr[1]['w']=='a'
+					||isset($inparr[1]['thisisabbreviation'])
+				)
+		){
 			array_splice($inparr,0,1);//remove verb
 			//this will work incorrectly with "read the bug through tracker"
-			if(count($inparr)>1){
-				$inparr=order_2($inparr);
-			}
-			$outparr[]=$inparr;
-			$outparr[]=$word['w'];
-			return $outparr;
-			//i should make dictionary with (several) properties (instead of word-per-word translations) (i need it now because i need check whether morphem is verb)
-		}elseif($word['w']==','&&($inparr[$key+1]['w']=='the'||$inparr[$key+1]['w']=='a')){
-			$noun=array_splice($inparr,0,$key);
-			array_splice($inparr,0,1);//remove comma
 			if(count($inparr)>1){
 				$inparr=order_2($inparr);
 			}else{
 				$inparr=$inparr[0];
 			}
-			if(count($noun)>1){
-				$inparr=order_2($noun);
-			}else{
-				$noun=$noun[0];
-			}
 			$outparr[]=$inparr;
-			$outparr[]=$noun;
+			$outparr[]=$word;
 			return $outparr;
+			//i should make dictionary with (several) properties (instead of word-per-word translations) (i need it now because i need check whether morphem is verb)
+		}elseif($word['w']==','){
+			if($inparr[$key+1]['w']=='the'||$inparr[$key+1]['w']=='a'){
+				$noun=array_splice($inparr,0,$key);
+				array_splice($inparr,0,1);//remove comma
+				if(count($inparr)>1){
+					$inparr=order_2($inparr);
+				}else{
+					$inparr=$inparr[0];
+				}
+				if(count($noun)>1){
+					$inparr=order_2($noun);
+				}else{
+					$noun=$noun[0];
+				}
+				$outparr[]=$inparr;
+				$outparr[]=$noun;
+				return $outparr;
+			}
 		}elseif(isset($dic[$word['w']])&&$dic[$word['w']]['type']=='verb'&&$key==0&&$inparr[1]['w']!='ed-pp'&&$inparr[1]['w']!='er'){
 			if($word['w']=='have'||$word['w']=='be'){
 				if($key==0){//have is 1st
@@ -293,13 +325,13 @@ function order_2($inparr){
 				return $outparr;
 				//get: {[(that is ...)(through park)] walk} - not correct... but that is not fail of this code.
 			}
-		}elseif(($word['w']=='the'||$word['w']=='through'||$word['w']=='from')&&$key==0){
+		}elseif(($word['w']=='the'||$word['w']=='through'||$word['w']=='from'||$word['w']=='for')&&$key==0){
 			$inparrtry=$inparr;
 			array_splice($inparrtry,0,1);//remove the
 			if(count($inparrtry)>1){
 				$inparrtry=order_2($inparrtry);
 			}
-			if($inparrtry[1]['w']=='s'||$inparrtry[1]['w']=='pr-si'||$inparrtry[1]['w']=='ed'){
+			if(isset($inparrtry[1]['w'])&&($inparrtry[1]['w']=='s'||$inparrtry[1]['w']=='pr-si'||$inparrtry[1]['w']=='ed')){
 				//why is this? the | know n - process , the | know s - go out - that is impossible.. may be to go out from incorrect ordering. i have tried to search in github site for "unset($inparrtry);" but it shows just index2.php , not commit. then i have looked at script output for "the"s and i see error messages at top of page... the teacher... example is broken
 				//i have remembered this. this makes a try ordering.
 				//the {teacher ...}

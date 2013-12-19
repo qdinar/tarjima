@@ -1259,7 +1259,38 @@ echo nstd_to_str_2($result);
 //this example is done...
 
 
-
+echo'<br/>';
+$engtext='For graphics DDR3, see GDDR3.';
+$engtext=explode(' ', $engtext);
+//$dic['buy']['type']='verb';
+$engtext2=explode_words_into_morphemes_2($engtext);
+print_r($engtext2);
+echo'<pre>';
+$dic['see']['type']='verb';
+$engtext2=order_2($engtext2);
+print_r($engtext2);
+echo'</pre>';
+$words['for']='өчен';
+$words['graphics']='графика';
+$words['.']='.';
+$words['see']='кара';
+$words['GDDR3']='GDDR3';
+$recursionlevel=0;
+$result=tr_simple_block_2($engtext2);
+echo'<pre>';
+print_r($result);
+echo'</pre>';
+$nstd_to_str_2_firstwordisready=false;
+echo nstd_to_str_2($result);
+//after some editions: ГрафикаDDR3өченкараGDDR3.
+//should be: ГрафикаDDR3етурындаGDDR3некара.
+//or ГрафикаDDR3еөченGDDR3неач.
+//or ГрафикаDDR3еөченGDDR3некара.
+//and may be all imperatives should be translated in plural... now they are translated as singular...
+//first of all, gddr3 and кара should be replaced... done.
+//не is added. е is added. so, ГрафикаDDR3еөченGDDR3некара.
+//i am going to make plural imperatives... done... ГрафикаDDR3еөченGDDR3некарагыз.
+//and i have found a mistake... see is not кара, it is күр... look for/at is кара ...
 
 
 

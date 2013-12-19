@@ -3,7 +3,8 @@
 
 function tr_simple_block_2($simbl){
 
-	global $words,$dic;
+	global $words,$dic,$recursionlevel;
+	$recursionlevel++;
 	$s2=array();
 	if(!isset($simbl[0]['w'])){
 		$s2[0]=tr_simple_block_2($simbl[0]);
@@ -16,11 +17,23 @@ function tr_simple_block_2($simbl){
 	}
 	//add ны
 	if(
-		((isset($simbl[1][1]['w'])&&$simbl[1][1]['w']=='read')||(isset($simbl[1]['w'])&&$simbl[1]['w']=='read'))
+		//((isset($simbl[1][1]['w'])&&$simbl[1][1]['w']=='read')||(isset($simbl[1]['w'])&&$simbl[1]['w']=='read'))
+		(isset($simbl[1][1]['w'])&&isset($dic[$simbl[1][1]['w']])&&$dic[$simbl[1][1]['w']]['type']=='verb'
+			||
+			isset($simbl[1]['w'])&&isset($dic[$simbl[1]['w']])&&$dic[$simbl[1]['w']]['type']=='verb')
 		&&
-		(!isset($simbl[0]['w'])&&$simbl[0][0]['w']=='the')
+		(
+		isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='the'
+		||
+		isset($simbl[0]['w'])&&$simbl[0]['thisisabbreviation']==true
+		)
 	){
-		$s2[0]=array($s2[0],'ны');
+		if(isset($simbl[0]['w'])&&$simbl[0]['thisisabbreviation']==true&&substr($simbl[0]['w'],-1)=='3'){
+			$suffiksno='не';
+		}else{
+			$suffiksno='ны';
+		}
+		$s2[0]=array($s2[0],array('w'=>$suffiksno));
 	}
 	//
 	if(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='from'){
@@ -212,37 +225,47 @@ function tr_simple_block_2($simbl){
 	if(!isset($s2[1])){
 		$s2[1]['w']=$words[$simbl[1]['w']];
 	}
-	if(isset($simbl[1]['w'])&&($simbl[1]['w']=='s'||$simbl[1]['w']=='ed'||$simbl[1]['w']=='pr-si')){
-		if(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='i'){
-			$new_s2=array();
-			$new_s2[0]['w']=$s2;
-			$new_s2[1]['w']='м';
-			$s2=$new_s2;
-			unset($new_s2);
-		}elseif(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='we'){
-			$new_s2=array();
-			$new_s2[0]['w']=$s2;
-			$new_s2[1]['w']='быз';
-			$s2=$new_s2;
-			unset($new_s2);
-		}
-		if($simbl[1]['w']=='pr-si'||$simbl[1]['w']=='s'){
-			//i was going to fix йөреа to йөри but have found important order bug
-			//that is fixed. continue
-			if($simbl[0][1][1]['w']=='walk'){
-				$s2[1]['w']='й';
+	if(isset($simbl[1]['w'])){
+		if($simbl[1]['w']=='s'||$simbl[1]['w']=='ed'||$simbl[1]['w']=='pr-si'){
+			if(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='i'){
+				$new_s2=array();
+				$new_s2[0]['w']=$s2;
+				$new_s2[1]['w']='м';
+				$s2=$new_s2;
+				unset($new_s2);
+			}elseif(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='we'){
+				$new_s2=array();
+				$new_s2[0]['w']=$s2;
+				$new_s2[1]['w']='быз';
+				$s2=$new_s2;
+				unset($new_s2);
 			}
-			
-		}
-		if(isset($s2[1]['w'])&&$s2[1]['w']=='ды'){
-			if($s2[0][1][1][1]['w']=='йөре'){
-				$s2[1]['w']='де';
+			if($simbl[1]['w']=='pr-si'||$simbl[1]['w']=='s'){
+				//i was going to fix йөреа to йөри but have found important order bug
+				//that is fixed. continue
+				if($simbl[0][1][1]['w']=='walk'){
+					$s2[1]['w']='й';
+				}
+				
 			}
-			
+			if(isset($s2[1]['w'])&&$s2[1]['w']=='ды'){
+				if($s2[0][1][1][1]['w']=='йөре'){
+					$s2[1]['w']='де';
+				}
+				
+			}
+		}elseif($s2[1]['w']=='тан'&&isset($s2[0][1]['w'])&&(mb_substr($s2[0][1]['w'],-1)=='а'||mb_substr($s2[0][1]['w'],-1)=='я')){
+			$s2[1]['w']='дан';
+		}elseif(isset($simbl[1]['thisisabbreviation'])&&substr($simbl[0]['w'],-1)=='s'){
+			$s2[1]=array($s2[1],array('w'=>'е'));
 		}
-	}
-	if(isset($s2[1]['w'])&&$s2[1]['w']=='тан'&&isset($s2[0][1]['w'])&&(mb_substr($s2[0][1]['w'],-1)=='а'||mb_substr($s2[0][1]['w'],-1)=='я')){
-		$s2[1]['w']='дан';
+		elseif($simbl[1]['w']=='.'){//top of sentence
+			//echo'*';
+			if(isset($simbl[0][1][1]['w'])&&$dic[$simbl[0][1][1]['w']]['type']=='verb'){
+				$s2[0][0]=array($s2[0][0],$s2[0][1]);
+				$s2[0][1]=array('w'=>'гыз');
+			}
+		}
 	}
 	if(isset($simbl[0]['firstiscapital'])){
 		$s2[0]['firstiscapital']=$simbl[0]['firstiscapital'];
@@ -251,6 +274,7 @@ function tr_simple_block_2($simbl){
 		$s2[1]['firstiscapital']=$simbl[1]['firstiscapital'];
 	}
 	//var_dump($s2);echo'*';
+	$recursionlevel--;
 	return $s2;
 
 }
