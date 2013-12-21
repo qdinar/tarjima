@@ -1197,11 +1197,15 @@ function nstd_to_str_2($nstd){
 		$nstd_to_str_2_firstwordisready=true;
 	}
 	if(!isset($nstd[1]['w'])){
+		$result.=' ';
 		$result.=nstd_to_str_2($nstd[1]);
 	}else{
 		$word=$nstd[1]['w'];
 		if(isset($nstd[1]['firstiscapital'])&&$nstd[1]['firstiscapital']==true||!$nstd_to_str_2_firstwordisready){
 			$word=mb_strtoupper(mb_substr($word,0,1)).mb_substr($word,1);
+		}
+		if($word!='.'&&$word!='не'&&$word!='е'&&$word!='гыз'&&$word!='дан'&&$word!='нче'){
+			$result.=' ';
 		}
 		$result.=$word;
 		$nstd_to_str_2_firstwordisready=true;
@@ -1290,15 +1294,46 @@ echo nstd_to_str_2($result);
 //first of all, gddr3 and кара should be replaced... done.
 //не is added. е is added. so, ГрафикаDDR3еөченGDDR3некара.
 //i am going to make plural imperatives... done... ГрафикаDDR3еөченGDDR3некарагыз.
-//and i have found a mistake... see is not кара, it is күр... look for/at is кара ...
+//and i have found a mistake... see is not кара, it is күр... look for/at is кара ... i have looked it in google translate and see it is both in english...
+//i want to set spaces in result text, as in literary tatar language. i by myself am not agree with that spelling of spaces. done. Графика DDR3е өчен GDDR3не карагыз.
 
-
-
-
-
-
-
-
+echo'<br/>';
+$engtext='For the video game, see Dance Dance Revolution 3rdMix.';
+$engtext=explode(' ', $engtext);
+//$dic['buy']['type']='verb';
+$engtext2=explode_words_into_morphemes_2($engtext);
+//i have here redundant "pr-si" after "see", and 'w'=>'revolution' is absent
+print_r($engtext2);
+echo'<pre>';
+$dic['dance']['type']='noun';
+$dic['revolution']['type']='noun';
+$engtext2=order_2($engtext2);
+print_r($engtext2);
+echo'</pre>';
+$words['video']='видео';
+$words['game']='уен';
+$words['dance']='бию';
+$words['rd']='нче';
+$words['mix']='болгату';
+$words['3']='3';
+$words['revolution']='революция';
+$recursionlevel=0;
+$result=tr_simple_block_2($engtext2);
+echo'<pre>';
+print_r($result);
+echo'</pre>';
+$nstd_to_str_2_firstwordisready=false;
+echo nstd_to_str_2($result);
+//need to order "Dance Dance Revolution 3rdMix"
+//-> {{Dance Dance Revolution} {{3 rd} Mix}}
+//is that {{Dance Dance} Revolution} or {Dance {Dance Revolution}}?
+//seems it is the first.. and seems it is reduplicative, then it should have been written with hyphen, as such reduplicatives are usually spelled
+//i am going to order it as the second. it is also meaningful for me now... it emphasizes that it is not actually a revolution, but something related to dance
+//also the 1st "dance" could be imperative
+//btw revolution can be separated as {{re volu} tion} (, i know this is not correct ... ), graphics in previous example as {{graph ic} s}...
+//after some editions:
+//Теге видео уен өчен Бию Бию Революция 3нче Болгату карагыз.
+// - almost done... it can be left as this...
 
 
 

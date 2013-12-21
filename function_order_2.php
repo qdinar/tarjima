@@ -5,7 +5,7 @@ function order_2($inparr){
 	$outparr=array();
 
 
-	if($inparr[count($inparr)-1]['w']=='.'){
+	if(isset($inparr[count($inparr)-1]['w'])&&$inparr[count($inparr)-1]['w']=='.'){
 		$dot=array_splice($inparr,-1);
 		if(count($inparr)>1){
 			$inparr=order_2($inparr);
@@ -16,8 +16,28 @@ function order_2($inparr){
 		return $outparr;
 	}
 
+	$tryallarenouns=true;
+	foreach($inparr as $trynoun){
+		if(!(isset($trynoun['w'])&&isset($dic[$trynoun['w']])&&$dic[$trynoun['w']]['type']=='noun')){
+			$tryallarenouns=false;
+			break;
+		}
+	}
+	if($tryallarenouns){
+		$firstnoun=array_splice($inparr,0,1);
+		$firstnoun=$firstnoun[0];
+		if(count($inparr)>1){
+			$inparr=order_2($inparr);
+		}else{
+			$inparr=$inparr[0];
+		}
+		$outparr[]=$firstnoun;
+		$outparr[]=$inparr;
+		return $outparr;
+	}
+
 	foreach($inparr as $key=>$word){
-		if($word['w']==','){
+		if(isset($word['w'])&&$word['w']==','){
 			if(isset($dic[$inparr[$key+1]['w']])&&$dic[$inparr[$key+1]['w']]['type']=='verb'){
 				$verb=array_splice($inparr,$key+1);
 				array_splice($inparr,$key);//remove comma
@@ -40,7 +60,7 @@ function order_2($inparr){
 	}
 
 	foreach($inparr as $key=>$word){
-		if($word['w']=='s'||$word['w']=='pr-si'||$word['w']=='ed'){
+		if(isset($word['w'])&&($word['w']=='s'||$word['w']=='pr-si'||$word['w']=='ed')){
 			for($i=0,$dependentcl=0,$whoes=0,$ises=0;$i<$key;$i++){
 				if($inparr[$i]['w']=='whom'||$inparr[$i]['w']=='that'){
 					$dependentcl++;
@@ -126,7 +146,7 @@ function order_2($inparr){
 					//i have seen that he is in array and fix
 					$subject=$subject[0];
 				}elseif(count($subject)==0){
-					unset($subject);
+					//unset($subject);//comm.out, dont rem. what for is it
 				}
 				if(count($inparr)>1){
 					$inparr=order_2($inparr);
@@ -183,7 +203,7 @@ function order_2($inparr){
 					return $outparr;
 				}
 			}*/
-		}elseif($word['w']=='ed-pp'&&$key==1&&count($inparr)>2){
+		}elseif(isset($word['w'])&&$word['w']=='ed-pp'&&$key==1&&count($inparr)>2){
 			//seems 'built last year' should come here but it does not.
 			//probably it goes to the "verb & key=0" in external recursion
 			//that is fixed
@@ -194,12 +214,13 @@ function order_2($inparr){
 			$outparr[]=$inparr;
 			$outparr[]='ed-pp';
 			return $outparr;
-		}elseif(isset($dic[$word['w']])
+		}elseif(isset($word['w'])&&isset($dic[$word['w']])
 				&&$dic[$word['w']]['type']=='verb'
 				&&$key==0
 				&&($inparr[1]['w']=='the'
 					||$inparr[1]['w']=='a'
 					||isset($inparr[1]['thisisabbreviation'])
+					||isset($inparr[1]['firstiscapital'])
 				)
 		){
 			array_splice($inparr,0,1);//remove verb
@@ -213,7 +234,7 @@ function order_2($inparr){
 			$outparr[]=$word;
 			return $outparr;
 			//i should make dictionary with (several) properties (instead of word-per-word translations) (i need it now because i need check whether morphem is verb)
-		}elseif($word['w']==','){
+		}elseif(isset($word['w'])&&$word['w']==','){
 			if($inparr[$key+1]['w']=='the'||$inparr[$key+1]['w']=='a'){
 				$noun=array_splice($inparr,0,$key);
 				array_splice($inparr,0,1);//remove comma
@@ -231,7 +252,7 @@ function order_2($inparr){
 				$outparr[]=$noun;
 				return $outparr;
 			}
-		}elseif(isset($dic[$word['w']])&&$dic[$word['w']]['type']=='verb'&&$key==0&&$inparr[1]['w']!='ed-pp'&&$inparr[1]['w']!='er'){
+		}elseif(isset($word['w'])&&isset($dic[$word['w']])&&$dic[$word['w']]['type']=='verb'&&$key==0&&$inparr[1]['w']!='ed-pp'&&$inparr[1]['w']!='er'){
 			if($word['w']=='have'||$word['w']=='be'){
 				if($key==0){//have is 1st
 					if($inparr[2]['w']=='ed-pp'){//have(0) do(1) ed(2)
@@ -258,7 +279,7 @@ function order_2($inparr){
 			}
 			if(!isset($thereisathat)){
 				for($i=count($inparr)-1;$i>=0;$i--){
-					if($inparr[$i]['w']=='every'||$inparr[$i]['w']=='to'||$inparr[$i]['w']=='from'||$inparr[$i]['w']=='through'||$inparr[$i]['w']=='last'||$inparr[$i]['w']=='about'){//preposition or adverb
+					if(isset($inparr[$i]['w'])&&($inparr[$i]['w']=='every'||$inparr[$i]['w']=='to'||$inparr[$i]['w']=='from'||$inparr[$i]['w']=='through'||$inparr[$i]['w']=='last'||$inparr[$i]['w']=='about')){//preposition or adverb
 						$verb=array_splice($inparr,0,$i);
 						//'built last year' is probably broken here, it should not come here
 						//i have added &&$inparr[1]['w']!='ed-pp' in if condition (16 lines upper) and it is fixed
@@ -325,7 +346,7 @@ function order_2($inparr){
 				return $outparr;
 				//get: {[(that is ...)(through park)] walk} - not correct... but that is not fail of this code.
 			}
-		}elseif(($word['w']=='the'||$word['w']=='through'||$word['w']=='from'||$word['w']=='for')&&$key==0){
+		}elseif(isset($word['w'])&&($word['w']=='the'||$word['w']=='through'||$word['w']=='from'||$word['w']=='for')&&$key==0){
 			$inparrtry=$inparr;
 			array_splice($inparrtry,0,1);//remove the
 			if(count($inparrtry)>1){
@@ -352,7 +373,7 @@ function order_2($inparr){
 			return $outparr;
 			//he had read the last known bug
 			//i see "last know ed bug", it can be {subject verb object}, but it is not "knowed", it is "known", for that i will replace ed to ed-pp (past participle). no. i replace it to en. no. en is used itself in texts, change back.
-		}elseif(($word['w']=='whom'||$word['w']=='that')&&$key>0){
+		}elseif(isset($word['w'])&&($word['w']=='whom'||$word['w']=='that')&&$key>0){
 			//this code separates : teacher | whom ...
 			$inparrtry=$inparr;
 			$main=array_splice($inparrtry,0,$key);
@@ -391,20 +412,37 @@ function order_2($inparr){
 			$outparr[]=$inparrtry;
 			$outparr[]=$main;
 			return $outparr;
-		}elseif(isset($dic[$word['w']])&&$dic[$word['w']]['type']=='noun'&&$key==count($inparr)-1&&$inparr[$key-1]['w']=='ed-pp'){
+		}elseif(isset($word['w'])&&isset($dic[$word['w']])&&$dic[$word['w']]['type']=='noun'&&$key==count($inparr)-1&&$inparr[$key-1]['w']=='ed-pp'){
 			array_splice($inparr,$key,1);//remove noun
 			if(count($inparr)>1){
 				$inparr=order_2($inparr);
 			}
 			$outparr[]=$inparr;
-			$outparr[]=$word['w'];
+			$outparr[]=$word;
 			return $outparr;
 			//i see {last know ed-pp}. {(last know) n} or {last (know n)}? it is (usually) the 1st one, but how to select with program? if it is {last (know n)}, it would be {last (known bug)}...
-		}elseif($word['w']=='last'&&$key==0&&$inparr[1]['w']=='know'&&$inparr[2]['w']=='ed-pp'&&count($inparr)==3){
+		}elseif(isset($word['w'])&&$word['w']=='last'&&$key==0&&$inparr[1]['w']=='know'&&$inparr[2]['w']=='ed-pp'&&count($inparr)==3){
 			array_splice($inparr,2,1);//remove ed-pp
 			$outparr[]=$inparr;
 			$outparr[]='ed-pp';
 			return $outparr;
+		}
+		elseif(isset($word[0]['ordnum'])&&$key=count($inparr)-1){
+			for($i=0,$allwithcapital=true;$i<count($inparr)-1;$i++){
+				if(!(isset($inparr[$i]['firstiscapital'])&&$inparr[$i]['firstiscapital']==true)){
+					$allwithcapital=false;
+					break;
+				}
+			}
+			if($allwithcapital){
+				$edition=array_splice($inparr,-1);
+				if(count($inparr)>1){
+					$inparr=order_2($inparr);
+				}
+				$outparr[]=$inparr;
+				$outparr[]=$edition[0];
+				return $outparr;
+			}
 		}
 	}
 	return $inparr;
