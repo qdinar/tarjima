@@ -1176,6 +1176,7 @@ $words['wikipedia']='википедия';
 $words['free']='бушлай';
 $words['encyclopedia']='энциклопедия';
 $words[',']=',';
+$words['the']='теге';
 include 'function_tr_simple_block_2.php';
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
@@ -1186,6 +1187,9 @@ function nstd_to_str_2($nstd){
 	$result='';
 	global $firstletterofsentenceiscapital;
 	global $nstd_to_str_2_firstwordisready;
+	if(isset($nstd['thisisheader'])){
+		$result.='"';
+	}
 	if(!isset($nstd[0]['w'])){
 		$result.=nstd_to_str_2($nstd[0]);
 	}else{
@@ -1204,11 +1208,14 @@ function nstd_to_str_2($nstd){
 		if(isset($nstd[1]['firstiscapital'])&&$nstd[1]['firstiscapital']==true||!$nstd_to_str_2_firstwordisready){
 			$word=mb_strtoupper(mb_substr($word,0,1)).mb_substr($word,1);
 		}
-		if($word!='.'&&$word!='не'&&$word!='е'&&$word!='гыз'&&$word!='дан'&&$word!='нче'){
+		if($word!='.'&&$word!='не'&&$word!='ны'&&$word!='е'&&$word!='гыз'&&$word!='дан'&&$word!='нче'){
 			$result.=' ';
 		}
 		$result.=$word;
 		$nstd_to_str_2_firstwordisready=true;
+	}
+	if(isset($nstd['thisisheader'])){
+		$result.='"';
 	}
 	return $result;
 }
@@ -1334,6 +1341,27 @@ echo nstd_to_str_2($result);
 //after some editions:
 //Теге видео уен өчен Бию Бию Революция 3нче Болгату карагыз.
 // - almost done... it can be left as this...
+//more correct would be: Видеоуен турында "Бию бию революциясе 3нче болгатмасы"н карагыз.
+//and more correct: Видеоуен турында "Dance Dance Revolution 3rdMix"ны карагыз.
+//i have commented out code that passed capital letters into translation, it is code of copying array elements, it does not work properly if structure/dependency/tree is changed
+//the problem is fixed. quotes are added. ны is added.
+//Теге видео уен өчен "Бию Бию Революция 3нче Болгату"ны карагыз.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

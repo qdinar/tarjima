@@ -9,11 +9,8 @@ function tr_simple_block_2($simbl){
 	if(!isset($simbl[0]['w'])){
 		$s2[0]=tr_simple_block_2($simbl[0]);
 	}else{
-		if($simbl[0]['w']=='the'){
-			$s2[0]['w']='теге';
-		}else{
-			$s2[0]['w']=$words[$simbl[0]['w']];
-		}
+		$s2[0]=$simbl[0];
+		$s2[0]['w']=$words[$simbl[0]['w']];
 	}
 	//add ны
 	if(
@@ -26,6 +23,8 @@ function tr_simple_block_2($simbl){
 		isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='the'
 		||
 		isset($simbl[0]['w'])&&$simbl[0]['thisisabbreviation']==true
+		||
+		isset($simbl[0]['thisisheader'])
 		)
 	){
 		if(isset($simbl[0]['w'])&&$simbl[0]['thisisabbreviation']==true&&substr($simbl[0]['w'],-1)=='3'){
@@ -33,6 +32,11 @@ function tr_simple_block_2($simbl){
 		}else{
 			$suffiksno='ны';
 		}
+		//i had here problem, could not move 'thisisheader' properly, code at bottom also changed it
+		//i have tried and deleted many codes here...
+		//i am sorry i have tried this at 0-1 of clock at night and could not solve
+		//i think it is unproductive to work at night. but i have checked/tested that one more time...
+		//now i will just add 'ны' and then i am going to make new functions... - i have made a function but have deleted it. problem is solved
 		$s2[0]=array($s2[0],array('w'=>$suffiksno));
 	}
 	//
@@ -57,6 +61,8 @@ function tr_simple_block_2($simbl){
 	}else{
 		if($simbl[1]['w']=='ed-pp'){
 			//$s2[1]['w']='лгән';
+			$s2[1]=$simbl[1];
+			//this place is translation, not just fixing of ready translation, for that i copy here all properties
 			if((!isset($simbl[0]['w'])&&$simbl[0][1]['w']=='know')||$simbl[0]['w']=='know'){
 				$s2[1]['w']='енгән';
 			}elseif((!isset($simbl[0]['w'])&&$simbl[0][1]['w']=='mention')||$simbl[0]['w']=='mention'){
@@ -77,6 +83,7 @@ function tr_simple_block_2($simbl){
 				//i should translate this if this is imperative
 				//i can translate this {п куй}
 				//commented out previous code again
+				$s2[1]=$simbl[1];
 				$s2[1]['w']='куй';
 				$s2[0][1]['w']='п';
 			}
@@ -92,6 +99,7 @@ function tr_simple_block_2($simbl){
 			if($simbl[0][1][1]['w']=='have'&&$simbl[0][1][0][1]['w']=='ed-pp'){
 				$s2[0]/*hehave..*/[1]/*haveread..*/=$s2[0][1][0]/*read(pp)...*/[0]/*read...*/;
 				//have read ed-pp is translated like read
+				$s2[1]=$simbl[1];
 				$s2[1]['w']='ды';//past tense morphem is in place of s
 				//'ды' is reordered . subject is like adverbs etc, also in tatar...
 			}elseif(isset($simbl[0][0]['w'])&&($simbl[0][0]['w']=='that'||$simbl[0][0]['w']=='whom')){
@@ -101,10 +109,10 @@ function tr_simple_block_2($simbl){
 				if(($simbl[0][1][1]['w']=='be'||$simbl[0][1][1]['w']=='have')&&$simbl[0][1][0][1]['w']=='ed-pp'){
 				//if (($simbl[0]/*whom..met*/[1]/*we..met*/[1]/*havemet*/=='be'||$simbl[0][1][1]['w']=='have')&&$simbl[0][1][0]/*we*/[1]['w']=='ed-pp'){
 					//echo'*';
-					$verb=$s2[0][1][0][0]['w'];
-					$verbending=$s2[0][1][0][1]['w'];
-					$s2[0]['w']=$verb;
-					$s2[1]['w']=$verbending;
+					$verb=$s2[0][1][0][0];
+					$verbending=$s2[0][1][0][1];
+					$s2[0]=$verb;
+					$s2[1]=$verbending;
 					//кайсыискәалынганбулды->искәалынган
 					/*Array
 					(
@@ -160,6 +168,7 @@ function tr_simple_block_2($simbl){
 					$verb=$s2[0][1][1][0][0];
 					$s2[0][0]=$subject;
 					$s2[0][1]=$verb;
+					$s2[1]=$simbl[1];
 					$s2[1]['w']='кан';//this works, but probably is buggy with other sentences
 				//}else{
 					//$s2[1]['w']=$words[$simbl[1]['w']];
@@ -186,6 +195,7 @@ function tr_simple_block_2($simbl){
 						[1] => ed
 					)*/
 					$s2[0]=$s2[0][1];
+					$s2[1]=$simbl[1];
 					$s2[1]['w']='ган';
 					if($simbl[0][1][0][0]['w']=='a'){
 						$s2[0][0]=$s2[0][0][1];
@@ -223,19 +233,20 @@ function tr_simple_block_2($simbl){
 		}
 	}
 	if(!isset($s2[1])){
+		$s2[1]=$simbl[1];
 		$s2[1]['w']=$words[$simbl[1]['w']];
 	}
 	if(isset($simbl[1]['w'])){
 		if($simbl[1]['w']=='s'||$simbl[1]['w']=='ed'||$simbl[1]['w']=='pr-si'){
 			if(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='i'){
 				$new_s2=array();
-				$new_s2[0]['w']=$s2;
+				$new_s2[0]=$s2;
 				$new_s2[1]['w']='м';
 				$s2=$new_s2;
 				unset($new_s2);
 			}elseif(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='we'){
 				$new_s2=array();
-				$new_s2[0]['w']=$s2;
+				$new_s2[0]=$s2;
 				$new_s2[1]['w']='быз';
 				$s2=$new_s2;
 				unset($new_s2);
@@ -267,15 +278,50 @@ function tr_simple_block_2($simbl){
 			}
 		}
 	}
+	/*
+	//these work incorrectly when order is changed
 	if(isset($simbl[0]['firstiscapital'])){
 		$s2[0]['firstiscapital']=$simbl[0]['firstiscapital'];
 	}
 	if(isset($simbl[1]['firstiscapital'])){
 		$s2[1]['firstiscapital']=$simbl[1]['firstiscapital'];
 	}
+	//these work incorrectly when order is changed
+	foreach($simbl[0] as $key=>$word){
+		if(!isset($s2[0][$key])){
+			$s2[0][$key]=$simbl[0][$key];
+		}
+	}
+	foreach($simbl[1] as $key=>$word){
+		if(!isset($s2[1][$key])){
+			$s2[1][$key]=$simbl[1][$key];
+		}
+	}*/
+	foreach($simbl as $key=>$word){
+		if(!isset($s2[$key])){
+			$s2[$key]=$simbl[$key];
+		}
+	}
 	//var_dump($s2);echo'*';
 	$recursionlevel--;
 	return $s2;
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ?>

@@ -441,6 +441,7 @@ function order_2($inparr){
 				}
 				$outparr[]=$inparr;
 				$outparr[]=$edition[0];
+				$outparr['thisisheader']=true;
 				return $outparr;
 			}
 		}
