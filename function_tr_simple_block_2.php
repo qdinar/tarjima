@@ -22,7 +22,7 @@ function tr_simple_block_2($simbl){
 		(
 		isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='the'
 		||
-		isset($simbl[0]['w'])&&$simbl[0]['thisisabbreviation']==true
+		isset($simbl[0]['w'])&&isset($simbl[0]['thisisabbreviation'])
 		||
 		isset($simbl[0]['thisisheader'])
 		)
@@ -63,11 +63,17 @@ function tr_simple_block_2($simbl){
 			//$s2[1]['w']='лгән';
 			$s2[1]=$simbl[1];
 			//this place is translation, not just fixing of ready translation, for that i copy here all properties
-			if((!isset($simbl[0]['w'])&&$simbl[0][1]['w']=='know')||$simbl[0]['w']=='know'){
+			$ofplace1=$simbl[0][1]['w'];
+			if(isset($simbl[0]['w'])){
+				$ofplace2=$simbl[0]['w'];
+			}else{
+				$ofplace2=false;
+			}
+			if($ofplace1=='know'||$ofplace2=='know'){
 				$s2[1]['w']='енгән';
-			}elseif((!isset($simbl[0]['w'])&&$simbl[0][1]['w']=='mention')||$simbl[0]['w']=='mention'){
+			}elseif($ofplace1=='mention'||$ofplace2=='mention'){
 				$s2[1]['w']='ынган';
-			}elseif((!isset($simbl[0]['w'])&&$simbl[0][1]['w']=='build')||$simbl[0]['w']=='build'){
+			}elseif($ofplace1=='build'||$ofplace2=='build'){
 				$s2[1]['w']='лгән';
 			}else{
 				$s2[1]['w']='лган';
@@ -260,7 +266,7 @@ function tr_simple_block_2($simbl){
 				
 			}
 			if(isset($s2[1]['w'])&&$s2[1]['w']=='ды'){
-				if($s2[0][1][1][1]['w']=='йөре'){
+				if(isset($s2[0][1][1][1]['w'])&&$s2[0][1][1][1]['w']=='йөре'){
 					$s2[1]['w']='де';
 				}
 				

@@ -68,6 +68,9 @@ function explode_words_into_morphemes_2($engtext){
 			if(mb_substr($word,0,mb_strlen($word)-1)=='know'){
 				$engtext2[]='know';
 				$engtext2[]='ed-pp';
+			}elseif(mb_substr($word,0,mb_strlen($word)-1)=='bee'){
+				$engtext2[]='be';
+				$engtext2[]='ed-pp';
 			}else{
 				$engtext2[]=$word;
 			}
@@ -108,18 +111,31 @@ function explode_words_into_morphemes_2($engtext){
 		}elseif(mb_substr($word,-2)=='rd'||mb_substr($word,-2)=='nd'||mb_substr($word,-2)=='th'){
 				//$engtext2[]=mb_substr($word,0,mb_strlen($word)-2);
 				//$engtext2[]=mb_substr($word,-2);
-				$ordinalnumber=array(
-					array('w'=>mb_substr($word,0,mb_strlen($word)-2)),
-					array('w'=>mb_substr($word,-2)),
-					'ordnum'=>true
-				);
-				$engtext2[]=$ordinalnumber;
-				$i=count($engtext2);
-				continue;
+				$trynumber=mb_substr($word,0,mb_strlen($word)-2);
+				if(preg_match('/^[0-9]+$/',$trynumber)==1){
+					$ordinalnumber=array(
+						array('w'=>$trynumber),
+						array('w'=>mb_substr($word,-2)),
+						'ordnum'=>true
+					);
+					$engtext2[]=$ordinalnumber;
+					$i=count($engtext2);
+					continue;
+				}else{
+					$engtext2[]=$word;
+				}
 		}elseif(mb_substr($word,-1)=='d'){
 			if(mb_substr($word,0,mb_strlen($word)-1)=='rea'){
 				$engtext2[]='read';
 				$engtext2[]='ed-pp';
+			}else{
+				$engtext2[]=$word;
+			}
+		}elseif(mb_substr($word,-3)=='ing'){
+			$tryverb=mb_substr($word,0,mb_strlen($word)-3).'e';//compute
+			if(isset($dic[$tryverb])&&$dic[$tryverb]['type']=='verb'){
+				$engtext2[]=$tryverb;
+				$engtext2[]='ing';
 			}else{
 				$engtext2[]=$word;
 			}

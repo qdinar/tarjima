@@ -38,7 +38,7 @@ function order_2($inparr){
 
 	foreach($inparr as $key=>$word){
 		if(isset($word['w'])&&$word['w']==','){
-			if(isset($dic[$inparr[$key+1]['w']])&&$dic[$inparr[$key+1]['w']]['type']=='verb'){
+			if(isset($inparr[$key+1]['w'])&&isset($dic[$inparr[$key+1]['w']])&&$dic[$inparr[$key+1]['w']]['type']=='verb'){
 				$verb=array_splice($inparr,$key+1);
 				array_splice($inparr,$key);//remove comma
 				//inparr is "for ..." now,  of "for ... , see ..."
@@ -62,10 +62,10 @@ function order_2($inparr){
 	foreach($inparr as $key=>$word){
 		if(isset($word['w'])&&($word['w']=='s'||$word['w']=='pr-si'||$word['w']=='ed')){
 			for($i=0,$dependentcl=0,$whoes=0,$ises=0;$i<$key;$i++){
-				if($inparr[$i]['w']=='whom'||$inparr[$i]['w']=='that'){
+				if(isset($inparr[$i]['w'])&&($inparr[$i]['w']=='whom'||$inparr[$i]['w']=='that')){
 					$dependentcl++;
 					$whoes++;
-				}elseif($inparr[$i]['w']=='s'||$inparr[$i]['w']=='pr-si'||$inparr[$i]['w']=='ed'){
+				}elseif(isset($inparr[$i]['w'])&&($inparr[$i]['w']=='s'||$inparr[$i]['w']=='pr-si'||$inparr[$i]['w']=='ed')){
 					$dependentcl--;
 					$ises++;
 				}
@@ -212,7 +212,7 @@ function order_2($inparr){
 				$inparr=order_2($inparr);
 			}
 			$outparr[]=$inparr;
-			$outparr[]='ed-pp';
+			$outparr[1]['w']='ed-pp';
 			return $outparr;
 		}elseif(isset($word['w'])&&isset($dic[$word['w']])
 				&&$dic[$word['w']]['type']=='verb'
@@ -235,7 +235,7 @@ function order_2($inparr){
 			return $outparr;
 			//i should make dictionary with (several) properties (instead of word-per-word translations) (i need it now because i need check whether morphem is verb)
 		}elseif(isset($word['w'])&&$word['w']==','){
-			if($inparr[$key+1]['w']=='the'||$inparr[$key+1]['w']=='a'){
+			if(isset($inparr[$key+1]['w'])&&($inparr[$key+1]['w']=='the'||$inparr[$key+1]['w']=='a')){
 				$noun=array_splice($inparr,0,$key);
 				array_splice($inparr,0,1);//remove comma
 				if(count($inparr)>1){

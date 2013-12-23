@@ -1346,8 +1346,51 @@ echo nstd_to_str_2($result);
 //i have commented out code that passed capital letters into translation, it is code of copying array elements, it does not work properly if structure/dependency/tree is changed
 //the problem is fixed. quotes are added. ны is added.
 //Теге видео уен өчен "Бию Бию Революция 3нче Болгату"ны карагыз.
+//i am going to left this as it is now, and start new example...
 
-
+echo'<br/>';
+$engtext='In computing, DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007.';
+$engtext=explode(' ', $engtext);
+$dic['compute']['type']='verb';
+$engtext2=explode_words_into_morphemes_2($engtext);
+print_r($engtext2);
+echo'<pre>';
+//$dic['dance']['type']='noun';
+$engtext2=order_2($engtext2);
+print_r($engtext2);
+echo'</pre>';
+$words['in']='эчендә';
+$words['modern']='яңа';
+$words['have']='have';
+$words['compute']='хисапла';
+$recursionlevel=0;
+$result=tr_simple_block_2($engtext2);
+echo'<pre>';
+print_r($result);
+echo'</pre>';
+$nstd_to_str_2_firstwordisready=false;
+echo nstd_to_str_2($result);
+//i have some result without errors after some edition
+//i do not know, how much it is correct because the sentence is too long, and i have not thought about its structure...
+//how this should be done:
+//{[In computing], [ {[DDR3 SDRAM], [an abbreviation for double data rate type three synchronous dynamic random access memory]} {is [a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface], and [has been in use since 2007]} ] }.
+//ie
+/*
+{
+	[In computing]
+	[
+		{
+			[DDR3 SDRAM]
+			[an abbreviation for double data rate type three synchronous dynamic random access memory]
+		}
+		{
+			[is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface]
+			and
+			[has been in use since 2007]
+		}
+	]
+}
+*/
 
 
 
