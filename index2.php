@@ -1349,7 +1349,7 @@ echo nstd_to_str_2($result);
 //i am going to left this as it is now, and start new example...
 
 echo'<br/>';
-$engtext='In computing, DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007.';
+$engtext='In computing, DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory, is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007.';
 $engtext=explode(' ', $engtext);
 $dic['compute']['type']='verb';
 $engtext2=explode_words_into_morphemes_2($engtext);
@@ -1363,6 +1363,22 @@ $words['in']='эчендә';
 $words['modern']='яңа';
 $words['have']='have';
 $words['compute']='хисапла';
+$words['an']='бер';
+$words['abbreviation']='аббревиатура';
+$words['and']='һәм';
+$words['ing']='у';
+$words['double']='икекатлы';
+$words['data']='мәгълүмат';
+$words['high']='биек';
+$words['with']='белән';
+$words['dynamic']='динамик';
+$words['random']='теләсәкайсы';
+$words['of']='ның';
+$words['since']='таналып';
+$words['2007']='2007';
+$words['use']='кулланылыш';
+$words['bandwidth']='агымкиңлеге';
+$words['type']='төр';
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
@@ -1370,7 +1386,7 @@ print_r($result);
 echo'</pre>';
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
-//i have some result without errors after some edition
+//i have some result without error messages after some edition
 //i do not know, how much it is correct because the sentence is too long, and i have not thought about its structure...
 //how this should be done:
 //{[In computing], [ {[DDR3 SDRAM], [an abbreviation for double data rate type three synchronous dynamic random access memory]} {is [a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface], and [has been in use since 2007]} ] }.
@@ -1391,11 +1407,20 @@ echo nstd_to_str_2($result);
 	]
 }
 */
-
-
-
-
-
+//there should be a comma between 'memory' and 'is'. i try to set it. (in $engtext).
+//i think, how should i order "and", should there be 3 branches in a level? ie {A and B}?
+//i think i will make it as {A {and B}}, and if they are more, {{A {and B}} and C}, same way with commas: {{A {, B}} {, C} }
+//i am going to fix empty subjects before 'has been' and 'is' , that i have in result now, and this block of 2 verb blocks is already correctly separated from the subject "ddr3 sdram , ..., " and i do not know how. i will look that later...
+//after some editing i have {a [modern type of ...]} , i think it is also logical at some level, but i think it is {{a [modern type]} {of ...}} and same problem at {an abbreviation for ...}. i think this have happened because i have added "or word==a/an " code after "word == the" code in condition. i have removed that code and see (notice) a little other(different) case: "a high bandwidth ("double data rate") interface".
+//"a" is done, "and" is done, and code for preposition after noun is made
+//now i need to order:
+//double data rate type three synchronous dynamic random access memory
+//dynamic random access memory (DRAM)
+//high bandwidth ("double data rate") interface
+//they should be:
+//{ {[double (data rate)] (type three)} {synchronous {dynamic [(random access) memory]}} }
+//{{dynamic [(random access) memory]} DRAM}
+//{  [{high bandwidth} {double [data rate]}] interface  }
 
 
 

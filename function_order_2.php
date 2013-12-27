@@ -38,7 +38,14 @@ function order_2($inparr){
 
 	foreach($inparr as $key=>$word){
 		if(isset($word['w'])&&$word['w']==','){
-			if(isset($inparr[$key+1]['w'])&&isset($dic[$inparr[$key+1]['w']])&&$dic[$inparr[$key+1]['w']]['type']=='verb'){
+			if(
+				isset($inparr[$key+1]['w'])
+				&&isset($dic[$inparr[$key+1]['w']])
+				&&$dic[$inparr[$key+1]['w']]['type']=='verb'
+				||
+				$inparr[0]['w']=='in'
+				//In computing
+			){
 				$verb=array_splice($inparr,$key+1);
 				array_splice($inparr,$key);//remove comma
 				//inparr is "for ..." now,  of "for ... , see ..."
@@ -56,6 +63,25 @@ function order_2($inparr){
 				$outparr[]=$verb;
 				return $outparr;
 			}
+		}
+	}
+	for($i=count($inparr)-1;$i>=0;$i--){
+		if(isset($inparr[$i]['w'])&&$inparr[$i]['w']==','&&isset($inparr[$i+1]['w'])&&$inparr[$i+1]['w']=='and'){
+			$andwhat=array_splice($inparr,$i+2);
+			$whatand=array_splice($inparr,0,$i);
+				if(count($andwhat)>1){
+					$andwhat=order_2($andwhat);
+				}else{
+					$andwhat=$andwhat[0];
+				}
+				if(count($whatand)>1){
+					$whatand=order_2($whatand);
+				}else{
+					$whatand=$whatand[0];
+				}
+				$outparr[]=array($andwhat,array('w'=>'and'));
+				$outparr[]=$whatand;
+				return $outparr;
 		}
 	}
 
@@ -146,13 +172,15 @@ function order_2($inparr){
 					//i have seen that he is in array and fix
 					$subject=$subject[0];
 				}elseif(count($subject)==0){
-					//unset($subject);//comm.out, dont rem. what for is it
+					unset($subject);//comm.out, dont rem. what for is it
+					//remove commenting, with 'is ... and has been ... ' example i see there is no subject in the block...
+					//i have empty subject blocks and i want to remove them
 				}
 				if(count($inparr)>1){
 					$inparr=order_2($inparr);
 				}
-				$outparr[]=array();//outparr0
 				if(isset($whoword)){
+					$outparr[]=array();//outparr0
 					$outparr[0][]=$whoword;
 					if(isset($subject)){
 						$outparr[0][]=array();
@@ -162,8 +190,13 @@ function order_2($inparr){
 						$outparr[0][]=$inparr;
 					}
 				}else{
-					$outparr[0][]=$subject;
-					$outparr[0][]=$inparr;
+					if(isset($subject)){
+						$outparr[]=array();//outparr0
+						$outparr[0][]=$subject;
+						$outparr[0][]=$inparr;
+					}else{
+						$outparr[]=$inparr;
+					}
 				}
 				$outparr[]=$word;//outparr1//s or ed or pr-si
 				return $outparr;
@@ -235,7 +268,7 @@ function order_2($inparr){
 			return $outparr;
 			//i should make dictionary with (several) properties (instead of word-per-word translations) (i need it now because i need check whether morphem is verb)
 		}elseif(isset($word['w'])&&$word['w']==','){
-			if(isset($inparr[$key+1]['w'])&&($inparr[$key+1]['w']=='the'||$inparr[$key+1]['w']=='a')){
+			if(isset($inparr[$key+1]['w'])&&($inparr[$key+1]['w']=='the'||$inparr[$key+1]['w']=='a'||$inparr[$key+1]['w']=='an')){
 				$noun=array_splice($inparr,0,$key);
 				array_splice($inparr,0,1);//remove comma
 				if(count($inparr)>1){
@@ -244,7 +277,7 @@ function order_2($inparr){
 					$inparr=$inparr[0];
 				}
 				if(count($noun)>1){
-					$inparr=order_2($noun);
+					$noun=order_2($noun);
 				}else{
 					$noun=$noun[0];
 				}
@@ -252,18 +285,16 @@ function order_2($inparr){
 				$outparr[]=$noun;
 				return $outparr;
 			}
-		}elseif(isset($word['w'])&&isset($dic[$word['w']])&&$dic[$word['w']]['type']=='verb'&&$key==0&&$inparr[1]['w']!='ed-pp'&&$inparr[1]['w']!='er'){
+		}elseif(isset($word['w'])&&isset($dic[$word['w']])&&$dic[$word['w']]['type']=='verb'&&$key==0&&$inparr[1]['w']!='ed-pp'&&$inparr[1]['w']!='er'&&$inparr[1]['w']!='s'){
 			if($word['w']=='have'||$word['w']=='be'){
-				if($key==0){//have is 1st
-					if($inparr[2]['w']=='ed-pp'){//have(0) do(1) ed(2)
-						array_splice($inparr,0,1);//remove have
-						if(count($inparr)>1){
-							$inparr=order_2($inparr);
-						}
-						$outparr[]=$inparr;
-						$outparr[]=$word;
-						return $outparr;
+				if($inparr[2]['w']=='ed-pp'){//have(0) do(1) ed(2)
+					array_splice($inparr,0,1);//remove have
+					if(count($inparr)>1){
+						$inparr=order_2($inparr);
 					}
+					$outparr[]=$inparr;
+					$outparr[]=$word;
+					return $outparr;
 				}
 			}
 			//this is not 'have' nor 'be' <-this is not true now...
@@ -279,7 +310,11 @@ function order_2($inparr){
 			}
 			if(!isset($thereisathat)){
 				for($i=count($inparr)-1;$i>=0;$i--){
-					if(isset($inparr[$i]['w'])&&($inparr[$i]['w']=='every'||$inparr[$i]['w']=='to'||$inparr[$i]['w']=='from'||$inparr[$i]['w']=='through'||$inparr[$i]['w']=='last'||$inparr[$i]['w']=='about')){//preposition or adverb
+					if(isset($inparr[$i]['w'])&&($inparr[$i]['w']=='every'||$inparr[$i]['w']=='to'||$inparr[$i]['w']=='from'||$inparr[$i]['w']=='through'||$inparr[$i]['w']=='last'||$inparr[$i]['w']=='about'||$inparr[$i]['w']=='since'||$inparr[$i]['w']=='in')){//preposition or adverb
+					//adding ||$inparr[$i]['w']=='since' have not worked "correctly" - it has been separated too early
+					//with 'has been in use since 2007'
+					//as i see it should not have come here so early
+					//i see why that happened.. &&$inparr[1]['w']!='s' upper helped
 						$verb=array_splice($inparr,0,$i);
 						//'built last year' is probably broken here, it should not come here
 						//i have added &&$inparr[1]['w']!='ed-pp' in if condition (16 lines upper) and it is fixed
@@ -289,13 +324,14 @@ function order_2($inparr){
 						}else{
 							$verb=$verb[0];
 						}
-						if($inparr[0]['w']=='to'||$inparr[0]['w']=='from'||$inparr[0]['w']=='through'||$inparr[0]['w']=='about'){//preposition
+						if($inparr[0]['w']=='to'||$inparr[0]['w']=='from'||$inparr[0]['w']=='through'||$inparr[0]['w']=='about'||$inparr[0]['w']=='since'||$inparr[0]['w']=='in'){//preposition
+						//swapping preposition with its word
 							$prep=array_splice($inparr,0,1);
 							$prep=$prep[0];
 							if(count($inparr)>1){//inparr is now "school" or "good school"
 								$inparr=order_2($inparr);
 							}else{
-								$inparr=$inparr[0]['w'];
+								$inparr=$inparr[0];
 							}
 							$tmpa=array();
 							$tmpa[]=$inparr;
@@ -346,7 +382,10 @@ function order_2($inparr){
 				return $outparr;
 				//get: {[(that is ...)(through park)] walk} - not correct... but that is not fail of this code.
 			}
-		}elseif(isset($word['w'])&&($word['w']=='the'||$word['w']=='through'||$word['w']=='from'||$word['w']=='for')&&$key==0){
+		}elseif(isset($word['w'])&&($word['w']=='the'||$word['w']=='through'||$word['w']=='from'||$word['w']=='for'||$word['w']=='in'||$word['w']=='of'||$word['w']=='with')&&$key==0){
+		//i have tried ||$word['w']=='a'||$word['w']=='an' here, it does not work as i expected
+		//i have got {a [modern type of ...]} but i want {{a [modern type]} {of ...}}
+		//no, when have removed this, i see "of" is already separated... indeed, it should be so, how it had come here before "of"? - at "a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface". i have set separation of "a" lower...
 			$inparrtry=$inparr;
 			array_splice($inparrtry,0,1);//remove the
 			if(count($inparrtry)>1){
@@ -442,6 +481,44 @@ function order_2($inparr){
 				$outparr[]=$inparr;
 				$outparr[]=$edition[0];
 				$outparr['thisisheader']=true;
+				return $outparr;
+			}
+		}
+		elseif(isset($word['w'])&&($word['w']=='for'||$word['w']=='of'||$word['w']=='with')&&$key>0){
+		//abbreviation for ..
+			$main=array_splice($inparr,0,$key);
+			if(count($inparr)>1){
+				$inparr=order_2($inparr);
+			}
+			if(count($main)>1){
+				$main=order_2($main);
+			}else{
+				$main=$main[0];
+			}
+			$outparr[]=$inparr;
+			$outparr[]=$main;
+			return $outparr;
+		}
+		elseif(isset($word['w'])&&($word['w']=='a'||$word['w']=='an')&&$key==0){
+		//an abbreviation
+		//{{a [modern type]} {of ...}}
+			$prepishere=false;
+			foreach($inparr as $trypreposition){
+				if($trypreposition['w']=='of'||$trypreposition['w']=='for'){
+					$prepishere=true;
+					break;
+				}
+			}
+			if($prepishere==false){
+				$an=array_splice($inparr,0,1);
+				$an=$an[0];
+				if(count($inparr)>1){
+					$inparr=order_2($inparr);
+				}else{
+					$inparr=$inparr[0];
+				}
+				$outparr[]=$an;
+				$outparr[]=$inparr;
 				return $outparr;
 			}
 		}

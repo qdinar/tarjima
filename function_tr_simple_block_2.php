@@ -63,11 +63,15 @@ function tr_simple_block_2($simbl){
 			//$s2[1]['w']='лгән';
 			$s2[1]=$simbl[1];
 			//this place is translation, not just fixing of ready translation, for that i copy here all properties
-			$ofplace1=$simbl[0][1]['w'];
 			if(isset($simbl[0]['w'])){
 				$ofplace2=$simbl[0]['w'];
 			}else{
 				$ofplace2=false;
+			}
+			if(isset($simbl[0][1]['w'])){
+				$ofplace1=$simbl[0][1]['w'];
+			}else{
+				$ofplace1=false;
 			}
 			if($ofplace1=='know'||$ofplace2=='know'){
 				$s2[1]['w']='енгән';
@@ -102,7 +106,7 @@ function tr_simple_block_2($simbl){
 			//echo'</pre>';
 			//return $s2[0];//$s2[1] should be translation of s but it becomes removed
 			//i see 'ды' should be reordered...
-			if($simbl[0][1][1]['w']=='have'&&$simbl[0][1][0][1]['w']=='ed-pp'){
+			if(isset($simbl[0][1][1]['w'])&&$simbl[0][1][1]['w']=='have'&&$simbl[0][1][0][1]['w']=='ed-pp'){
 				$s2[0]/*hehave..*/[1]/*haveread..*/=$s2[0][1][0]/*read(pp)...*/[0]/*read...*/;
 				//have read ed-pp is translated like read
 				$s2[1]=$simbl[1];
@@ -226,7 +230,7 @@ function tr_simple_block_2($simbl){
 				//$s2[1]['w']=$words[$simbl[1]['w']];
 				//echo'*';
 				//var_dump($simbl);
-			}elseif($simbl[0][1][1]['w']=='be'){
+			}elseif(isset($simbl[0][1][1]['w'])&&$simbl[0][1][1]['w']=='be'){
 				//remove "була" - copula "is" translation
 				$subj=$s2[0][0];
 				$obj=$s2[0][1][0];
@@ -260,7 +264,7 @@ function tr_simple_block_2($simbl){
 			if($simbl[1]['w']=='pr-si'||$simbl[1]['w']=='s'){
 				//i was going to fix йөреа to йөри but have found important order bug
 				//that is fixed. continue
-				if($simbl[0][1][1]['w']=='walk'){
+				if(isset($simbl[0][1][1]['w'])&&$simbl[0][1][1]['w']=='walk'){
 					$s2[1]['w']='й';
 				}
 				
@@ -278,7 +282,7 @@ function tr_simple_block_2($simbl){
 		}
 		elseif($simbl[1]['w']=='.'){//top of sentence
 			//echo'*';
-			if(isset($simbl[0][1][1]['w'])&&$dic[$simbl[0][1][1]['w']]['type']=='verb'){
+			if(isset($simbl[0][1][1]['w'])&&isset($dic[$simbl[0][1][1]['w']])&&$dic[$simbl[0][1][1]['w']]['type']=='verb'){
 				$s2[0][0]=array($s2[0][0],$s2[0][1]);
 				$s2[0][1]=array('w'=>'гыз');
 			}
