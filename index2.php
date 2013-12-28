@@ -1075,6 +1075,8 @@ echo nstd_to_str($result);
 //their latest commit in github is of 3 days ago, this makes me hopeful
 //indeed. "subscription request is approved". i am sorry for i have hurriedly written about that here...
 //i have posted in the forum: https://groups.google.com/forum/#!topic/nltk-users/lcyWvCQBUmc "i think it is easy to make high quality translator with nltk".
+//i have installed nltk today in 28 dec 2013 and i tried to make dependency with nltk and see that examples i had seen in http://nltk.org/book/ch08.html and http://nltk.org/ do not do that for whole english (ie almost any sentence), but are little examples.
+//i think: why these apertium and nltk ? , seems it is easy to code grammar in php or other language like it - python, c++. and apertium sets unneeded grammatical properties, as i have seen in qazaq-tatar ... i do not set suffixes as grammatical propeties of words, but use (handle) them as words , because whether they are written joined or separated is not important... and they are easily separated in tatar - they are not like in some languages like russian or latin ... and in english also they are few and easily separated.
 
 //also want to say about that in apertium mailing lists, that there is great possibility with nltk
 //and i think, even may be apertium should be "dropped", especially for language pairs where much and long distance word reordering between them in translation. but i do not know apertium well, but as i know, it does not use dependency structure
@@ -1421,7 +1423,7 @@ echo nstd_to_str_2($result);
 //{ {[double (data rate)] (type three)} {synchronous {dynamic [(random access) memory]}} }
 //{{dynamic [(random access) memory]} DRAM}
 //{  [{high bandwidth} {double [data rate]}] interface  }
-
+//there "type three", "random access", "double data rate type three", "double data rate", "high bandwidth" are joined/grouped earlier than usual flow... and i should handle/manage parentheses and quotes...
 
 
 
