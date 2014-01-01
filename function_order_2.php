@@ -24,6 +24,39 @@ function order_2($inparr){
 		}
 	}
 	if($tryallarenouns){
+	//before and after "type three"
+		foreach($inparr as $key=>$noun){
+			if($noun['w']=='type'&&$inparr[$key+1]['w']=='three'&&$key>0&&$key<count($inparr)-2){
+				$beforetype=array_splice($inparr,0,$key);
+				if(count($beforetype)>1){
+					$beforetype=order_2($beforetype);
+				}else{
+					$beforetype=$beforetype[0];
+				}
+				$typeblock=array_splice($inparr,0,2);
+				$typeblock=order_2($typeblock);
+				if(count($inparr)>1){
+					$inparr=order_2($inparr);
+				}else{
+					$inparr=$inparr[0];
+				}
+				$outparr[]=array($typeblock,$beforetype);
+				$outparr[]=$inparr;
+				return $outparr;
+			}elseif($key==0&&$noun['w']=='type'){
+				array_splice($inparr,0,1); //cut out "type"
+				if(count($inparr)>1){
+					$inparr=order_2($inparr);
+				}else{
+					$inparr=$inparr[0];
+				}
+				$outparr[]=$inparr;
+				$outparr[]=$noun;
+				return $outparr;
+			}
+		}
+	}
+	if($tryallarenouns){
 		$firstnoun=array_splice($inparr,0,1);
 		$firstnoun=$firstnoun[0];
 		if(count($inparr)>1){
@@ -522,9 +555,10 @@ function order_2($inparr){
 				return $outparr;
 			}
 		}
+		//elseif(isset($word['w'])&&isset($inparr[$key+1])&&$word['w']=='type'&&$inparr[$key+1]=='three'){
+		//}
 	}
 	return $inparr;
-	
 }
 
 

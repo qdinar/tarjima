@@ -1,6 +1,13 @@
 <?php
-//explode words into grammatical morphemes
-function explode_words_into_morphemes_2($engtext){	
+//explode string/sentence into grammatical morphemes
+function explode_into_morphemes($engtext){
+	$engtext=preg_split('/(?=[^a-zA-Z0-9])|(?<=[^a-zA-Z0-9])/',$engtext);
+	foreach($engtext as $key=>$word){
+		if($word==' '||$word==''){
+		//empty string appears at end , i do not know why.
+			unset($engtext[$key]);
+		}
+	}
 	global $dic,$firstletterofsentenceiscapital;
 	//global $thereisdotatendofsentence;
 	$engtext2=array();
@@ -11,7 +18,7 @@ function explode_words_into_morphemes_2($engtext){
 	$firstletterofsentenceiscapital=true;
 	$thisisabbreviation=false;
 	foreach($engtext as $key=>$word){
-		if(substr($word,-1)==','){
+		/*if(substr($word,-1)==','){
 			$thereiscomma=true;
 			$word=substr($word,0,strlen($word)-1);
 		}elseif(substr($word,-1)=='.'){
@@ -22,7 +29,7 @@ function explode_words_into_morphemes_2($engtext){
 			//}
 		}
 		if(substr($word,0,1)=='('){
-		}
+		}*/
 		if(ctype_upper(substr($word,0,1))){
 			if($key>0){
 				$firstiscapital=true;
@@ -56,7 +63,7 @@ function explode_words_into_morphemes_2($engtext){
 				$engtext2[]='ed';
 			}elseif(mb_substr($word,0,mb_strlen($word)-1)=='i'){
 				$engtext2[]='be';
-				$engtext2[]='pr-si';
+				$engtext2[]='s';
 			}else{
 				$tryverb=mb_substr($word,0,mb_strlen($word)-1);
 				if(isset($dic[$tryverb])&&$dic[$tryverb]['type']=='verb'){
@@ -181,4 +188,3 @@ function explode_words_into_morphemes_2($engtext){
 	}
 	return $engtext2;
 }
-?>

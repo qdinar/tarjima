@@ -1352,12 +1352,21 @@ echo nstd_to_str_2($result);
 
 echo'<br/>';
 $engtext='In computing, DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory, is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007.';
-$engtext=explode(' ', $engtext);
 $dic['compute']['type']='verb';
-$engtext2=explode_words_into_morphemes_2($engtext);
-print_r($engtext2);
+include 'function_explode_into_morphemes.php';
+$engtext2=explode_into_morphemes($engtext);
 echo'<pre>';
-//$dic['dance']['type']='noun';
+//print_r($engtext2);
+$dic['double']['type']='noun';
+$dic['data']['type']='noun';
+$dic['rate']['type']='noun';
+$dic['type']['type']='noun';
+$dic['three']['type']='noun';
+$dic['synchronous']['type']='noun';
+$dic['dynamic']['type']='noun';
+$dic['random']['type']='noun';
+$dic['access']['type']='noun';
+$dic['memory']['type']='noun';
 $engtext2=order_2($engtext2);
 print_r($engtext2);
 echo'</pre>';
@@ -1424,12 +1433,37 @@ echo nstd_to_str_2($result);
 //{{dynamic [(random access) memory]} DRAM}
 //{  [{high bandwidth} {double [data rate]}] interface  }
 //there "type three", "random access", "double data rate type three", "double data rate", "high bandwidth" are joined/grouped earlier than usual flow... and i should handle/manage parentheses and quotes...
-
-
-
-
-
-
+//may be i will use lexems in dic consisting of several words.
+//i have ordered parts before and after "type three" with special code block for it
+//what are differences of english from tatar in grammar of several nouns sitting one near other:
+//"double data rate" - this is said as "double (rate of data)" in tatar
+//"synchronous dynamic random access memory" - this is said as "synchronous ( dynamic (random-access-ful memory) )" in tatar
+//ie noun-likes are just set one before other , only if they are just are more or less wide/distinct denotation of same thing
+//ie if they can be said with "is" or "and" between them:
+//something is double AND (data rate), (data rate) IS double
+//but "rate" IS NOT "data", nothing is rate AND data "at same time".
+//so we cannot say "data rate" in tatar.
+//it is rate OF data
+//but, in some dialects of tatar there is same way of using nouns as in english, as i know
+//how can i order "random access" before "standart flow" now?
+//1st way, i said about it, to set "random access" in dictionary, and check for it
+//and i have found 2nd way:
+//words are usually ordered so that they mean more and more narrow thing(meaning):
+//big red book - not "red big book", nor "red book big", nor "book red big", nor "book big red"
+//and so i think "big", "something big" means most many things, there are lot of big things,
+//"red" means less things than "big", there are less red things in the worlds than big things
+//"book" means less possible things than what "red" means, there are lot less "book"s than "red thing"s.
+//same order of words is also in tatar and russian, and in arabic, but they have reverse order in arabic.
+//ie it is "book red big" in arabic.
+//so, i can set in dictionary some number, meaning how much things every word denotates (or, how much narrow meaning it has)
+//then i should go in standart order oly if that number becomes less and less or larger and larger.
+//synchronous dynamic ... - there are more synchronous things than dynamic things?? it is ok ...
+//dynamic random ... i think , we would say "random synchronous dynamic ..." , "random" things are more than "synchronous" by this theory
+//so, as soon as i get word with wider meaning in incorrect position, i should check whether it is in inner branch
+//... random access ... - access is narrower than "random", i should check it...
+// ... access memory ... - it is accessful memory, or memory with access ... so the number wich means wideness/narrowness of meaning does not work here ...
+//i am going to make some temporary code just for this case ...
+//if i think "random access" is ok , then again, (random access) memory - this is memory with (random access)
 
 
 
