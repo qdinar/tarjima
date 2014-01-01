@@ -1367,6 +1367,7 @@ $dic['dynamic']['type']='noun';
 $dic['random']['type']='noun';
 $dic['access']['type']='noun';
 $dic['memory']['type']='noun';
+$multiwords=array(0=>array('random','access'));
 $engtext2=order_2($engtext2);
 print_r($engtext2);
 echo'</pre>';
@@ -1390,6 +1391,11 @@ $words['2007']='2007';
 $words['use']='кулланылыш';
 $words['bandwidth']='агымкиңлеге';
 $words['type']='төр';
+$words['three']='өч';
+$words['rate']='дәрәҗә';
+$words['synchronous']='синхрон';
+$words['access']='керү';
+$words['memory']='хәтер';
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
@@ -1451,7 +1457,7 @@ echo nstd_to_str_2($result);
 //words are usually ordered so that they mean more and more narrow thing(meaning):
 //big red book - not "red big book", nor "red book big", nor "book red big", nor "book big red"
 //and so i think "big", "something big" means most many things, there are lot of big things,
-//"red" means less things than "big", there are less red things in the worlds than big things
+//"red" means less things than "big", there are less red things in the world than big things
 //"book" means less possible things than what "red" means, there are lot less "book"s than "red thing"s.
 //same order of words is also in tatar and russian, and in arabic, but they have reverse order in arabic.
 //ie it is "book red big" in arabic.
@@ -1464,7 +1470,7 @@ echo nstd_to_str_2($result);
 // ... access memory ... - it is accessful memory, or memory with access ... so the number wich means wideness/narrowness of meaning does not work here ...
 //i am going to make some temporary code just for this case ...
 //if i think "random access" is ok , then again, (random access) memory - this is memory with (random access)
-
+//i am going to just use "random access" as lexem in dictionary
 
 
 

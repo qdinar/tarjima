@@ -1,7 +1,7 @@
 <?php
 
 function order_2($inparr){
-	global $dic;
+	global $dic,$multiwords;
 	$outparr=array();
 
 
@@ -24,9 +24,9 @@ function order_2($inparr){
 		}
 	}
 	if($tryallarenouns){
-	//before and after "type three"
 		foreach($inparr as $key=>$noun){
 			if($noun['w']=='type'&&$inparr[$key+1]['w']=='three'&&$key>0&&$key<count($inparr)-2){
+			//before and after "type three"
 				$beforetype=array_splice($inparr,0,$key);
 				if(count($beforetype)>1){
 					$beforetype=order_2($beforetype);
@@ -43,20 +43,54 @@ function order_2($inparr){
 				$outparr[]=array($typeblock,$beforetype);
 				$outparr[]=$inparr;
 				return $outparr;
-			}elseif($key==0&&$noun['w']=='type'){
-				array_splice($inparr,0,1); //cut out "type"
-				if(count($inparr)>1){
-					$inparr=order_2($inparr);
-				}else{
-					$inparr=$inparr[0];
-				}
-				$outparr[]=$inparr;
-				$outparr[]=$noun;
-				return $outparr;
 			}
 		}
-	}
-	if($tryallarenouns){
+
+
+		if($inparr[0]['w']=='type'){
+		//inside "type three"
+			$type=array_splice($inparr,0,1); //cut out "type"
+			if(count($inparr)>1){
+				$inparr=order_2($inparr);
+			}else{
+				$inparr=$inparr[0];
+			}
+			$outparr[]=$inparr;
+			$outparr[]=$type[0];
+			return $outparr;
+		//}elseif($key<count($inparr)-1){ // 5: 0,1,2,3,4. 5-1=4. <4 is 0,1,2,3.
+		}elseif(count($inparr)>2){//if at least 3 : 2 for multiword and 1 for word after, so that it do not do infinite recursion
+			foreach($multiwords as $amultiword){
+				$trythisismatched=true;
+				foreach($amultiword as $mwkey=>$wordofmultiword){
+					//echo'*';
+					//echo($inparr[$key+$mwkey]);
+					if(isset($inparr[$mwkey]['w'])&&$wordofmultiword==$inparr[$mwkey]['w']){
+						continue;
+					}else{
+						$trythisismatched=false;
+						break;
+					}
+				}
+				if($trythisismatched==true){
+					$foundmw=array_splice($inparr,0,$mwkey+1);
+					$foundmw=order_2($foundmw);
+					if(count($inparr)>1){
+						$inparr=order_2($inparr);
+					}else{
+						$inparr=$inparr[0];
+					}
+					$outparr[]=$foundmw;
+					$outparr[]=$inparr;
+					return $outparr;
+				}else{
+					continue;
+				}
+			}
+		}
+
+
+
 		$firstnoun=array_splice($inparr,0,1);
 		$firstnoun=$firstnoun[0];
 		if(count($inparr)>1){
