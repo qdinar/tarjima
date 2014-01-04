@@ -1192,15 +1192,24 @@ function nstd_to_str_2($nstd){
 	if(isset($nstd['thisisheader'])||isset($nstd['inquotes'])){
 		$result.='"';
 	}
-	if(isset($nstd[0][1]['w'])&&$nstd[0][1]['w']=='()'){
-		//$inparentheses=$nstd[0][0];
-		//echo'<pre>';
-		//print_r($nstd);
-		$parentheses=$nstd[0];
-		$nstd[0]=$nstd[1];
-		$nstd[1]=$parentheses;
-		//print_r($nstd);
-		//echo'</pre>';
+	if(isset($nstd[0][1]['w'])){
+		if($nstd[0][1]['w']=='()'){
+			//$inparentheses=$nstd[0][0];
+			//echo'<pre>';
+			//print_r($nstd);
+			$parentheses=$nstd[0];
+			$nstd[0]=$nstd[1];
+			$nstd[1]=$parentheses;
+			//print_r($nstd);
+			//echo'</pre>';
+		}elseif($nstd[0][1]['w']=='һәм'){
+			$and=$nstd[0];
+			$nstd[0]=$nstd[1];
+			$nstd[1]=$and;
+			$and=$nstd[1][1];
+			$nstd[1][1]=$nstd[1][0];
+			$nstd[1][0]=$and;
+		}
 	}
 	if(!isset($nstd[0]['w'])){
 		/*if(!isset($nstd[0])){
@@ -1217,10 +1226,13 @@ function nstd_to_str_2($nstd){
 		$result.=$word;
 		$nstd_to_str_2_firstwordisready=true;
 	}
-	if(isset($nstd[1][1]['w'])&&$nstd[1][1]['w']=='()'){
-		//$result.=' (';
-		$nstd[1]=$nstd[1][0];
-		$parentheses=true;
+	if(isset($nstd[1][1]['w'])){
+		if($nstd[1][1]['w']=='()'){
+			//$result.=' (';
+			$nstd[1]=$nstd[1][0];
+			$parentheses=true;
+		//}elseif($nstd[1][1]['w']=='һәм'){
+		}
 	}
 	if(!isset($nstd[1]['w'])){
 		$result.=' ';
@@ -1527,8 +1539,9 @@ echo nstd_to_str_2($result);
 //[өч төр икекатлы мәгълүмат дәрәҗә синхрон динамик теләсәкайсы керү хәтер] өчен бер аббревиатура, DDR3 SDRAM
 //2007 таналып кулланылыш эчендә бул п куй а һәм
 //бер биек агымкиңлеге ("икекатлы мәгълүмат дәрәҗә") интерфейс белән динамик теләсәкайсы керү хәтер (DRAM) ның бер яңа төр бул а.
-//have fixed quotes in output. have fixed parentheses in output.
-
+//have fixed quotes in output. have fixed parentheses in output. have fixed order of blocks at 2 sides of "and".
+//now i have:
+//Хисапла у эчендә өч төр икекатлы мәгълүмат дәрәҗә синхрон динамик теләсәкайсы керү хәтер өчен бер аббревиатура DDR3 SDRAM бер биек агымкиңлеге ("икекатлы мәгълүмат дәрәҗә") интерфейс белән динамик теләсәкайсы керү хәтер (DRAM) ның бер яңа төр бул а һәм 2007 таналып кулланылыш эчендә бул п куй а.
 
 
 
