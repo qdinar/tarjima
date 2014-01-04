@@ -241,10 +241,10 @@ function tr_simple_block_2($simbl){
 		//}else{
 			//$s2[1]['w']=$words[$simbl[1]['w']];
 		}
-	}
-	if(!isset($s2[1])){
-		$s2[1]=$simbl[1];
-		$s2[1]['w']=$words[$simbl[1]['w']];
+		if(!isset($s2[1])){//if it is array, it is set. if it is word and is not set , set here
+			$s2[1]=$simbl[1];
+			$s2[1]['w']=$words[$simbl[1]['w']];
+		}
 	}
 	if(isset($simbl[1]['w'])){
 		if($simbl[1]['w']=='s'||$simbl[1]['w']=='ed'||$simbl[1]['w']=='pr-si'){

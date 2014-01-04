@@ -1,4 +1,12 @@
 <?php
+function order_2_if_needed(&$inparr){
+	if(count($inparr)>1){
+		$inparr=order_2($inparr);
+	}else{
+		$inparr=$inparr[0];
+	}
+}
+
 
 function order_2($inparr){
 	global $dic,$multiwords;
@@ -18,7 +26,7 @@ function order_2($inparr){
 
 	$tryallarenouns=true;
 	foreach($inparr as $trynoun){
-		if(!(isset($trynoun['w'])&&isset($dic[$trynoun['w']])&&$dic[$trynoun['w']]['type']=='noun')){
+		if(!(isset($trynoun['w'])&&isset($dic[$trynoun['w']])&&$dic[$trynoun['w']]['type']=='noun'||$trynoun['w']=='"'||$trynoun['w']=='('||$trynoun['w']==')')){
 			$tryallarenouns=false;
 			break;
 		}
@@ -43,6 +51,90 @@ function order_2($inparr){
 				$outparr[]=array($typeblock,$beforetype);
 				$outparr[]=$inparr;
 				return $outparr;
+			}elseif($noun['w']=='('&&$key>0&&$key<count($inparr)-2){
+				for($i=count($inparr)-1;$i>1;$i--){
+					if($inparr[$i]['w']==')'){
+						$beforeparentheses=array_splice($inparr,0,$key);
+						order_2_if_needed($beforeparentheses);
+						//count=8,key=2,i=5
+						//01(34)67
+						$inparentheses=array_splice($inparr,1,$i-$key-1);
+						//print_r($inparentheses);
+						order_2_if_needed($inparentheses);
+						//print_r($inparentheses);
+						//(12)45
+						$afterparentheses=array_splice($inparr,2);
+						if(count($afterparentheses)==0){
+							unset($afterparentheses);
+						}else{
+							order_2_if_needed($afterparentheses);
+						}
+						//()23
+						//$inparentheses['inparentheses']=true;
+						$inparentheses=array($inparentheses,array('w'=>'()'));
+						if(isset($afterparentheses)){
+							$outparr[]=array($inparentheses,$beforeparentheses);
+							$outparr[]=$afterparentheses;
+						}else{
+							$outparr[]=$inparentheses;
+							$outparr[]=$beforeparentheses;
+						}
+						return $outparr;
+						/*
+						$inparentheses=array_splice($inparr,$key+1,$i-$key-1);
+						order_2_if_needed($inparentheses);
+						$parentheses=array($inparentheses,array('w'=>'()'));
+						array_splice($inparr,$key,2,'0');
+						$inparr[$key]=$parentheses;
+						*/
+					}
+				}
+			}elseif($noun['w']=='"'&&$key<count($inparr)-1){
+				for($i=count($inparr)-1;$i>0;$i--){
+					if($inparr[$i]['w']=='"'){
+						$beforequotes=array_splice($inparr,0,$key);
+						if(count($beforequotes)==0){
+							unset($beforequotes);
+						}else{
+							order_2_if_needed($beforequotes);
+						}
+						//count=8,key=2,i=5
+						//01(34)67
+						$inquotes=array_splice($inparr,1,$i-$key-1);
+						//print_r($inquotes);
+						order_2_if_needed($inquotes);
+						//print_r($inparentheses);
+						//(12)45
+						$afterquotes=array_splice($inparr,2);
+						if(count($afterquotes)==0){
+							unset($afterquotes);
+						}else{
+							order_2_if_needed($afterquotes);
+						}
+						//()23
+						$inquotes['inquotes']=true;
+						if(isset($afterquotes)&&isset($beforequotes)){
+							$outparr[]=array($inquotes,$beforequotes);
+							$outparr[]=$afterquotes;
+						}elseif(isset($beforequotes)){
+							$outparr[]=$inquotes;
+							$outparr[]=$beforequotes;
+						}elseif(isset($afterquotes)){
+							$outparr[]=$afterquotes;
+							$outparr[]=$inquotes;
+						}else{
+							$outparr=$inquotes;
+						}
+						return $outparr;
+						/*
+						$inquotes=array_splice($inparr,$key+1,$i-$key-1);
+						order_2_if_needed($inquotes);
+						$quotes=array($inquotes,array('w'=>'""'));
+						array_splice($inparr,$key,2,'0');
+						$inparr[$key]=$quotes;
+						*/
+					}
+				}
 			}
 		}
 

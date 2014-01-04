@@ -1189,10 +1189,25 @@ function nstd_to_str_2($nstd){
 	$result='';
 	global $firstletterofsentenceiscapital;
 	global $nstd_to_str_2_firstwordisready;
-	if(isset($nstd['thisisheader'])){
+	if(isset($nstd['thisisheader'])||isset($nstd['inquotes'])){
 		$result.='"';
 	}
+	if(isset($nstd[0][1]['w'])&&$nstd[0][1]['w']=='()'){
+		//$inparentheses=$nstd[0][0];
+		//echo'<pre>';
+		//print_r($nstd);
+		$parentheses=$nstd[0];
+		$nstd[0]=$nstd[1];
+		$nstd[1]=$parentheses;
+		//print_r($nstd);
+		//echo'</pre>';
+	}
 	if(!isset($nstd[0]['w'])){
+		/*if(!isset($nstd[0])){
+			//echo'*';
+			print_r($nstd);
+			exit;
+		}*/
 		$result.=nstd_to_str_2($nstd[0]);
 	}else{
 		$word=$nstd[0]['w'];
@@ -1202,8 +1217,16 @@ function nstd_to_str_2($nstd){
 		$result.=$word;
 		$nstd_to_str_2_firstwordisready=true;
 	}
+	if(isset($nstd[1][1]['w'])&&$nstd[1][1]['w']=='()'){
+		//$result.=' (';
+		$nstd[1]=$nstd[1][0];
+		$parentheses=true;
+	}
 	if(!isset($nstd[1]['w'])){
 		$result.=' ';
+		if(isset($parentheses)){
+			$result.='(';
+		}
 		$result.=nstd_to_str_2($nstd[1]);
 	}else{
 		$word=$nstd[1]['w'];
@@ -1213,11 +1236,18 @@ function nstd_to_str_2($nstd){
 		if($word!='.'&&$word!='не'&&$word!='ны'&&$word!='е'&&$word!='гыз'&&$word!='дан'&&$word!='нче'){
 			$result.=' ';
 		}
+		if(isset($parentheses)){
+			$result.='(';
+		}
 		$result.=$word;
 		$nstd_to_str_2_firstwordisready=true;
 	}
-	if(isset($nstd['thisisheader'])){
+	if(isset($nstd['thisisheader'])||isset($nstd['inquotes'])){
 		$result.='"';
+	}
+	if(isset($parentheses)){
+		$result.=')';
+		unset($parentheses);
 	}
 	return $result;
 }
@@ -1367,6 +1397,10 @@ $dic['dynamic']['type']='noun';
 $dic['random']['type']='noun';
 $dic['access']['type']='noun';
 $dic['memory']['type']='noun';
+$dic['DRAM']['type']='noun';
+$dic['high']['type']='noun';
+$dic['bandwidth']['type']='noun';
+$dic['interface']['type']='noun';
 $multiwords=array(0=>array('random','access'));
 $engtext2=order_2($engtext2);
 print_r($engtext2);
@@ -1396,6 +1430,9 @@ $words['rate']='дәрәҗә';
 $words['synchronous']='синхрон';
 $words['access']='керү';
 $words['memory']='хәтер';
+$words['interface']='интерфейс';
+$words['DRAM']='DRAM';
+$words['()']='()';
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
@@ -1471,7 +1508,26 @@ echo nstd_to_str_2($result);
 //i am going to make some temporary code just for this case ...
 //if i think "random access" is ok , then again, (random access) memory - this is memory with (random access)
 //i am going to just use "random access" as lexem in dictionary
-
+//'random access memory' is ordered
+//now i am going to make parentheses
+//{dynamic random access memory ( DRAM )}
+//to
+//{DRAM {dynamic random access memory}}
+//and
+//high bandwidth ( " double data rate " ) interface
+//to
+//{ { [ " double data rate " ] [high bandwidth] } interface}
+//parentheses are done for this case
+//i have made quotes but quotes immediately in parentheses don't work and in my program...
+//i am going to replace "inquotes" and "inparentheses" properties with "words" '""', "()" . no, i will make only parentheses as word... done, i have now:
+//Хисапла у эчендә өч төр икекатлы мәгълүмат дәрәҗә синхрон динамик теләсәкайсы керү хәтер өчен бер аббревиатура DDR3 SDRAM 2007 таналып кулланылыш эчендә бул п куй а һәм бер икекатлы мәгълүмат дәрәҗә () биек агымкиңлеге интерфейс белән DRAM () динамик теләсәкайсы керү хәтер ның бер яңа төр бул а.
+//trying to understand it:
+//In computing, DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory, is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007.
+//Хисаплау эчендә,
+//[өч төр икекатлы мәгълүмат дәрәҗә синхрон динамик теләсәкайсы керү хәтер] өчен бер аббревиатура, DDR3 SDRAM
+//2007 таналып кулланылыш эчендә бул п куй а һәм
+//бер биек агымкиңлеге ("икекатлы мәгълүмат дәрәҗә") интерфейс белән динамик теләсәкайсы керү хәтер (DRAM) ның бер яңа төр бул а.
+//have fixed quotes in output. have fixed parentheses in output.
 
 
 
