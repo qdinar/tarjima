@@ -26,32 +26,49 @@ function order_2($inparr){
 
 	$tryallarenouns=true;
 	foreach($inparr as $trynoun){
-		if(!(isset($trynoun['w'])&&isset($dic[$trynoun['w']])&&$dic[$trynoun['w']]['type']=='noun'||$trynoun['w']=='"'||$trynoun['w']=='('||$trynoun['w']==')')){
+		if(
+			!(
+				isset($trynoun['w'])
+				&&(
+					isset($dic[$trynoun['w']])
+					&&$dic[$trynoun['w']]['type']=='noun'
+					||$trynoun['w']=='"'
+					||$trynoun['w']=='('
+					||$trynoun['w']==')'
+				)
+				||(
+					isset($trynoun[1]['w'])
+					&&$trynoun[1]['w']==',,'
+				)
+			)
+		){
 			$tryallarenouns=false;
 			break;
 		}
 	}
 	if($tryallarenouns){
 		foreach($inparr as $key=>$noun){
-			if($noun['w']=='type'&&$inparr[$key+1]['w']=='three'&&$key>0&&$key<count($inparr)-2){
+			if(isset($noun['w'])&&$noun['w']=='type'&&$inparr[$key+1]['w']=='three'&&$key>0&&$key<count($inparr)-2){
 			//before and after "type three"
 				$beforetype=array_splice($inparr,0,$key);
-				if(count($beforetype)>1){
+				/*if(count($beforetype)>1){
 					$beforetype=order_2($beforetype);
 				}else{
 					$beforetype=$beforetype[0];
-				}
+				}*/
+				order_2_if_needed($beforetype);
 				$typeblock=array_splice($inparr,0,2);
 				$typeblock=order_2($typeblock);
-				if(count($inparr)>1){
+				/*if(count($inparr)>1){
 					$inparr=order_2($inparr);
 				}else{
 					$inparr=$inparr[0];
-				}
+				}*/
+				order_2_if_needed($inparr);
 				$outparr[]=array($typeblock,$beforetype);
 				$outparr[]=$inparr;
 				return $outparr;
-			}elseif($noun['w']=='('&&$key>0&&$key<count($inparr)-2){
+			}elseif(isset($noun['w'])&&$noun['w']=='('&&$key>0&&$key<count($inparr)-2){
 				for($i=count($inparr)-1;$i>1;$i--){
 					if($inparr[$i]['w']==')'){
 						$beforeparentheses=array_splice($inparr,0,$key);
@@ -89,7 +106,7 @@ function order_2($inparr){
 						*/
 					}
 				}
-			}elseif($noun['w']=='"'&&$key<count($inparr)-1){
+			}elseif(isset($noun['w'])&&$noun['w']=='"'&&$key<count($inparr)-1){
 				for($i=count($inparr)-1;$i>0;$i--){
 					if($inparr[$i]['w']=='"'){
 						$beforequotes=array_splice($inparr,0,$key);
@@ -135,18 +152,34 @@ function order_2($inparr){
 						*/
 					}
 				}
+			}elseif(isset($noun[1]['w'])&&$noun[1]['w']==',,'&&$key==count($inparr)-1){
+				/*
+				$described=$inparr[$key-1];
+				$inparr[$key-1]=array($noun,$described);
+				array_splice($inparr,$key);//remove
+				//print_r($inparr);
+				if(count($inparr)==1){
+					$inparr=$inparr[0];
+				}
+				*/
+				array_splice($inparr,-1);
+				order_2_if_needed($inparr);
+				$outparr[]=$noun;
+				$outparr[]=$inparr;
+				return $outparr;
 			}
 		}
 
 
-		if($inparr[0]['w']=='type'){
+		if(isset($inparr[0]['w'])&&$inparr[0]['w']=='type'){
 		//inside "type three"
 			$type=array_splice($inparr,0,1); //cut out "type"
-			if(count($inparr)>1){
+			/*if(count($inparr)>1){
 				$inparr=order_2($inparr);
 			}else{
 				$inparr=$inparr[0];
-			}
+			}*/
+			order_2_if_needed($inparr);
 			$outparr[]=$inparr;
 			$outparr[]=$type[0];
 			return $outparr;
@@ -167,11 +200,12 @@ function order_2($inparr){
 				if($trythisismatched==true){
 					$foundmw=array_splice($inparr,0,$mwkey+1);
 					$foundmw=order_2($foundmw);
-					if(count($inparr)>1){
+					/*if(count($inparr)>1){
 						$inparr=order_2($inparr);
 					}else{
 						$inparr=$inparr[0];
-					}
+					}*/
+					order_2_if_needed($inparr);
 					$outparr[]=$foundmw;
 					$outparr[]=$inparr;
 					return $outparr;
@@ -185,11 +219,12 @@ function order_2($inparr){
 
 		$firstnoun=array_splice($inparr,0,1);
 		$firstnoun=$firstnoun[0];
-		if(count($inparr)>1){
+		/*if(count($inparr)>1){
 			$inparr=order_2($inparr);
 		}else{
 			$inparr=$inparr[0];
-		}
+		}*/
+		order_2_if_needed($inparr);
 		$outparr[]=$firstnoun;
 		$outparr[]=$inparr;
 		return $outparr;
@@ -201,48 +236,85 @@ function order_2($inparr){
 				isset($inparr[$key+1]['w'])
 				&&isset($dic[$inparr[$key+1]['w']])
 				&&$dic[$inparr[$key+1]['w']]['type']=='verb'
+				//this catched both for ... , see ...
+				//and second comma in
+				//... , an abbreviation for ... , is ...
+				//but the second comma is other thing...
+				//&&$inparr[$key+2]['w']!='s'
+				//but if i add this my example becomes broken...
+				//i need to do something with all commas, probably - done
 				||
 				$inparr[0]['w']=='in'
 				//In computing
 			){
+				/*
 				$verb=array_splice($inparr,$key+1);
 				array_splice($inparr,$key);//remove comma
 				//inparr is "for ..." now,  of "for ... , see ..."
-				if(count($inparr)>1){
-					$inparr=order_2($inparr);
-				}else{
-					$inparr=$inparr[0];
-				}
-				if(count($verb)>1){
-					$verb=order_2($verb);
-				}else{
-					$verb=$verb[0];
-				}
-				$outparr[]=$inparr;
+				order_2_if_needed($inparr);
+				order_2_if_needed($verb);
+				$outparr[]=array($inparr,array('w'=>','));
 				$outparr[]=$verb;
 				return $outparr;
+				*/
+				$intro=array_splice($inparr,0,$key);
+				order_2_if_needed($intro);
+				//1st (0th) element of inparr is "," now
+				$inparr[0]=array($intro,array('w'=>','));
+				break;
+				//after finding 1 introductory i assume there are none other one
 			}
 		}
 	}
 	for($i=count($inparr)-1;$i>=0;$i--){
-		if(isset($inparr[$i]['w'])&&$inparr[$i]['w']==','&&isset($inparr[$i+1]['w'])&&$inparr[$i+1]['w']=='and'){
-			$andwhat=array_splice($inparr,$i+2);
-			$whatand=array_splice($inparr,0,$i);
-				if(count($andwhat)>1){
-					$andwhat=order_2($andwhat);
-				}else{
-					$andwhat=$andwhat[0];
-				}
-				if(count($whatand)>1){
-					$whatand=order_2($whatand);
-				}else{
-					$whatand=$whatand[0];
-				}
+		if(isset($inparr[$i]['w'])&&$inparr[$i]['w']==','){
+			if(isset($inparr[$i+1]['w'])&&$inparr[$i+1]['w']=='and'){
+				/*
+				$andwhat=array_splice($inparr,$i+2);
+				$whatand=array_splice($inparr,0,$i);
+				order_2_if_needed($andwhat);
+				order_2_if_needed($whatand);
 				$outparr[]=array($andwhat,array('w'=>'and'));
 				$outparr[]=$whatand;
 				return $outparr;
+				*/
+				$andblock=array_splice($inparr,$i+2,count($inparr)-$i-2);
+				order_2_if_needed($andblock);
+				array_splice($inparr,count($inparr)-1);//remove last element because there are "," and "and"
+				$inparr[count($inparr)-1]=array($andblock,array('w'=>'and'));
+			}
 		}
 	}
+	for($i=0;$i<count($inparr);$i++){
+		if(isset($inparr[$i]['w'])&&$inparr[$i]['w']==','){
+			if(isset($inparr[$i+1]['w'])&&($inparr[$i+1]['w']=='the'||$inparr[$i+1]['w']=='a'||$inparr[$i+1]['w']=='an')){
+				/*
+				$noun=array_splice($inparr,0,$key);
+				array_splice($inparr,0,1);//remove comma
+				order_2_if_needed($inparr);
+				//$inparr['incommas']=true;
+				order_2_if_needed($noun);
+				$outparr[]=array($inparr,array('w'=>',,'));
+				$outparr[]=$noun;
+				return $outparr;
+				*/
+				for($j=$i+1;$j<count($inparr);$j++){
+					if($inparr[$j]['w']==','){
+						break;
+					}
+				}
+				$additionalinfo=array_splice($inparr,$i+1,$j-$i-1);
+				order_2_if_needed($additionalinfo);
+				//0,23,5
+				//i=1,j=4
+				array_splice($inparr,$i,1);//remove 1 of 2 commas
+				$inparr[$i]=array($additionalinfo,array('w'=>',,'));
+			}
+		}
+	}
+	echo'<pre>';
+	print_r($inparr);
+	echo'</pre>';
 
 	foreach($inparr as $key=>$word){
 		if(isset($word['w'])&&($word['w']=='s'||$word['w']=='pr-si'||$word['w']=='ed')){
@@ -323,8 +395,6 @@ function order_2($inparr){
 					$key--;
 				}
 				$subject=array_splice($inparr,0,$key-1);//all before has or is
-				//inparr is without subject now
-				array_splice($inparr,1,1);//remove s
 				if(count($subject)>1){//i have seen there should be >2 and will replace in other places <- this was mistake
 					$subject=order_2($subject);
 				}elseif(count($subject)==1){
@@ -335,6 +405,22 @@ function order_2($inparr){
 					//remove commenting, with 'is ... and has been ... ' example i see there is no subject in the block...
 					//i have empty subject blocks and i want to remove them
 				}
+				//inparr is without subject now
+				if(isset($inparr[count($inparr)-1][1]['w'])&&$inparr[count($inparr)-1][1]['w']=='and'&&$inparr[count($inparr)-1][0][1]['w']=='s'){
+					//need to remove 'and' block
+					$andblock=array_splice($inparr,-1);
+					order_2_if_needed($inparr);
+					$andblock=$andblock[0];
+					if(isset($subject)){
+						$outparr[]=$subject;
+						$outparr[]=array($andblock,$inparr);
+					}else{
+						$outparr[]=$andblock;
+						$outparr[]=$inparr;
+					}
+					return $outparr;
+				}
+				array_splice($inparr,1,1);//remove s
 				if(count($inparr)>1){
 					$inparr=order_2($inparr);
 				}
@@ -417,33 +503,37 @@ function order_2($inparr){
 		){
 			array_splice($inparr,0,1);//remove verb
 			//this will work incorrectly with "read the bug through tracker"
-			if(count($inparr)>1){
+			/*if(count($inparr)>1){
 				$inparr=order_2($inparr);
 			}else{
 				$inparr=$inparr[0];
-			}
+			}*/
+			order_2_if_needed($inparr);
 			$outparr[]=$inparr;
 			$outparr[]=$word;
 			return $outparr;
 			//i should make dictionary with (several) properties (instead of word-per-word translations) (i need it now because i need check whether morphem is verb)
-		}elseif(isset($word['w'])&&$word['w']==','){
-			if(isset($inparr[$key+1]['w'])&&($inparr[$key+1]['w']=='the'||$inparr[$key+1]['w']=='a'||$inparr[$key+1]['w']=='an')){
+		//}elseif(isset($word['w'])&&$word['w']==','){
+			//if(isset($inparr[$key+1]['w'])&&($inparr[$key+1]['w']=='the'||$inparr[$key+1]['w']=='a'||$inparr[$key+1]['w']=='an')){
+				/*
 				$noun=array_splice($inparr,0,$key);
 				array_splice($inparr,0,1);//remove comma
-				if(count($inparr)>1){
-					$inparr=order_2($inparr);
-				}else{
-					$inparr=$inparr[0];
-				}
-				if(count($noun)>1){
-					$noun=order_2($noun);
-				}else{
-					$noun=$noun[0];
-				}
-				$outparr[]=$inparr;
+				order_2_if_needed($inparr);
+				//$inparr['incommas']=true;
+				order_2_if_needed($noun);
+				$outparr[]=array($inparr,array('w'=>',,'));
 				$outparr[]=$noun;
 				return $outparr;
-			}
+				*/
+				/*for($i=$key+1;$key<count($inparr);$i++){
+					if($inparr[$i]==','){
+						break;
+					}
+				}
+				$additionalinfo=array_splice($inparr,$key+1,$i-$key-1);
+				$noun=array_splice($inparr,0,$key);
+				*/
+			//}
 		}elseif(isset($word['w'])&&isset($dic[$word['w']])&&$dic[$word['w']]['type']=='verb'&&$key==0&&$inparr[1]['w']!='ed-pp'&&$inparr[1]['w']!='er'&&$inparr[1]['w']!='s'){
 			if($word['w']=='have'||$word['w']=='be'){
 				if($inparr[2]['w']=='ed-pp'){//have(0) do(1) ed(2)
@@ -477,21 +567,23 @@ function order_2($inparr){
 						$verb=array_splice($inparr,0,$i);
 						//'built last year' is probably broken here, it should not come here
 						//i have added &&$inparr[1]['w']!='ed-pp' in if condition (16 lines upper) and it is fixed
-						if(count($verb)>1){
+						/*if(count($verb)>1){
 							$verb=order_2($verb);
 							//"i go to school every day" is almost ordered now, need to (write code to) order "to school" and remove excessive array from "(go)"
 						}else{
 							$verb=$verb[0];
-						}
+						}*/
+						order_2_if_needed($verb);
 						if($inparr[0]['w']=='to'||$inparr[0]['w']=='from'||$inparr[0]['w']=='through'||$inparr[0]['w']=='about'||$inparr[0]['w']=='since'||$inparr[0]['w']=='in'){//preposition
 						//swapping preposition with its word
 							$prep=array_splice($inparr,0,1);
 							$prep=$prep[0];
-							if(count($inparr)>1){//inparr is now "school" or "good school"
+							/*if(count($inparr)>1){//inparr is now "school" or "good school"
 								$inparr=order_2($inparr);
 							}else{
 								$inparr=$inparr[0];
-							}
+							}*/
+							order_2_if_needed($inparr);
 							$tmpa=array();
 							$tmpa[]=$inparr;
 							$tmpa[]=$prep;
@@ -525,16 +617,18 @@ function order_2($inparr){
 				}
 				$thatsblock=array_splice($inparr,$i);
 				//inparr is "verb block" now
-				if(count($inparr)>1){
+				/*if(count($inparr)>1){
 					$inparr=order_2($inparr);
 				}else{
 					$inparr=$inparr[0]['w'];
-				}
-				if(count($thatsblock)>1){
+				}*/
+				order_2_if_needed($inparr);
+				/*if(count($thatsblock)>1){
 					$thatsblock=order_2($thatsblock);
 				}else{
 					$thatsblock=$thatsblock[0];
-				}
+				}*/
+				order_2_if_needed($thatsblock);
 				$outparr[]=$thatsblock;
 				$outparr[]=$inparr;
 				//return 0; // i see teacher whom ... has come here and have been broken. and it is (the 0) - it is not correct. i have added &&$inparr[1]['w']!='er' in condition and it does not come here and is fixed.
@@ -671,11 +765,12 @@ function order_2($inparr){
 			if($prepishere==false){
 				$an=array_splice($inparr,0,1);
 				$an=$an[0];
-				if(count($inparr)>1){
+				/*if(count($inparr)>1){
 					$inparr=order_2($inparr);
 				}else{
 					$inparr=$inparr[0];
-				}
+				}*/
+				order_2_if_needed($inparr);
 				$outparr[]=$an;
 				$outparr[]=$inparr;
 				return $outparr;
@@ -683,6 +778,14 @@ function order_2($inparr){
 		}
 		//elseif(isset($word['w'])&&isset($inparr[$key+1])&&$word['w']=='type'&&$inparr[$key+1]=='three'){
 		//}
+		elseif($key==0&&isset($word[1]['w'])&&$word[1]['w']==','){
+			$intro=$word;
+			array_splice($inparr,0,1);//remove it
+			order_2_if_needed($inparr);
+			$outparr[]=$intro;
+			$outparr[]=$inparr;
+			return $outparr;
+		}
 	}
 	return $inparr;
 }
