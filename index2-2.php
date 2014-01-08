@@ -1,5 +1,5 @@
 <?php
-
+//this file is to be included from/by index2.php
 
 //i want to translate these sentences, from https://en.wikipedia.org/wiki/DDR3_SDRAM :
 //From Wikipedia, the free encyclopedia
@@ -290,6 +290,8 @@ $words['memory']='хәтер';
 $words['interface']='интерфейс';
 $words['DRAM']='DRAM';
 $words['()']='()';
+$mwdic=array();
+$mwdic[]=array('en'=>array('compute','ing'),'tt'=>array('компьютер',array('гыйлем','е')));
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
@@ -430,6 +432,93 @@ echo nstd_to_str_2($result);
 // 2007 таналып -> 2007дән алып
 // кулланылыш эчендә -> кулланылышта
 // delete бул п куй а
+function is_mw_eq($simbl,$mw){
+	if(is_array($mw[0])){
+	}else{
+		if(!(isset($simbl[0]['w'])&&$simbl[0]['w']==$mw[0])){
+			//$notequal=true;
+			return false;
+		}
+	}
+	if(is_array($mw[1])){
+	}else{
+		if(!(isset($simbl[1]['w'])&&$simbl[1]['w']==$mw[1])){
+			//$notequal=true;
+			return false;
+		}
+	}
+	return true;
+}
+function assign_mw_tr(&$s2,$tr){
+	if(is_array($tr[0])){
+		$s2[0]=array();
+		assign_mw_tr($s2[0],$tr[0]);
+	}else{
+		$s2[0]=array('w'=>$tr[0]);
+	}
+	if(is_array($tr[1])){
+		$s2[1]=array();
+		assign_mw_tr($s2[1],$tr[1]);
+	}else{
+		$s2[1]=array('w'=>$tr[1]);
+	}
+}
+//multi morphem lexem translation is started
+//'computing' is translated special way now, before it is translated simply morphem-to-morphem ...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

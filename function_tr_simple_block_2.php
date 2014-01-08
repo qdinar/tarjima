@@ -3,9 +3,18 @@
 
 function tr_simple_block_2($simbl){
 
-	global $words,$dic,$recursionlevel;
+	global $words,$dic,$recursionlevel,$mwdic;
 	$recursionlevel++;
 	$s2=array();
+	foreach($mwdic as $mw){
+		if(is_mw_eq($simbl,$mw['en'])){
+			//echo'*';
+			assign_mw_tr($s2,$mw['tt']);
+			//echo'*';
+			//print_r( $s2 );
+			return $s2;
+		}
+	}
 	if(!isset($simbl[0]['w'])){
 		$s2[0]=tr_simple_block_2($simbl[0]);
 	}else{
