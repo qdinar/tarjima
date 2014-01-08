@@ -65,6 +65,9 @@ function tr_simple_block_2($simbl){
 		//var_dump($s2);
 	}
 	//
+	//
+	//
+	//
 	if(!isset($simbl[1]['w'])){
 		$s2[1]=tr_simple_block_2($simbl[1]);
 	}else{
@@ -246,6 +249,26 @@ function tr_simple_block_2($simbl){
 				$s2[0]=$subj;
 				$s2[1]=$obj;
 				unset($subj,$obj);
+			}elseif(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='be'){
+				//ddrsdram {is ... and has been in ...}
+				//remove "була" - copula "is" translation
+				$s2=$s2[0][0];
+			}elseif(
+				isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='have'
+				&&isset($simbl[0][0][1]['w'])&&$simbl[0][0][1]['w']=='ed-pp'
+				&&isset($simbl[0][0][0][1][1]['w'])&&$simbl[0][0][0][1][1]['w']=='be'
+			){
+				//ddrsdram {is ... and has been in ...}
+				//remove "була" - copula "is" translation
+				$part1=$s2[0][0][0][0];//since 2007
+				$part2=$s2[0][0][0][1][0];//in use
+				$s2[0]=$part1;
+				$s2[1]=$part2;
+			}
+		}elseif($simbl[1]['w']=='type'){
+			if(isset($simbl[0]['w'])&&$simbl[0]['w']=='three'){
+				$num=$s2[0];
+				$s2[0]=array($num,array('w'=>'енче'));
 			}
 		//}else{
 			//$s2[1]['w']=$words[$simbl[1]['w']];

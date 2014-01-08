@@ -88,7 +88,7 @@ function nstd_to_str_2($nstd){
 		if(isset($nstd[1]['firstiscapital'])&&$nstd[1]['firstiscapital']==true||!$nstd_to_str_2_firstwordisready){
 			$word=mb_strtoupper(mb_substr($word,0,1)).mb_substr($word,1);
 		}
-		if($word!='.'&&$word!='не'&&$word!='ны'&&$word!='е'&&$word!='гыз'&&$word!='дан'&&$word!='нче'){
+		if($word!='.'&&$word!='не'&&$word!='ны'&&$word!='е'&&$word!='гыз'&&$word!='дан'&&$word!='нче'&&$word!='енче'){
 			$result.=' ';
 		}
 		if(isset($parentheses)){
@@ -292,6 +292,8 @@ $words['DRAM']='DRAM';
 $words['()']='()';
 $mwdic=array();
 $mwdic[]=array('en'=>array('compute','ing'),'tt'=>array('компьютер',array('гыйлем','е')));
+$mwdic[]=array('en'=>array('random','access'),'tt'=>array('теләсә-ничек','керү'));
+$mwdic[]=array('en'=>array('high','bandwidth'),'tt'=>array('югары','үткәрүчәнлек'));
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
@@ -411,27 +413,27 @@ echo nstd_to_str_2($result);
 //Хисапла у эчендә , өч төр икекатлы мәгълүмат дәрәҗә синхрон динамик теләсәкайсы керү хәтер өчен бер аббревиатура булган DDR3 SDRAM бер биек агымкиңлеге ("икекатлы мәгълүмат дәрәҗә") интерфейс белән динамик теләсәкайсы керү хәтер (DRAM) ның бер яңа төр бул а һәм 2007 таналып кулланылыш эчендә бул п куй а.
 //there were comma between SDRAM and бер, i have removed it. though it is more correct now, seems it is less readable... but i think i can add comma now if i want...
 //what i need to edit:
-// хисапла у -> компьютер гыйлеме
+// хисапла у -> компьютер гыйлеме - done
 // компьютер гыйлеме эчендә -> компьютер гыйлемендә
-// өч төр -> өченче төр -> өченче төрдәге
+// өч төр -> өченче төр (done) -> өченче төрдәге
 // дәрәҗә -> тизлек - done
 // мәгълүмат тизлек -> мәгълүмат тизлеге
-// теләсәкайсы керү -> теләсә-ничек керү
+// теләсәкайсы керү -> теләсә-ничек керү - done
 // теләсә-ничек керү хәтер -> теләсә-ничек керү хәтере
 // (өченче төрдәге ике катлы мәгълүмат тизлеге) (синхрон динамик теләсә-ничек керү хәтере)
 // -> өченче төрдәге ике катлы мәгълүмат тизлеге ле синхрон динамик теләсә-ничек керү хәтере
 // агымкиңлеге -> үткәрүчәнлек - done
-// биек үткәрүчәнлек -> югары үткәрүчәнлек
+// биек үткәрүчәнлек -> югары үткәрүчәнлек - done
 // югары үткәрүчәнлек ("ике катлы мәгълүмат тизлеге") интерфейс
 // -> югары үткәрүчәнлек ("ике катлы мәгълүмат тизлеге") ле интерфейс
 // or -> югары үткәрүчәнлекле ("ике катлы мәгълүмат тизлекле") интерфейс
 // ... интерфейс белән -> ... интерфейслы
 // maybe ... хәтере (DRAM) ның -> ... хәтере (DRAM) нең
 // бер яңа төр -> бер яңа төре
-// delete бул а
+// delete бул а - done
 // 2007 таналып -> 2007дән алып
 // кулланылыш эчендә -> кулланылышта
-// delete бул п куй а
+// delete бул п куй а - done
 function is_mw_eq($simbl,$mw){
 	if(is_array($mw[0])){
 	}else{
@@ -465,10 +467,14 @@ function assign_mw_tr(&$s2,$tr){
 }
 //multi morphem lexem translation is started
 //'computing' is translated special way now, before it is translated simply morphem-to-morphem ...
-
-
-
-
+//өч төр -> өченче төр is done
+//i have written some code about "type three", i do not commit it, i use now commits just for history, not for reusing that commits...
+//теләсәкайсы керү -> теләсә-ничек керү is done
+//биек үткәрүчәнлек -> югары үткәрүчәнлек is done
+//(these are made with the new multi morphem dic instrument)
+//бул а is deleted
+//бул п куй а is deleted
+//(these are made with special code)
 
 
 
