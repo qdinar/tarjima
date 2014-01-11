@@ -270,6 +270,10 @@ function tr_simple_block_2($simbl){
 				$num=$s2[0];
 				$s2[0]=array($num,array('w'=>'енче'));
 			}
+		}elseif($simbl[1]['w']==',,'){
+			if(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='the'){
+				$s2=$s2[0];
+			}
 		//}else{
 			//$s2[1]['w']=$words[$simbl[1]['w']];
 		}

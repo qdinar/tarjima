@@ -1,5 +1,6 @@
 <?php
 //this file is to be included from/by index2.php
+$mwdic=array();
 
 //i want to translate these sentences, from https://en.wikipedia.org/wiki/DDR3_SDRAM :
 //From Wikipedia, the free encyclopedia
@@ -209,7 +210,7 @@ $words['video']='видео';
 $words['game']='уен';
 $words['dance']='бию';
 $words['rd']='нче';
-$words['mix']='болгату';
+$words['mix']='болгатма';
 $words['3']='3';
 $words['revolution']='революция';
 $recursionlevel=0;
@@ -290,7 +291,6 @@ $words['memory']='хәтер';
 $words['interface']='интерфейс';
 $words['DRAM']='DRAM';
 $words['()']='()';
-$mwdic=array();
 $mwdic[]=array('en'=>array('compute','ing'),'tt'=>array('компьютер',array('гыйлем','е')));
 $mwdic[]=array('en'=>array('random','access'),'tt'=>array('теләсә-ничек','керү'));
 $mwdic[]=array('en'=>array('high','bandwidth'),'tt'=>array('югары','үткәрүчәнлек'));
@@ -349,6 +349,16 @@ echo nstd_to_str_2($result);
 //so we cannot say "data rate" in tatar.
 //it is rate OF data
 //but, in some dialects of tatar there is same way of using nouns as in english, as i know
+//seems, tatar way of using 2 nouns is not in english, but only some words that are adjectives are used that way
+//and also there are some nouns that r=are also adjectives: brick... - same in tatar ... materials...
+//can any other noun be used that way in tatar and in english?
+//seems that does not work with any nouns also in tatar...
+//no.. seems they work both in english and in tatar : cave house - мәгарә өй ... but as i know that is (would be) spelled мәгарә-өй - i think that is not correct
+//another example: editor program, text editor soft
+//i am going to use a "semantic category" property - a number, to mark words with meaning of same type with same number. i have found/seen this method near a month ago in http://www.e-zerde.kz/conf/TurkLang.pdf "PROCEEDINGS Of the I International Conference on Computer processing of Turkic Languages (TurkLang-2013)" p. 274, pdf p. 270. i do not know whether i would have found this method by myself
+//but then i should mark "program" and "editor" with same number...
+//may be i should just use adjectives and nouns as in common tatar and english grammars...
+
 //how can i order "random access" before "standart flow" now?
 //1st way, i said about it, to set "random access" in dictionary, and check for it
 //and i have found 2nd way:
@@ -475,33 +485,57 @@ function assign_mw_tr(&$s2,$tr){
 //бул а is deleted
 //бул п куй а is deleted
 //(these are made with special code)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//now i am going to make:
+// мәгълүмат тизлек -> мәгълүмат тизлеге
+// керү хәтер -> керү хәтере
+// хәтеренең бер яңа төр -> хәтеренең бер яңа төре
+// үткәрүчәнлек интерфейс does not become үткәрүчәнлек интерфейсы, but үткәрүчәнлекле интерфейс
+// in english, something like: 
+// data rate -> data, its rate
+// ... access memory -> ... access, its memory
+// ... memory 's a modern type -> ... memory 's , its a modern type
+// ... bandwidth interface -> ... bandwidth -ful interface
+//i do not know how to know out that it is not ... bandwidth, its interface
+//also, if i do not get "random access" from multi-word dic, how would i know out that it is not
+// random, its access
+//?
+//but access memory also can be done as access-ful memory
+//"access, its memory" seems to me unlogical
+//so, i get:
+// in case хәтеренең ... төр it is easily known that е should be added, from presence of "ның".
+// in case data rate seems it is feature of word "rate"
+// in other cases use "-ful"
+//also may be i should fix now previous example
+//Теге видео уен өчен "Бию Бию Революция 3нче Болгату"ны карагыз.
+//Бию Бию Революция -> Бию Бию Революциясе
+//Болгату->Болгатма - done
+//Бию Бию Революциясе 3нче Болгатма -> Бию Бию Революциясе 3нче Болгатмасы
+//and,
+// {(revolution of dance) of dance} could be
+// {Бию (Бию Революциясен)е}
+//but 2 "(с)е(н)" one after another are not used
+//also "лы" and "сыз" suffixes are not used in modern tatar language after "(с)е(н)"
+//i do not know, whether they are used in that place in other turkic languages
+//and i want to edit
+//Теге бушлай энциклопедия булган Википедиядан
+//to
+//Теге бушлай энциклопедия Википедиядан - done
+//as it was. it has become with "булган" after i added that for DDR SDRAM , ... ,
+//it is also same 2 commas as it is in wikipedia, ... - (though there is no last comma, just end of sentence)
+//i am going to make different translation for "... , the ... ," and "... , an ... ," ...
+//i am not sure whether that would be correct with other sentences
+//dance revolution is not dance-ful revolution, but dance's revolution
+//how to know that out automatically?
+//also,
+//... тизлеге ... хәтер -> ... тизлеге(н)ле ... хәтер
+// ie ... rate ... memory -> ... rate -ful memory
+//not rate's memory
+//how to know that out automatically?
+//so i get...
+//data rate, dance revolution -> data's rate, dance's revolution
+//randomaccess memory, highbandwidth interface, ddrate sdramemory -> randomaccess-ful memory, highbandwidth-ful interface, ddrate-ful sdramemory
+//i see a rule now: multiwords are like adjectives with "ful" and one-words are "owners"
+//(i am not sure whether that would be correct with other sentences)
 
 
 
