@@ -312,9 +312,9 @@ function order_2($inparr){
 			}
 		}
 	}
-	echo'<pre>';
-	print_r($inparr);
-	echo'</pre>';
+	//echo'<pre>';
+	//print_r($inparr);
+	//echo'</pre>';
 
 	foreach($inparr as $key=>$word){
 		if(isset($word['w'])&&($word['w']=='s'||$word['w']=='pr-si'||$word['w']=='ed')){

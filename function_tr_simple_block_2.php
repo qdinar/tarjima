@@ -3,7 +3,7 @@
 
 function tr_simple_block_2($simbl){
 
-	global $words,$dic,$recursionlevel,$mwdic;
+	global $words,$dic,$recursionlevel,$mwdic,$nounlikes;
 	$recursionlevel++;
 	$s2=array();
 	foreach($mwdic as $mw){
@@ -63,6 +63,40 @@ function tr_simple_block_2($simbl){
 		$s2[0]['w']='узган';//instead of соңгы in dic
 		//does not work, i do not know why. found. == instead of =.
 		//var_dump($s2);
+	}
+	if(!isset($simbl[0]['w'])){
+		$sb0mainword=get_main_word($simbl[0]);
+		//echo'*';print_r($sb0mainword);
+		//echo'*';print_r($simbl[0]);
+		if(isset($simbl[1]['w'])){
+			$sb1mainword=$simbl[1];
+		}else{
+			$sb1mainword=get_main_word($simbl[1]);
+		}
+		//if($sb1mainword['w']=='interface'){
+			//echo'*';
+			//echo'<pre>';
+			//print_r($simbl[0]);
+			//echo'</pre>';
+			//print_r($sb0mainword);
+		//}
+		if(
+			isset($nounlikes[$sb1mainword['w']])&&$nounlikes[$sb1mainword['w']]['type']=='noun'
+			&&
+			isset($nounlikes[$sb0mainword['w']])&&$nounlikes[$sb0mainword['w']]['type']=='noun'
+		){
+			//echo'*!'.$sb0mainword['w'].'-'.$sb1mainword['w'];
+			$mwadj=$s2[0];
+			$s2[0]=array($mwadj,array('w'=>'лы'));
+		}
+	/*}else{
+		if(
+			isset($nounlikes[$simbl[0]['w']])&&$nounlikes[$simbl[0]['w']]['type']=='noun'
+		){
+			//echo'*!'.$sb0mainword['w'].'-'.$sb1mainword['w'];
+			$mwadj=$s2[0];
+			$s2[0]=array($mwadj,array('w'=>'s'));
+		}*/
 	}
 	//
 	//
@@ -311,7 +345,7 @@ function tr_simple_block_2($simbl){
 				}
 				
 			}
-		}elseif($s2[1]['w']=='тан'&&isset($s2[0][1]['w'])&&(mb_substr($s2[0][1]['w'],-1)=='а'||mb_substr($s2[0][1]['w'],-1)=='я')){
+		}elseif(isset($s2[1]['w'])&&$s2[1]['w']=='тан'&&isset($s2[0][1]['w'])&&(mb_substr($s2[0][1]['w'],-1)=='а'||mb_substr($s2[0][1]['w'],-1)=='я')){
 			$s2[1]['w']='дан';
 		}elseif(isset($simbl[1]['thisisabbreviation'])&&substr($simbl[0]['w'],-1)=='s'){
 			$s2[1]=array($s2[1],array('w'=>'е'));
@@ -322,6 +356,16 @@ function tr_simple_block_2($simbl){
 				$s2[0][0]=array($s2[0][0],$s2[0][1]);
 				$s2[0][1]=array('w'=>'гыз');
 			}
+		}
+	}
+	if(isset($simbl[0]['w'])){
+		if(
+			isset($nounlikes[$simbl[0]['w']])&&$nounlikes[$simbl[0]['w']]['type']=='noun'
+		){
+			//echo'*!'.$sb0mainword['w'].'-'.$sb1mainword['w'];
+			//$mwadj=$s2[0];
+			//$s2[0]=array($mwadj,array('w'=>'s'));
+			$s2[1]=array($s2[1],array('w'=>'ы'));
 		}
 	}
 	/*

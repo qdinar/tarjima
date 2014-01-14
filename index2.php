@@ -961,6 +961,11 @@ echo nstd_to_str($result);
 //and software ideas are not patented in russia and patenting requires money in usa, and my this code in php itself is almost useless, almost not reusable, gpl license would only guard code, but not ideas ({ideas are guarded from patenting} by publishing), so i have not set license like gpl for this
 // (and even code cannot be well guarded with gpl, because it is open and can be copied, though , even closed source programs can be disassembled etc )
 
+//i would like to use something like gnu affero lesser gpl v3 with requirement of attribution to authors... but i like not only attribution to authors of copied or copied and used/modified/processed codes, but also of used ideas that have been got from here ... no, that may be too many, widely known ideas' authors are not shown on every usage, just in some articles... that is ok... so just common good faith rules should be used about ideas...
+//or i would like to just say: everybody use your good faith rules and be afraid of punishment in hereafter ...
+//these do not mean that i am sure that there are super-duper new ideas
+//i think my linguistic ideas are simple and may be known to many people, just they do not publish it ...
+
 //just a next example from index php. no new grammar, only lexems
 echo'<br/>';
 $engtext='we go from park every morning';
@@ -1077,6 +1082,7 @@ echo nstd_to_str($result);
 //i have posted in the forum: https://groups.google.com/forum/#!topic/nltk-users/lcyWvCQBUmc "i think it is easy to make high quality translator with nltk".
 //i have installed nltk today in 28 dec 2013 and i tried to make dependency with nltk and see that examples i had seen in http://nltk.org/book/ch08.html and http://nltk.org/ do not do that for whole english (ie almost any sentence), but are little examples.
 //i think: why these apertium and nltk ? , seems it is easy to code grammar in php or other language like it - python, c++. and apertium sets unneeded grammatical properties, as i have seen in qazaq-tatar ... i do not set suffixes as grammatical propeties of words, but use (handle) them as words , because whether they are written joined or separated is not important... and they are easily separated in tatar - they are not like in some languages like russian or latin ... and in english also they are few and easily separated.
+//i have searched for "nltk english grammar" in google and have come to http://stackoverflow.com/questions/6115677/english-grammar-for-parsing-in-nltk then to https://github.com/emilmont/pyStatParser but have not tried it yet
 
 //also want to say about that in apertium mailing lists, that there is great possibility with nltk
 //and i think, even may be apertium should be "dropped", especially for language pairs where much and long distance word reordering between them in translation. but i do not know apertium well, but as i know, it does not use dependency structure

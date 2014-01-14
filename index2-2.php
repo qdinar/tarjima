@@ -213,6 +213,8 @@ $words['rd']='нче';
 $words['mix']='болгатма';
 $words['3']='3';
 $words['revolution']='революция';
+$nounlikes['dance']=array('tt'=>'бию','type'=>'noun');
+$nounlikes['revolution']=array('tt'=>'революция','type'=>'noun');
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
@@ -294,6 +296,24 @@ $words['()']='()';
 $mwdic[]=array('en'=>array('compute','ing'),'tt'=>array('компьютер',array('гыйлем','е')));
 $mwdic[]=array('en'=>array('random','access'),'tt'=>array('теләсә-ничек','керү'));
 $mwdic[]=array('en'=>array('high','bandwidth'),'tt'=>array('югары','үткәрүчәнлек'));
+$nounlikes=array();
+$nounlikes['data']=array('tt'=>'мәгълүмат','type'=>'noun');
+$nounlikes['dance']=array('tt'=>'бию','type'=>'noun');
+$nounlikes['random']=array('tt'=>'мәгълүмат','type'=>'adj');
+$nounlikes['high']=array('tt'=>'мәгълүмат','type'=>'adj');
+$nounlikes['dynamic']=array('tt'=>'мәгълүмат','type'=>'adj');
+$nounlikes['synchronous']=array('tt'=>'мәгълүмат','type'=>'adj');
+$nounlikes['interface']=array('tt'=>'интерфейс','type'=>'noun');
+$nounlikes['memory']=array('tt'=>'хәтер','type'=>'noun');
+$nounlikes['bandwidth']=array('tt'=>'үткәрүчәнлек','type'=>'noun');
+$nounlikes['access']=array('tt'=>'керү','type'=>'noun');
+$nounlikes['rate']=array('tt'=>'тизлек','type'=>'noun');
+//in wiktionary:
+//synchronous - adj
+//dynamic - adj and noun
+//high - adj, adv, noun, verb, and has 2 omonyms except that
+//random - noun, adj
+//seems, marking them just as adjective has some sense
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
@@ -547,20 +567,13 @@ function assign_mw_tr(&$s2,$tr){
 //now i was going to use adjectives and nouns and adverbs together...
 //btw in wiktionary: data is only noun, dance is verb and noun
 //and i was going to use separate arrays for noun-likes and verbs... i think that is ok ... but will not i have problems while same word has noun and adverb and adjective variants? i do not know yet ...
-$nounlikes=array();
-$nounlikes['data']=array('tt'=>'мәгълүмат','type'=>'noun');
-$nounlikes['dance']=array('tt'=>'бию','type'=>'noun');
-$nounlikes['random']=array('tt'=>'мәгълүмат','type'=>'adj');
-$nounlikes['high']=array('tt'=>'мәгълүмат','type'=>'adj');
-$nounlikes['dynamic']=array('tt'=>'мәгълүмат','type'=>'adj');
-$nounlikes['synchronous']=array('tt'=>'мәгълүмат','type'=>'adj');
-//in wiktionary:
-//synchronous - adj
-//dynamic - adj and noun
-//high - adj, adv, noun, verb, and has 2 omonyms except that
-//random - noun, adj
-//seems, marking them just as adjective has some sense
-
+function get_main_word($simbl){
+	if(isset($simbl[1]['w'])){
+		return $simbl[1];
+	}else{
+		return get_main_word($simbl[1]);
+	}
+}
 
 
 
