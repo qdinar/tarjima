@@ -536,6 +536,36 @@ function assign_mw_tr(&$s2,$tr){
 //randomaccess memory, highbandwidth interface, ddrate sdramemory -> randomaccess-ful memory, highbandwidth-ful interface, ddrate-ful sdramemory
 //i see a rule now: multiwords are like adjectives with "ful" and one-words are "owners"
 //(i am not sure whether that would be correct with other sentences)
+//but i have found another example ... :
+// double d.rate -> neither of the 2 : nor double's d.rate, nor double-ful d.rate ... it is just double d.rate...
+//and there are lot of such cases:
+// random access, high bandwidth, dynamic r.a.memory, synchronous d.r.a.memory
+//i see a rule... multiword first word (describer) -> use -ful
+//else: if first word is "adjective" -> do not change
+// else -> first word is noun -> 's.
+//but i will need to mark adjectives in dictionary...
+//now i was going to use adjectives and nouns and adverbs together...
+//btw in wiktionary: data is only noun, dance is verb and noun
+//and i was going to use separate arrays for noun-likes and verbs... i think that is ok ... but will not i have problems while same word has noun and adverb and adjective variants? i do not know yet ...
+$nounlikes=array();
+$nounlikes['data']=array('tt'=>'мәгълүмат','type'=>'noun');
+$nounlikes['dance']=array('tt'=>'бию','type'=>'noun');
+$nounlikes['random']=array('tt'=>'мәгълүмат','type'=>'adj');
+$nounlikes['high']=array('tt'=>'мәгълүмат','type'=>'adj');
+$nounlikes['dynamic']=array('tt'=>'мәгълүмат','type'=>'adj');
+$nounlikes['synchronous']=array('tt'=>'мәгълүмат','type'=>'adj');
+//in wiktionary:
+//synchronous - adj
+//dynamic - adj and noun
+//high - adj, adv, noun, verb, and has 2 omonyms except that
+//random - noun, adj
+//seems, marking them just as adjective has some sense
+
+
+
+
+
+
 
 
 
