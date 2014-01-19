@@ -98,6 +98,25 @@ function tr_simple_block_2($simbl){
 			$s2[0]=array($mwadj,array('w'=>'s'));
 		}*/
 	}
+	if(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='with'){
+		if(isset($simbl[0][0]['w'])){
+			$sb0mainword=$simbl[0][0];
+		}else{
+			$sb0mainword=get_main_word($simbl[0][0]);
+		}
+		if(isset($simbl[1]['w'])){
+			$sb1mainword=$simbl[1];
+		}else{
+			$sb1mainword=get_main_word($simbl[1]);
+		}
+		if(
+			isset($nounlikes[$sb1mainword['w']])&&$nounlikes[$sb1mainword['w']]['type']=='noun'
+			&&
+			isset($nounlikes[$sb0mainword['w']])&&$nounlikes[$sb0mainword['w']]['type']=='noun'
+		){
+			$s2[0][1]['w']='лы';
+		}
+	}
 	//
 	//
 	//
@@ -303,6 +322,7 @@ function tr_simple_block_2($simbl){
 			if(isset($simbl[0]['w'])&&$simbl[0]['w']=='three'){
 				$num=$s2[0];
 				$s2[0]=array($num,array('w'=>'енче'));
+				$s2[1]['w']='төрдәге';//instead of төр
 			}
 		}elseif($simbl[1]['w']==',,'){
 			if(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='the'){
@@ -366,6 +386,24 @@ function tr_simple_block_2($simbl){
 			//$mwadj=$s2[0];
 			//$s2[0]=array($mwadj,array('w'=>'s'));
 			$s2[1]=array($s2[1],array('w'=>'ы'));
+		}
+	//}elseif(!isset($s2[0]['w'])){
+		//$trynin=get_main_word($s2[0]);
+		//if($trynin['w']=='ның'){
+	}elseif(!isset($simbl[0]['w'])){
+		$main=get_main_word($simbl[0]);
+		if($main['w']=='of'){
+			//echo'*';
+			//echo'<pre>';
+			//print_r($s2[0]);
+			//print_r($s2[1]);
+			//print_r($s2);
+			//print_r($simbl[1]);
+			//echo'</pre>';
+			$s2[1]=array($s2[1],array('w'=>'ы'));
+			//this works 2 times - adds it 2 times, somehow
+			//simbl1 is 'a modern type' in 1st time and 's' in 2nd time
+			//i think i have understood it. first time it is regular translation, second time it is external level translation, the inner level is set to current level again. so i will check this by english word "of" - and it works.
 		}
 	}
 	/*
