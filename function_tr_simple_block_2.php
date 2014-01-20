@@ -87,7 +87,7 @@ function tr_simple_block_2($simbl){
 		){
 			//echo'*!'.$sb0mainword['w'].'-'.$sb1mainword['w'];
 			$mwadj=$s2[0];
-			$s2[0]=array($mwadj,array('w'=>'лы'));
+			$s2[0]=array($mwadj,array('w'=>' лы'));
 		}
 	/*}else{
 		if(
@@ -114,7 +114,7 @@ function tr_simple_block_2($simbl){
 			&&
 			isset($nounlikes[$sb0mainword['w']])&&$nounlikes[$sb0mainword['w']]['type']=='noun'
 		){
-			$s2[0][1]['w']='лы';
+			$s2[0][1]['w']=' лы';
 		}
 	}
 	//
@@ -302,10 +302,12 @@ function tr_simple_block_2($simbl){
 				$s2[0]=$subj;
 				$s2[1]=$obj;
 				unset($subj,$obj);
+				$s2[1]['dash']=true;
 			}elseif(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='be'){
 				//ddrsdram {is ... and has been in ...}
 				//remove "була" - copula "is" translation
 				$s2=$s2[0][0];
+				$s2['dash']=true;
 			}elseif(
 				isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='have'
 				&&isset($simbl[0][0][1]['w'])&&$simbl[0][0][1]['w']=='ed-pp'
@@ -317,6 +319,7 @@ function tr_simple_block_2($simbl){
 				$part2=$s2[0][0][0][1][0];//in use
 				$s2[0]=$part1;
 				$s2[1]=$part2;
+				$s2['dash']=true;
 			}
 		}elseif($simbl[1]['w']=='type'){
 			if(isset($simbl[0]['w'])&&$simbl[0]['w']=='three'){

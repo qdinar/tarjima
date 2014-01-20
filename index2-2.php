@@ -44,6 +44,9 @@ function nstd_to_str_2($nstd){
 	$result='';
 	//global $firstletterofsentenceiscapital;
 	global $nstd_to_str_2_firstwordisready;
+	if(isset($nstd['dash'])){
+		$result.=' — ';
+	}
 	if(isset($nstd['thisisheader'])||isset($nstd['inquotes'])){
 		$result.='"';
 	}
@@ -89,12 +92,12 @@ function nstd_to_str_2($nstd){
 		if(isset($nstd[1]['firstiscapital'])&&$nstd[1]['firstiscapital']==true||!$nstd_to_str_2_firstwordisready){
 			$word=mb_strtoupper(mb_substr($word,0,1)).mb_substr($word,1);
 		}
-		//if(
-			//$word!='.'&&$word!='не'&&$word!='ны'&&$word!='е'&&$word!='гыз'
-			//&&$word!='дан'&&$word!='нче'&&$word!='енче'&&$word!='ы'&&$word!='лы'
-		//){
+		if(
+			$word!='.'&&$word!='не'&&$word!='ны'&&$word!='е'&&$word!='гыз'
+			&&$word!='дан'&&$word!='нче'&&$word!='енче'&&$word!='ы'&&$word!='лы'
+		){
 			$result.=' ';
-		//}
+		}
 		if(isset($parentheses)){
 			$result.='(';
 		}
@@ -586,8 +589,9 @@ function get_main_word($simbl){
 //... интерфейс белән -> ... интерфейс лы - done
 //now i have:
 //Компьютер гыйлем е эчендә , өч енче төрдәге икекатлы мәгълүмат тизлек ы лы синхрон динамик теләсә-ничек керү лы хәтер өчен бер аббревиатура булган DDR3 SDRAM бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлек ы") лы интерфейс лы динамик теләсә-ничек керү лы хәтер (DRAM) ның бер яңа төр ы һәм 2007 таналып кулланылыш эчендә .
-
-
+//i want to make these changes:
+//add long "-" after ... DDR3 SDRAM (and before бер югары үткәрүчәнлек ...)
+//make лы->ле ы->е where needed
 
 
 
