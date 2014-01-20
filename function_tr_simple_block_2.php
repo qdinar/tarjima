@@ -68,11 +68,11 @@ function tr_simple_block_2($simbl){
 		$sb0mainword=get_main_word($simbl[0]);
 		//echo'*';print_r($sb0mainword);
 		//echo'*';print_r($simbl[0]);
-		if(isset($simbl[1]['w'])){
-			$sb1mainword=$simbl[1];
-		}else{
+		//if(isset($simbl[1]['w'])){
+			//$sb1mainword=$simbl[1];
+		//}else{
 			$sb1mainword=get_main_word($simbl[1]);
-		}
+		//}
 		//if($sb1mainword['w']=='interface'){
 			//echo'*';
 			//echo'<pre>';
@@ -86,8 +86,14 @@ function tr_simple_block_2($simbl){
 			isset($nounlikes[$sb0mainword['w']])&&$nounlikes[$sb0mainword['w']]['type']=='noun'
 		){
 			//echo'*!'.$sb0mainword['w'].'-'.$sb1mainword['w'];
+			$lastword=get_main_word($s2[0]);
+			if(is_soft($lastword['w'])){
+				$limorphem='ле';
+			}else{
+				$limorphem='лы';
+			}
 			$mwadj=$s2[0];
-			$s2[0]=array($mwadj,array('w'=>' лы'));
+			$s2[0]=array($mwadj,array('w'=>' '.$limorphem));
 		}
 	/*}else{
 		if(
@@ -99,16 +105,16 @@ function tr_simple_block_2($simbl){
 		}*/
 	}
 	if(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='with'){
-		if(isset($simbl[0][0]['w'])){
-			$sb0mainword=$simbl[0][0];
-		}else{
+		//if(isset($simbl[0][0]['w'])){
+			//$sb0mainword=$simbl[0][0];
+		//}else{
 			$sb0mainword=get_main_word($simbl[0][0]);
-		}
-		if(isset($simbl[1]['w'])){
-			$sb1mainword=$simbl[1];
-		}else{
+		//}
+		//if(isset($simbl[1]['w'])){
+			//$sb1mainword=$simbl[1];
+		//}else{
 			$sb1mainword=get_main_word($simbl[1]);
-		}
+		//}
 		if(
 			isset($nounlikes[$sb1mainword['w']])&&$nounlikes[$sb1mainword['w']]['type']=='noun'
 			&&
@@ -362,18 +368,27 @@ function tr_simple_block_2($simbl){
 				}
 				
 			}
-			if(isset($s2[1]['w'])&&$s2[1]['w']=='ды'){
+		}else
+		if(isset($s2[1]['w'])){
+			if($s2[1]['w']=='ды'){
 				if(isset($s2[0][1][1][1]['w'])&&$s2[0][1][1][1]['w']=='йөре'){
 					$s2[1]['w']='де';
 				}
-				
+			}else
+			if($s2[1]['w']=='тан'&&isset($s2[0][1]['w'])&&(mb_substr($s2[0][1]['w'],-1)=='а'||mb_substr($s2[0][1]['w'],-1)=='я')){
+				$s2[1]['w']='дан';
+			}else
+			if($s2[1]['w']=='ның'){
+				$lastword=get_main_word($s2[0]);
+				if(is_soft($lastword['w'])){
+					$s2[1]['w']='нең';
+				}
 			}
-		}elseif(isset($s2[1]['w'])&&$s2[1]['w']=='тан'&&isset($s2[0][1]['w'])&&(mb_substr($s2[0][1]['w'],-1)=='а'||mb_substr($s2[0][1]['w'],-1)=='я')){
-			$s2[1]['w']='дан';
-		}elseif(isset($simbl[1]['thisisabbreviation'])&&substr($simbl[0]['w'],-1)=='s'){
+		}else
+		if(isset($simbl[1]['thisisabbreviation'])&&substr($simbl[0]['w'],-1)=='s'){
 			$s2[1]=array($s2[1],array('w'=>'е'));
-		}
-		elseif($simbl[1]['w']=='.'){//top of sentence
+		}else
+		if($simbl[1]['w']=='.'){//top of sentence
 			//echo'*';
 			if(isset($simbl[0][1][1]['w'])&&isset($dic[$simbl[0][1][1]['w']])&&$dic[$simbl[0][1][1]['w']]['type']=='verb'){
 				$s2[0][0]=array($s2[0][0],$s2[0][1]);
@@ -388,14 +403,29 @@ function tr_simple_block_2($simbl){
 			//echo'*!'.$sb0mainword['w'].'-'.$sb1mainword['w'];
 			//$mwadj=$s2[0];
 			//$s2[0]=array($mwadj,array('w'=>'s'));
-			$s2[1]=array($s2[1],array('w'=>'ы'));
+			//if(isset($s2[1]['w'])){
+				//$lastword=$s2[1]['w'];
+			//}else{
+				$lastword=get_main_word($s2[1]);
+			//}
+			if(is_soft($lastword['w'])){
+				$imorphem='е';
+			}else{
+				$imorphem='ы';
+			}
+			$s2[1]=array($s2[1],array('w'=>$imorphem));
 		}
 	//}elseif(!isset($s2[0]['w'])){
 		//$trynin=get_main_word($s2[0]);
 		//if($trynin['w']=='ның'){
 	}elseif(!isset($simbl[0]['w'])){
-		$main=get_main_word($simbl[0]);
-		if($main['w']=='of'){
+		//$main=get_main_word($simbl[0]);
+		//if($main['w']=='of'){
+		if(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='of'){
+			//$lastword=get_main_word($s2[0][0]);
+			//if(is_soft($lastword['w'])){
+				//$s2[0][1]['w']='нең';
+			//}//i move this upper
 			//echo'*';
 			//echo'<pre>';
 			//print_r($s2[0]);
@@ -403,7 +433,13 @@ function tr_simple_block_2($simbl){
 			//print_r($s2);
 			//print_r($simbl[1]);
 			//echo'</pre>';
-			$s2[1]=array($s2[1],array('w'=>'ы'));
+			$lastword=get_main_word($s2[1]);
+			if(is_soft($lastword['w'])){
+				$imorphem='е';
+			}else{
+				$imorphem='ы';
+			}
+			$s2[1]=array($s2[1],array('w'=>' '.$imorphem));
 			//this works 2 times - adds it 2 times, somehow
 			//simbl1 is 'a modern type' in 1st time and 's' in 2nd time
 			//i think i have understood it. first time it is regular translation, second time it is external level translation, the inner level is set to current level again. so i will check this by english word "of" - and it works.

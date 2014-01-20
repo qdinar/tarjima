@@ -574,6 +574,9 @@ function assign_mw_tr(&$s2,$tr){
 //btw in wiktionary: data is only noun, dance is verb and noun
 //and i was going to use separate arrays for noun-likes and verbs... i think that is ok ... but will not i have problems while same word has noun and adverb and adjective variants? i do not know yet ...
 function get_main_word($simbl){
+	if(isset($simbl['w'])){
+		return $simbl;
+	}else
 	if(isset($simbl[1]['w'])){
 		return $simbl[1];
 	}else{
@@ -590,13 +593,21 @@ function get_main_word($simbl){
 //now i have:
 //Компьютер гыйлем е эчендә , өч енче төрдәге икекатлы мәгълүмат тизлек ы лы синхрон динамик теләсә-ничек керү лы хәтер өчен бер аббревиатура булган DDR3 SDRAM бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлек ы") лы интерфейс лы динамик теләсә-ничек керү лы хәтер (DRAM) ның бер яңа төр ы һәм 2007 таналып кулланылыш эчендә .
 //i want to make these changes:
-//add long "-" after ... DDR3 SDRAM (and before бер югары үткәрүчәнлек ...)
-//make лы->ле ы->е where needed
-
-
-
-
-
+//add long "-" after ... DDR3 SDRAM (and before бер югары үткәрүчәнлек ...) - done
+//make лы->ле ы->е where needed - done
+function is_soft($s){
+	if($s=='тизлек'||$s=='төр'||$s=='е'||$s=='керү'||$s=='үткәрүчәнлек'||$s=='хәтер'){
+		return true;
+	}else{
+		return false;
+	}
+}
+//after some fixes i have:
+//Компьютер гыйлеме эчендә , өченче төрдәге икекатлы мәгълүмат тизлеке ле синхрон динамик теләсә-ничек керү ле хәтер өчен бер аббревиатура булган DDR3 SDRAM — бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлеке") ле интерфейс лы динамик теләсә-ничек керү ле хәтер (DRAM) нең бер яңа төр е һәм — 2007 таналып кулланылыш эчендә.
+//(also a ның->нең is fixed)
+//i should fix:
+//тизлеке -> тизлеге
+//2007 таналып -> 2007дән алып
 
 
 
