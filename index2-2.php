@@ -72,6 +72,9 @@ function nstd_to_str_2($nstd){
 		if(isset($nstd[0]['firstiscapital'])&&$nstd[0]['firstiscapital']==true||!$nstd_to_str_2_firstwordisready){
 			$word=mb_strtoupper(mb_substr($word,0,1)).mb_substr($word,1);
 		}
+		if(isset($nstd[1]['w'])&&$nstd[1]['w']=='е'&&$word=='тизлек'){
+			$word='тизлег';
+		}
 		$result.=$word;
 		$nstd_to_str_2_firstwordisready=true;
 	}
@@ -95,8 +98,14 @@ function nstd_to_str_2($nstd){
 		if(
 			$word!='.'&&$word!='не'&&$word!='ны'&&$word!='е'&&$word!='гыз'
 			&&$word!='дан'&&$word!='нче'&&$word!='енче'&&$word!='ы'&&$word!='лы'
+			&&$word!='п'&&$word!='дән'
 		){
 			$result.=' ';
+		}elseif($word=='п'){
+			$main=get_main_word($nstd[0]);
+			if($main['w']=='ал'){
+				$result.='ы';
+			}
 		}
 		if(isset($parentheses)){
 			$result.='(';
@@ -510,6 +519,7 @@ function assign_mw_tr(&$s2,$tr,$inner){
 	}else{
 		$s2[1]=array('w'=>$tr[1]);
 	}
+	apply_fixes_after_1_by_s2($s2);
 }
 //multi morphem lexem translation is started
 //'computing' is translated special way now, before it is translated simply morphem-to-morphem ...
@@ -606,7 +616,7 @@ function get_main_word($simbl){
 //add long "-" after ... DDR3 SDRAM (and before бер югары үткәрүчәнлек ...) - done
 //make лы->ле ы->е where needed - done
 function is_soft($s){
-	if($s=='тизлек'||$s=='төр'||$s=='е'||$s=='керү'||$s=='үткәрүчәнлек'||$s=='хәтер'){
+	if($s=='тизлек'||$s=='төр'||$s=='е'||$s=='керү'||$s=='үткәрүчәнлек'||$s=='хәтер'||$s=='2007'){
 		return true;
 	}else{
 		return false;
@@ -616,8 +626,8 @@ function is_soft($s){
 //Компьютер гыйлеме эчендә , өченче төрдәге икекатлы мәгълүмат тизлеке ле синхрон динамик теләсә-ничек керү ле хәтер өчен бер аббревиатура булган DDR3 SDRAM — бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлеке") ле интерфейс лы динамик теләсә-ничек керү ле хәтер (DRAM) нең бер яңа төр е һәм — 2007 таналып кулланылыш эчендә.
 //(also a ның->нең is fixed)
 //i should fix:
-//тизлеке -> тизлеге
-//2007 таналып -> 2007дән алып
+//тизлеке -> тизлеге - done
+//2007 таналып -> 2007дән алып - done
 
 
 

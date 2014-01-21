@@ -349,6 +349,42 @@ function tr_simple_block_2($simbl){
 			$s2[1]['w']=$words[$simbl[1]['w']];
 		}
 	}
+	apply_fixes_after_1($simbl,$s2);
+	/*
+	//these work incorrectly when order is changed
+	if(isset($simbl[0]['firstiscapital'])){
+		$s2[0]['firstiscapital']=$simbl[0]['firstiscapital'];
+	}
+	if(isset($simbl[1]['firstiscapital'])){
+		$s2[1]['firstiscapital']=$simbl[1]['firstiscapital'];
+	}
+	//these work incorrectly when order is changed
+	foreach($simbl[0] as $key=>$word){
+		if(!isset($s2[0][$key])){
+			$s2[0][$key]=$simbl[0][$key];
+		}
+	}
+	foreach($simbl[1] as $key=>$word){
+		if(!isset($s2[1][$key])){
+			$s2[1][$key]=$simbl[1][$key];
+		}
+	}*/
+	foreach($simbl as $key=>$word){
+		if(!isset($s2[$key])){
+			$s2[$key]=$simbl[$key];
+		}
+	}
+	//var_dump($s2);echo'*';
+	$recursionlevel--;
+	return $s2;
+
+}
+
+function apply_fixes_after_1(&$simbl,&$s2){
+	//global $words,$dic,$recursionlevel,$mwdic,$nounlikes;
+	global $dic,$nounlikes;
+
+
 	if(isset($simbl[1]['w'])){
 		if($simbl[1]['w']=='s'||$simbl[1]['w']=='ed'||$simbl[1]['w']=='pr-si'){
 			if(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='i'){
@@ -449,39 +485,22 @@ function tr_simple_block_2($simbl){
 			//i think i have understood it. first time it is regular translation, second time it is external level translation, the inner level is set to current level again. so i will check this by english word "of" - and it works.
 		}
 	}
-	/*
-	//these work incorrectly when order is changed
-	if(isset($simbl[0]['firstiscapital'])){
-		$s2[0]['firstiscapital']=$simbl[0]['firstiscapital'];
-	}
-	if(isset($simbl[1]['firstiscapital'])){
-		$s2[1]['firstiscapital']=$simbl[1]['firstiscapital'];
-	}
-	//these work incorrectly when order is changed
-	foreach($simbl[0] as $key=>$word){
-		if(!isset($s2[0][$key])){
-			$s2[0][$key]=$simbl[0][$key];
-		}
-	}
-	foreach($simbl[1] as $key=>$word){
-		if(!isset($s2[1][$key])){
-			$s2[1][$key]=$simbl[1][$key];
-		}
-	}*/
-	foreach($simbl as $key=>$word){
-		if(!isset($s2[$key])){
-			$s2[$key]=$simbl[$key];
-		}
-	}
-	//var_dump($s2);echo'*';
-	$recursionlevel--;
-	return $s2;
+	apply_fixes_after_1_by_s2($s2);
+
 
 }
 
-
-
-
+function apply_fixes_after_1_by_s2(&$s2){
+	//global $words,$dic,$recursionlevel,$mwdic,$nounlikes;
+	//global $dic,$nounlikes;
+	if(isset($s2[1]['w'])&&$s2[1]['w']=='тан'){
+		//echo'*';
+		$lastword=get_main_word($s2[0]);
+		if(is_soft($lastword['w'])){
+			$s2[1]['w']='дән';
+		}
+	}
+}
 
 
 
