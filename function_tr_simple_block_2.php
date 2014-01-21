@@ -7,9 +7,13 @@ function tr_simple_block_2($simbl){
 	$recursionlevel++;
 	$s2=array();
 	foreach($mwdic as $mw){
-		if(is_mw_eq($simbl,$mw['en'])){
+		if(is_mw_eq($simbl,$mw['en'],$getinner)){
 			//echo'*';
-			assign_mw_tr($s2,$mw['tt']);
+			if(isset($getinner)&&isset($getinner[0])){
+				$getinner=tr_simple_block_2($getinner);
+			}
+			assign_mw_tr($s2,$mw['tt'],$getinner);
+			unset($getinner);
 			//echo'*';
 			//print_r( $s2 );
 			return $s2;

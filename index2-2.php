@@ -314,6 +314,7 @@ $nounlikes['memory']=array('tt'=>'хәтер','type'=>'noun');
 $nounlikes['bandwidth']=array('tt'=>'үткәрүчәнлек','type'=>'noun');
 $nounlikes['access']=array('tt'=>'керү','type'=>'noun');
 $nounlikes['rate']=array('tt'=>'тизлек','type'=>'noun');
+$mwdic[]=array('en'=>array('<1>','since'),'tt'=>array(array(array('<1>','тан'),'ал'),'п'));
 //in wiktionary:
 //synchronous - adj
 //dynamic - adj and noun
@@ -470,10 +471,16 @@ echo nstd_to_str_2($result);
 // 2007 таналып -> 2007дән алып
 // кулланылыш эчендә -> кулланылышта
 // delete бул п куй а - done
-function is_mw_eq($simbl,$mw){
+function is_mw_eq($simbl,$mw,&$inner){
 	if(is_array($mw[0])){
+	}elseif($mw[0]=='<1>'){
+		$inner=$simbl[0];
 	}else{
-		if(!(isset($simbl[0]['w'])&&$simbl[0]['w']==$mw[0])){
+		if(
+			!(
+				isset($simbl[0]['w'])&&$simbl[0]['w']==$mw[0]
+			)
+		){
 			//$notequal=true;
 			return false;
 		}
@@ -487,16 +494,19 @@ function is_mw_eq($simbl,$mw){
 	}
 	return true;
 }
-function assign_mw_tr(&$s2,$tr){
+function assign_mw_tr(&$s2,$tr,$inner){
 	if(is_array($tr[0])){
 		$s2[0]=array();
-		assign_mw_tr($s2[0],$tr[0]);
+		assign_mw_tr($s2[0],$tr[0],$inner);
+	}elseif($tr[0]=='<1>'){
+		//$s2[0]=array();
+		$s2[0]=$inner;
 	}else{
 		$s2[0]=array('w'=>$tr[0]);
 	}
 	if(is_array($tr[1])){
 		$s2[1]=array();
-		assign_mw_tr($s2[1],$tr[1]);
+		assign_mw_tr($s2[1],$tr[1],$inner);
 	}else{
 		$s2[1]=array('w'=>$tr[1]);
 	}
