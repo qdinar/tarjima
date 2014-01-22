@@ -52,16 +52,28 @@ function nstd_to_str_2($nstd){
 	}
 	if(isset($nstd[0][1]['w'])){
 		if($nstd[0][1]['w']=='()'){
+			//swap
 			$parentheses=$nstd[0];
 			$nstd[0]=$nstd[1];
 			$nstd[1]=$parentheses;
 		}elseif($nstd[0][1]['w']=='һәм'){
-			$and=$nstd[0];
-			$nstd[0]=$nstd[1];
-			$nstd[1]=$and;
+			$and=$nstd[0];//and's block
+			$nstd[0]=$nstd[1];//main block
+			$nstd[1]=$and;//swap
 			$and=$nstd[1][1];
+			//swapping the word 'and' with dependent block
 			$nstd[1][1]=$nstd[1][0];
 			$nstd[1][0]=$and;
+			if(
+				isset($nstd[1][1]['dash'])//possible dash of external and block , that is positioned later
+				//&&isset($nstd[0][0][1]['w'])//possible 'and' of inner and block
+				//&&$nstd[0][0][1]['w']=='and'
+				//&&isset($nstd[0][0][0]['dash'])
+				&&isset($nstd[0]['dash'])
+			){
+				//echo'*';
+				unset($nstd[1][1]['dash']);//remove later dash
+			}
 		//}elseif($nstd[0][1]['w']==',,'){
 		}
 	}
@@ -628,7 +640,7 @@ function is_soft($s){
 //i should fix:
 //тизлеке -> тизлеге - done
 //2007 таналып -> 2007дән алып - done
-
+//i should make one dash instead of two - done
 
 
 

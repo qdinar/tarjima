@@ -407,6 +407,7 @@ function order_2($inparr){
 				}
 				//inparr is without subject now
 				if(isset($inparr[count($inparr)-1][1]['w'])&&$inparr[count($inparr)-1][1]['w']=='and'&&$inparr[count($inparr)-1][0][1]['w']=='s'){
+					//and block (should be and) is put in inparr element
 					//need to remove 'and' block
 					$andblock=array_splice($inparr,-1);
 					order_2_if_needed($inparr);
