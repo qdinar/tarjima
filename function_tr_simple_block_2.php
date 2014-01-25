@@ -23,7 +23,11 @@ function tr_simple_block_2($simbl){
 		$s2[0]=tr_simple_block_2($simbl[0]);
 	}else{
 		$s2[0]=$simbl[0];
-		$s2[0]['w']=$words[$simbl[0]['w']];
+		if(isset($words[$simbl[0]['w']])){
+			$s2[0]['w']=$words[$simbl[0]['w']];
+		}else{
+			$s2[0]['w']=$nounlikes[$simbl[0]['w']]['tt'];
+		}
 	}
 	//add ны
 	if(
@@ -346,7 +350,12 @@ function tr_simple_block_2($simbl){
 		}
 		if(!isset($s2[1])){//if it is array, it is set. if it is word and is not set , set here
 			$s2[1]=$simbl[1];
-			$s2[1]['w']=$words[$simbl[1]['w']];
+			//$s2[1]['w']=$words[$simbl[1]['w']];
+			if(isset($words[$simbl[1]['w']])){
+				$s2[1]['w']=$words[$simbl[1]['w']];
+			}else{
+				$s2[1]['w']=$nounlikes[$simbl[1]['w']]['tt'];
+			}
 		}
 	}
 	apply_fixes_after_1($simbl,$s2);

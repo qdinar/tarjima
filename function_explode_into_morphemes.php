@@ -8,7 +8,7 @@ function explode_into_morphemes($engtext){
 			unset($engtext[$key]);
 		}
 	}
-	global $dic,$firstletterofsentenceiscapital;
+	global $dic,$firstletterofsentenceiscapital,$nounlikes;
 	//global $thereisdotatendofsentence;
 	$engtext2=array();
 	$i=0;
@@ -102,7 +102,7 @@ function explode_into_morphemes($engtext){
 			}else{
 				$engtext2[]=$word;
 			}
-		}elseif(mb_substr($word,-2,2)=='ed'){
+		}elseif(mb_substr($word,-2,2)=='ed'&&$word!='speed'){
 			$engtext2[]=mb_substr($word,0,mb_strlen($word)-2);
 			if(isset($engtext2[count($engtext2)-3])&&($engtext2[count($engtext2)-3]=='be'||$engtext2[count($engtext2)-3]=='have')){
 				$engtext2[]='ed-pp';
@@ -114,6 +114,9 @@ function explode_into_morphemes($engtext){
 			if(isset($dic[$word1])&&$dic[$word1]['type']=='verb'){
 				$engtext2[]=$word1;
 				$engtext2[]='er';
+			}elseif(isset($nounlikes[$word1])){
+				$engtext2[]=$word1;
+				$engtext2[]='er-comp';
 			}else{
 				$engtext2[]=$word;
 			}

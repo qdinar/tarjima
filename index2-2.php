@@ -641,13 +641,45 @@ function is_soft($s){
 //тизлеке -> тизлеге - done
 //2007 таналып -> 2007дән алып - done
 //i should make one dash instead of two - done
+//now i have:
+//Компьютер гыйлеме эчендә , өченче төрдәге икекатлы мәгълүмат тизлеге ле синхрон динамик
+//теләсә-ничек керү ле хәтер өчен бер аббревиатура булган DDR3 SDRAM
+// — бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлеге") ле интерфейс лы
+// динамик теләсә-ничек керү ле хәтер (DRAM) нең бер яңа төр е
+// һәм 2007дән алып кулланылыш эчендә.
 
 
 
-
-
-
-
+echo'<br/>';
+$engtext='It is the higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips.';
+//$dic['compute']['type']='verb';
+$nounlikes['high']=array('tt'=>'биек','type'=>'adjective');
+$engtext2=explode_into_morphemes($engtext);
+echo'<pre>';
+print_r($engtext2);
+//$dic['double']['type']='noun';
+$engtext2=order_2($engtext2);
+print_r($engtext2);
+echo'</pre>';
+//$words['-']='-';
+//$mwdic[]=array('en'=>array('compute','ing'),'tt'=>array('компьютер',array('гыйлем','е')));
+$nounlikes['it']=array('tt'=>'ул','type'=>'noun');
+$nounlikes['-']=array('tt'=>'-','type'=>'hyphen');
+$nounlikes['er-comp']=array('tt'=>'рәк','type'=>'nnp');//nnp - noun-noun-postfix - i have "created"/(thought out?) this term ... and i am writing it first time (i was going to write about that, postfix  types, in a tatar grammar "book" i am writing)
+//$mwdic[]=array('en'=>array('<1>','since'),'tt'=>array(array(array('<1>','тан'),'ал'),'п'));
+$recursionlevel=0;
+$result=tr_simple_block_2($engtext2);
+echo'<pre>';
+print_r($result);
+echo'</pre>';
+$nstd_to_str_2_firstwordisready=false;
+echo nstd_to_str_2($result);
+//need to "order":
+//higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips
+//it should become:
+//{{higher-speed successor to [DDR and DDR2]} and {predecessor to DDR4}} {synchronous dynamic random access memory (SDRAM) chips}
+//or
+//{higher-speed successor to [DDR and DDR2]} and {predecessor to {DDR4 synchronous dynamic random access memory (SDRAM) chips}}
 
 
 
