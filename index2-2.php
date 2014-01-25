@@ -680,8 +680,11 @@ echo nstd_to_str_2($result);
 //{{higher-speed successor to [DDR and DDR2]} and {predecessor to DDR4}} {synchronous dynamic random access memory (SDRAM) chips}
 //or
 //{higher-speed successor to [DDR and DDR2]} and {predecessor to {DDR4 synchronous dynamic random access memory (SDRAM) chips}}
-
-
+//it would be ...
+//It is the {[higher-speed successor] [to [{{DDR [synchronous dynamic random access memory]} (SDRAM)} chips]]}
+//so it should be ...
+// {{higher-speed successor to [[DDR and DDR2] ..<sdram chips>..]} and {predecessor to [DDR4 ..<sdram chips>..]}}
+// {[[..<ddr and ddr2 and ddr4>.. {synchronous dynamic random access memory}] (SDRAM)] chips}
 
 
 
