@@ -664,7 +664,7 @@ echo'</pre>';
 //$words['-']='-';
 //$mwdic[]=array('en'=>array('compute','ing'),'tt'=>array('компьютер',array('гыйлем','е')));
 $nounlikes['it']=array('tt'=>'ул','type'=>'noun');
-$nounlikes['-']=array('tt'=>'-','type'=>'hyphen');
+$nounlikes['-']=array('tt'=>'-','type'=>'hyphen');//it is not noun-like but i left it that way for now
 $nounlikes['er-comp']=array('tt'=>'рәк','type'=>'nnp');//nnp - noun-noun-postfix - i have "created"/(thought out?) this term ... and i am writing it first time (i was going to write about that, postfix  types, in a tatar grammar "book" i am writing)
 //$mwdic[]=array('en'=>array('<1>','since'),'tt'=>array(array(array('<1>','тан'),'ал'),'п'));
 $recursionlevel=0;
@@ -685,12 +685,15 @@ echo nstd_to_str_2($result);
 //so it should be ...
 // {{higher-speed successor to [[DDR and DDR2] ..<sdram chips>..]} and {predecessor to [DDR4 ..<sdram chips>..]}}
 // {[[..<ddr and ddr2 and ddr4>.. {synchronous dynamic random access memory}] (SDRAM)] chips}
-
-
-
-
-
-
+//how do/would i translate this into tatar? - :
+//ул - теге ddr белән ddr2 синхрон динамик теләсә-ничек керүле хәтер (sdram) микросхемаларына карата югарырак тизлекле соңрак килүче һәм ddr4 енә карата алдан килүче.
+//i do not understand , why is here "the" article, and i am asking about it in ##english in freenode
+//i have got answer that it means that there is only one such predecessor and successor and that answer is enough for me, i also thought/assumed it that way
+//or, i can translate this way:
+//ул - теге синхрон динамик теләсә-ничек керүле хәтер (sdram) микросхемаларының ddr белән ddr2 сенә карата югарырак тизлекле соңрак килүче һәм ddr4 енә карата алдан килүче.
+//if i make it just the 2nd way it will be translated:
+//ул - теге ddr белән ddr2 гә карата югарырак тизлекле соңрак килүче һәм ddr4 синхрон динамик теләсә-ничек керүле хәтер (sdram) микросхемаларына карата алдан килүче.
+//it would be also acceptable, but a little strange
 
 
 
