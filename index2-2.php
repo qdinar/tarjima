@@ -684,7 +684,7 @@ echo nstd_to_str_2($result);
 //It is the {[higher-speed successor] [to [{{DDR [synchronous dynamic random access memory]} (SDRAM)} chips]]}
 //so it should be ...
 // {{higher-speed successor to [[DDR and DDR2] ..<sdram chips>..]} and {predecessor to [DDR4 ..<sdram chips>..]}}
-// {[[..<ddr and ddr2 and ddr4>.. {synchronous dynamic random access memory}] (SDRAM)] chips}
+// { [ ..<ddr and ddr2 and ddr4>.. ( {synchronous dynamic random access memory}SDRAM ) ]  chips}
 //how do/would i translate this into tatar? - :
 //ул - теге ddr белән ddr2 синхрон динамик теләсә-ничек керүле хәтер (sdram) микросхемаларына карата югарырак тизлекле соңрак килүче һәм ddr4 енә карата алдан килүче.
 //i do not understand , why is here "the" article, and i am asking about it in ##english in freenode
@@ -694,8 +694,13 @@ echo nstd_to_str_2($result);
 //if i make it just the 2nd way it will be translated:
 //ул - теге ddr белән ddr2 гә карата югарырак тизлекле соңрак килүче һәм ddr4 синхрон динамик теләсә-ничек керүле хәтер (sdram) микросхемаларына карата алдан килүче.
 //it would be also acceptable, but a little strange
-
-
+//
+// {  {higher-speed successor to [[DDR and DDR2] ..<sdram chips>..]} and {predecessor to [DDR4 ..<sdram chips>..]}  }
+// { [ ..<ddr and ddr2 and ddr4>.. ( {synchronous dynamic random access memory}SDRAM ) ]  chips}
+//this in tatar is:
+// {  {[[ddr белән ddr2] ..<сдрам микросхемалары>..] гә карата югарырак тизлекле соңрак килүче} һәм {[ddr4 ..<сдрам микросхемалары>..] кә карата алдан килүче}  }
+// {  ..<ddr, ddr2, dd4>..  ( {синхрон динамик теләсә-ничек керүле хәтер} sdram ) микросхемалары }
+//and by the way how my program could know out that this is strange structure here
 
 
 
