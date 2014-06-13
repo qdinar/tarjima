@@ -686,13 +686,13 @@ echo nstd_to_str_2($result);
 // {{higher-speed successor to [[DDR and DDR2] ..<sdram chips>..]} and {predecessor to [DDR4 ..<sdram chips>..]}}
 // { [ ..<ddr and ddr2 and ddr4>.. ( {synchronous dynamic random access memory}SDRAM ) ]  chips}
 //how do/would i translate this into tatar? - :
-//ул - теге ddr белән ddr2 синхрон динамик теләсә-ничек керүле хәтер (sdram) микросхемаларына карата югарырак тизлекле соңрак килүче һәм ddr4 енә карата алдан килүче.
+//ddr белән ddr2 синхрон динамик теләсә-ничек керүле хәтер (sdram) микросхемаларына карата югарырак тизлекле соңрак килүче һәм ddr4 енә карата алдан килүче.
 //i do not understand , why is here "the" article, and i am asking about it in ##english in freenode
 //i have got answer that it means that there is only one such predecessor and successor and that answer is enough for me, i also thought/assumed it that way
 //or, i can translate this way:
-//ул - теге синхрон динамик теләсә-ничек керүле хәтер (sdram) микросхемаларының ddr белән ddr2 сенә карата югарырак тизлекле соңрак килүче һәм ddr4 енә карата алдан килүче.
+//синхрон динамик теләсә-ничек керүле хәтер (sdram) микросхемаларының ddr белән ddr2 сенә карата югарырак тизлекле соңрак килүче һәм ddr4 енә карата алдан килүче.
 //if i make it just the 2nd way it will be translated:
-//ул - теге ddr белән ddr2 гә карата югарырак тизлекле соңрак килүче һәм ddr4 синхрон динамик теләсә-ничек керүле хәтер (sdram) микросхемаларына карата алдан килүче.
+//ddr белән ddr2 гә карата югарырак тизлекле соңрак килүче һәм ddr4 синхрон динамик теләсә-ничек керүле хәтер (sdram) микросхемаларына карата алдан килүче.
 //it would be also acceptable, but a little strange
 //
 // {  {higher-speed successor to [[DDR and DDR2] ..<sdram chips>..]} and {predecessor to [DDR4 ..<sdram chips>..]}  }
@@ -701,9 +701,31 @@ echo nstd_to_str_2($result);
 // {  {[[ddr белән ddr2] ..<сдрам микросхемалары>..] гә карата югарырак тизлекле соңрак килүче} һәм {[ddr4 ..<сдрам микросхемалары>..] кә карата алдан килүче}  }
 // {  ..<ddr, ddr2, dd4>..  ( {синхрон динамик теләсә-ничек керүле хәтер} sdram ) микросхемалары }
 //and by the way how my program could know out that this is strange structure here
-
-
-
+//2014-06-12 i have come here after several months
+//i think this this way now:
+//(higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips)
+//higher-speed successor to (DDR ...) and (DDR2 ...) and predecessor to (DDR4 ...)    (... synchronous dynamic random access memory (SDRAM) chips)
+//higher-speed successor to (DDR ..pointer..) and (DDR2 ..pointer..) and predecessor to (DDR4 > >>points to here<< synchronous dynamic random access memory (SDRAM) chips< )
+//so, first, i should start to make it the second way
+//so, i need to catch the second "and" now.
+//
+//how can my program know out that it is not this:
+//
+//higher-speed successor to DDR
+//and
+//DDR2
+//and
+//predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips
+//
+//and not this:
+//
+//higher-speed successor to DDR
+//and
+//(DDR2 and predecessor) to DDR4 synchronous dynamic random access memory (SDRAM) chips
+//
+//? the first, 2 "and"s, is rare and says ddr3 is ddr2, it is strange...
+//the second uses "ddr2" like "predecessor", it is strange...
+//i can find strangeness if i count phrase usage in texts...
 
 
 
