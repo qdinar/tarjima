@@ -1084,6 +1084,179 @@ echo nstd_to_str($result);
 //i think: why these apertium and nltk ? , seems it is easy to code grammar in php or other language like it - python, c++. and apertium sets unneeded grammatical properties, as i have seen in qazaq-tatar ... i do not set suffixes as grammatical propeties of words, but use (handle) them as words , because whether they are written joined or separated is not important... and they are easily separated in tatar - they are not like in some languages like russian or latin ... and in english also they are few and easily separated.
 //i have searched for "nltk english grammar" in google and have come to http://stackoverflow.com/questions/6115677/english-grammar-for-parsing-in-nltk then to https://github.com/emilmont/pyStatParser but have not tried it yet
 
+//2014-june-17 : i have installed pyStatParser and trying it. some tests:
+
+//print parser.parse("From Wikipedia, the free encyclopedia")
+//(PP+PP
+//  (IN from)
+//  (NP (NNP Wikipedia) (, ,) (DT the) (JJ free) (NN encyclopedia)))
+//good
+
+//print parser.parse("This article is about DDR3 SDRAM.")
+//(S
+//  (NP (DT this) (NN article))
+//  (VP (VBZ is) (PP (IN about) (NP (JJ DDR3) (NN SDRAM))))
+//  (. .))
+//good
+
+//print parser.parse("For graphics DDR3, see GDDR3.")
+//(PRN+SBAR
+//  (IN for)
+//  (S
+//    (NP (JJ graphics) (NN DDR3))
+//    (, ,)
+//    (VP (VB see) (NP (NN GDDR3)))
+//    (. .)))
+//as i understand, it is :
+// For {graphics DDR3, see GDDR3.}
+//which is incorrect: "for" and dot are at incorrect place
+
+//print parser.parse("For the video game, see Dance Dance Revolution 3rdMix.")
+//(PRN+SBAR
+//  (IN for)
+//  (S
+//    (NP (DT the) (JJ video) (NN game))
+//    (, ,)
+//    (VP
+//      (VB see)
+//      (NP (NP (NNP Dance) (NNP Dance)) (NNP Revolution) (NNP 3rdMix)))
+//    (. .)))
+//as i understand, it is :
+// For {the video game, see {{Dance Dance} Revolution 3rdMix}.}
+//where "for" and dot are at incorrect place
+
+//print parser.parse("In computing, DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory, is a modern type of dynamic random access memory (DRAM) with a high bandwidth (\"double data rate\") interface, and has been in use since 2007.")
+/*
+(PRN+SBAR
+  (IN in)
+  (S
+    (S+VP (VBG computing) (NP (, ,) (JJ DDR3) (NN SDRAM)))
+    (, ,)
+    (NP
+      (NP (DT an) (NN abbreviation))
+      (PP (IN for) (NP (JJ double) (NNS data))))
+    (NP (NN rate) (NN type))
+    (NP (CD three) (NNS synchronous))
+    (NP (JJ dynamic) (NN random))
+    (NP (NN access) (NN memory))
+    (, ,)
+    (VP
+      (VBZ is)
+      (NP
+        (NP (DT a) (JJ modern) (NN type))
+        (PP (IN of) (NP (JJ dynamic) (NN random)))))
+    (NP (NN access) (NN memory))
+    (PRN (-LRB- () (NP (NNP DRAM)) (-RRB- )))
+    (PP (IN with) (NP (DT a) (JJ high) (NN bandwidth)))
+    (PRN
+      (-LRB- ()
+      (NP (NP (`` ``) (JJ double) (NNS data)) (NN rate) ('' ''))
+      (-RRB- )))
+    (NP (NNS interface))
+    (, ,)
+    (CC and)
+    (VP
+      (VBZ has)
+      (VBN been)
+      (PP (IN in) (NP (NP (NN use)) (PP (IN since) (NP (CD 2007))))))
+    (. .)))
+*/
+//as i understand, it is :
+//In {{computing, DDR3 SDRAM}, { {(an abbreviation) (for double data)} {rate type} {three synchronous} {dynamic random} {access memory} }, {is {{a modern type} {of dynamic random}}} {access memory} (DRAM) {with (a high bandwidth)} ("double data rate") interface, and {has been {in (use (since 2007))}}.}
+//there are many order mistakes/errors
+
+//print parser.parse("It is the higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips.")
+/*
+(SBARQ
+  (SQ
+    (NP (PRP it))
+    (VP
+      (VBZ is)
+      (NP
+        (NP
+          (DT the)
+          (JJ higher-speed)
+          (NN successor)
+          (PP
+            (TO to)
+            (NP
+              (JJ DDR)
+              (NX
+                (CC and)
+                (NX (NNS DDR2))
+                (CC and)
+                (NX (NN predecessor))
+                (PP (TO to) (NP (JJ DDR4) (NN synchronous)))
+                (NX (NNS dynamic))
+                (NX (NNS random))
+                (NN access)
+                (NN memory))))
+          (PRN (-LRB- () (NP (NNP SDRAM)) (-RRB- ))))
+        (NNS chips))))
+  (. .))
+*/
+//as i understand, it is :
+//{It {is {  [the higher-speed successor {to {DDR [and DDR2 [and predecessor {to DDR4 synchronous} dynamic random access memory]]}} (SDRAM)  ] chips}}}.
+//there are several errors
+
+//print parser.parse("DDR3 SDRAM is neither forward nor backward compatible with any earlier type of random access memory (RAM) due to different signaling voltages, timings, and other factors.")
+/*
+(S+ADJP
+  (ADJP
+    (JJ DDR3)
+    (JJ SDRAM)
+    (S+VP (VBZ is) (NP (DT neither) (NN forward))))
+  (ADJP (CC nor) (JJ backward))
+  (ADJP (JJ compatible))
+  (SBAR
+    (IN with)
+    (S
+      (NP
+        (DT any)
+        (JJR earlier)
+        (NN type)
+        (PP (IN of) (NP (JJ random) (NN access))))
+      (NP (NN memory))
+      (PRN (-LRB- () (NP (NNP RAM)) (-RRB- )))
+      (NP
+        (ADJP
+          (JJ due)
+          (PP (TO to) (NP (JJ different) (NN signaling))))
+        (NN voltages))
+      (, ,)
+      (VP (VB timings) (NP (, ,) (CC and) (JJ other) (NNS factors)))
+      (. .))))
+*/
+//there are many errors
+
+//print parser.parse("DDR3 is a DRAM interface specification.")
+/*
+(SBARQ
+  (SQ
+    (VBZ DDR3)
+    (VBZ is)
+    (NP (NP (DT a) (NN DRAM)) (JJ interface) (NN specification)))
+  (. .))
+*/
+//good
+
+//print parser.parse("The actual DRAM arrays that store the data are similar to earlier types, with similar performance.")
+/*
+(NP+SBAR+S
+  (S
+    (NP
+      (NP (DT the) (JJ actual) (JJ DRAM) (NN arrays))
+      (PP (IN that) (NP (NN store) (DT the) (NNS data))))
+    (VP
+      (VBP are)
+      (ADJP (JJ similar) (PP (TO to) (NP (JJR earlier) (NNS types))))))
+  (S
+    (VP (, ,) (PP (IN with) (NP (JJ similar) (NN performance))))
+    (. .)))
+*/
+//good, but dot is at incorrect place. and i think it would be better if the part after comma would be in the "are similar ..."
+
+
 //also want to say about that in apertium mailing lists, that there is great possibility with nltk
 //and i think, even may be apertium should be "dropped", especially for language pairs where much and long distance word reordering between them in translation. but i do not know apertium well, but as i know, it does not use dependency structure
 //i see apertium has "cascaded interchunk" possibility...
