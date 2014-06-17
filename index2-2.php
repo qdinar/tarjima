@@ -667,6 +667,9 @@ $nounlikes['it']=array('tt'=>'ул','type'=>'noun');
 $nounlikes['-']=array('tt'=>'-','type'=>'hyphen');//it is not noun-like but i left it that way for now
 $nounlikes['er-comp']=array('tt'=>'рәк','type'=>'nnp');//nnp - noun-noun-postfix - i have "created"/(thought out?) this term ... and i am writing it first time (i was going to write about that, postfix  types, in a tatar grammar "book" i am writing)
 //$mwdic[]=array('en'=>array('<1>','since'),'tt'=>array(array(array('<1>','тан'),'ал'),'п'));
+$nounlikes['it']=array('tt'=>'ул','type'=>'noun');
+$nounlikes['DDR2']=array('tt'=>'DDR2','type'=>'noun');
+$nounlikes['predecessor']=array('tt'=>'алдан килүче','type'=>'noun'); 
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
@@ -726,9 +729,13 @@ echo nstd_to_str_2($result);
 //? the first, 2 "and"s, is rare and says ddr3 is ddr2, it is strange...
 //the second uses "ddr2" like "predecessor", it is strange...
 //i can find strangeness if i count phrase usage in texts...
-
-
-
-
+//i have started to look for "and" from end
+//now i have incorrect
+//{{higher-speed successor to DDR} {and DDR2}} {and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips}
+//how my program should know out whether it is
+//{higher-speed successor to DDR} {and DDR2}
+//or
+//{higher-speed successor} {to DDR and DDR2}
+// the first is part of " a and b and c " and it is strange ...
 
 

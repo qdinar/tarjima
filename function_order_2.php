@@ -787,6 +787,34 @@ function order_2($inparr){
 			$outparr[]=$inparr;
 			return $outparr;
 		}
+		/*
+		elseif(isset($word['w'])&&($word['w']=='and')){
+			$andblock=array_splice($inparr,$key);
+			$andsblock=array_splice($andblock,1);
+			order_2($andsblock);
+			$andblock_new[0]=$andsblock;
+			$andblock_new[1]=$andblock[0];
+			order_2_if_needed($inparr);
+			$outparr[]=$andblock_new;
+			$outparr[]=$inparr;
+			return $outparr;
+		}
+		*/
+	}
+	for($i=count($inparr)-1;$i>=0;$i--){
+		$word=$inparr[$i];
+		$key=$i;
+		if(isset($word['w'])&&($word['w']=='and')){
+			$andblock=array_splice($inparr,$key);
+			$andsblock=array_splice($andblock,1);
+			order_2_if_needed($andsblock);
+			$andblock_new[0]=$andsblock;
+			$andblock_new[1]=$andblock[0];
+			order_2_if_needed($inparr);
+			$outparr[]=$andblock_new;
+			$outparr[]=$inparr;
+			return $outparr;
+		}
 	}
 	return $inparr;
 }
