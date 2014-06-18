@@ -768,9 +768,12 @@ echo nstd_to_str_2($result);
 //so second "and" is ok but first "and" needs to be "ordered" later than "to"
 //(higher-speed successor (to (DDR and DDR2))) (and predecessor to (DDR4 synchronous dynamic random access memory (SDRAM) chips))
 //this part is done!
-
-
-
+//i need "gosub" to do not double code, but there is no such thing, and i am searching other solution. i have already tried "function", but that was unsuccessful.
+//i have an other idea now : using "include". - i have tried it now , and it also does not work.
+//link to the my code that has example of php code that needs gosub: https://github.com/qdinar/tarjima/commit/e78da41329aae6b2e733722a2c0049300378222d
+//see lines 775 and 810 (only the foreach block between that 2 blocks). (code is doubled) . i have tried to use function (&$inparr , &$outparr ) but that was unsuccessful.
+//and i have one more idea now : setting subroutine code into a variable and "eval"ing it - i have tried it , it does not work.
+//also i know from php.net/goto that using "goto" with variable label in "eval" won't work
 
 
 
