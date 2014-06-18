@@ -740,7 +740,7 @@ echo nstd_to_str_2($result);
 //after simply adding "to" now i have incorrect
 //{higher-speed successor} {[[[to DDR] [and DDR2]] [and predecessor]] [to DDR4 synchronous dynamic random access memory (SDRAM) chips]}
 //how should i choose , what to catch earlier, set at "upper" level: the first "to" or the second "and"
-//if it try the first "to" i will get
+//if i try the first "to" i will get
 //[higher-speed successor] [to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips]
 //then
 //to [[DDR and DDR2 and predecessor] to DDR4 synchronous dynamic random access memory (SDRAM) chips]
@@ -748,11 +748,22 @@ echo nstd_to_str_2($result);
 //to [[DDR and DDR2 and [predecessor to DDR4]] synchronous dynamic random access memory (SDRAM) chips]
 //to [DDR and [DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips]]
 //seems they all can be rejected because of a and b and c construction
-
-
-
-
-
+//intermediate result after adding "to" to other place:
+//higher-speed successor [to [(DDR and DDR2 and predecessor) (to (DDR4 synchronous dynamic random access memory (SDRAM) chips))]]
+//i am going to identify "DDR and DDR2 and predecessor" earlier...
+//then, whether it is
+//{higher-speed successor to DDR} and {DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips}
+//or
+//{higher-speed successor to DDR and DDR2} and {predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips}
+//?
+//i am going to just move checking for last "and" earlier. that is temporary solution.
+//and intermediate result is /   and i get:
+//[{{It [be [the ((higher-speed successor) (to DDR))]] *s} and DDR2} {and {predecessor {to {DDR4 synchronous dynamic random access memory (SDRAM) chips}}}}].
+//check for and is too early. moved it and get:
+//[[It [be (the (higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips))]] *s].
+// - that part/level is ok. inner is:
+// (((higher-speed successor) (to DDR)) and DDR2) (and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips)
+//so second "and" is ok but first "and" needs to be ordered later than "to"
 
 
 

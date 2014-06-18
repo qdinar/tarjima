@@ -482,7 +482,10 @@ function order_2($inparr){
 					return $outparr;
 				}
 			}*/
-		}elseif(isset($word['w'])&&$word['w']=='ed-pp'&&$key==1&&count($inparr)>2){
+		}
+	}
+	foreach($inparr as $key=>$word){
+		if(isset($word['w'])&&$word['w']=='ed-pp'&&$key==1&&count($inparr)>2){
 			//seems 'built last year' should come here but it does not.
 			//probably it goes to the "verb & key=0" in external recursion
 			//that is fixed
@@ -493,7 +496,10 @@ function order_2($inparr){
 			$outparr[]=$inparr;
 			$outparr[1]['w']='ed-pp';
 			return $outparr;
-		}elseif(isset($word['w'])&&isset($dic[$word['w']])
+		}
+	}
+	foreach($inparr as $key=>$word){
+		if(isset($word['w'])&&isset($dic[$word['w']])
 				&&$dic[$word['w']]['type']=='verb'
 				&&$key==0
 				&&($inparr[1]['w']=='the'
@@ -535,7 +541,10 @@ function order_2($inparr){
 				$noun=array_splice($inparr,0,$key);
 				*/
 			//}
-		}elseif(isset($word['w'])&&isset($dic[$word['w']])&&$dic[$word['w']]['type']=='verb'&&$key==0&&$inparr[1]['w']!='ed-pp'&&$inparr[1]['w']!='er'&&$inparr[1]['w']!='s'){
+		}
+	}
+	foreach($inparr as $key=>$word){
+		if(isset($word['w'])&&isset($dic[$word['w']])&&$dic[$word['w']]['type']=='verb'&&$key==0&&$inparr[1]['w']!='ed-pp'&&$inparr[1]['w']!='er'&&$inparr[1]['w']!='s'){
 			if($word['w']=='have'||$word['w']=='be'){
 				if($inparr[2]['w']=='ed-pp'){//have(0) do(1) ed(2)
 					array_splice($inparr,0,1);//remove have
@@ -636,7 +645,10 @@ function order_2($inparr){
 				return $outparr;
 				//get: {[(that is ...)(through park)] walk} - not correct... but that is not fail of this code.
 			}
-		}elseif(isset($word['w'])&&($word['w']=='the'||$word['w']=='through'||$word['w']=='from'||$word['w']=='for'||$word['w']=='in'||$word['w']=='of'||$word['w']=='with')&&$key==0){
+		}
+	}
+	foreach($inparr as $key=>$word){
+		if(isset($word['w'])&&($word['w']=='the'||$word['w']=='through'||$word['w']=='from'||$word['w']=='for'||$word['w']=='in'||$word['w']=='of'||$word['w']=='with'||$word['w']=='to')&&$key==0){
 		//i have tried ||$word['w']=='a'||$word['w']=='an' here, it does not work as i expected
 		//i have got {a [modern type of ...]} but i want {{a [modern type]} {of ...}}
 		//no, when have removed this, i see "of" is already separated... indeed, it should be so, how it had come here before "of"? - at "a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface". i have set separation of "a" lower...
@@ -666,7 +678,10 @@ function order_2($inparr){
 			return $outparr;
 			//he had read the last known bug
 			//i see "last know ed bug", it can be {subject verb object}, but it is not "knowed", it is "known", for that i will replace ed to ed-pp (past participle). no. i replace it to en. no. en is used itself in texts, change back.
-		}elseif(isset($word['w'])&&($word['w']=='whom'||$word['w']=='that')&&$key>0){
+		}
+	}
+	foreach($inparr as $key=>$word){
+		if(isset($word['w'])&&($word['w']=='whom'||$word['w']=='that')&&$key>0){
 			//this code separates : teacher | whom ...
 			$inparrtry=$inparr;
 			$main=array_splice($inparrtry,0,$key);
@@ -705,7 +720,10 @@ function order_2($inparr){
 			$outparr[]=$inparrtry;
 			$outparr[]=$main;
 			return $outparr;
-		}elseif(isset($word['w'])&&isset($dic[$word['w']])&&$dic[$word['w']]['type']=='noun'&&$key==count($inparr)-1&&$inparr[$key-1]['w']=='ed-pp'){
+		}
+	}
+	foreach($inparr as $key=>$word){
+		if(isset($word['w'])&&isset($dic[$word['w']])&&$dic[$word['w']]['type']=='noun'&&$key==count($inparr)-1&&$inparr[$key-1]['w']=='ed-pp'){
 			array_splice($inparr,$key,1);//remove noun
 			if(count($inparr)>1){
 				$inparr=order_2($inparr);
@@ -714,13 +732,18 @@ function order_2($inparr){
 			$outparr[]=$word;
 			return $outparr;
 			//i see {last know ed-pp}. {(last know) n} or {last (know n)}? it is (usually) the 1st one, but how to select with program? if it is {last (know n)}, it would be {last (known bug)}...
-		}elseif(isset($word['w'])&&$word['w']=='last'&&$key==0&&$inparr[1]['w']=='know'&&$inparr[2]['w']=='ed-pp'&&count($inparr)==3){
+		}
+	}
+	foreach($inparr as $key=>$word){
+		if(isset($word['w'])&&$word['w']=='last'&&$key==0&&$inparr[1]['w']=='know'&&$inparr[2]['w']=='ed-pp'&&count($inparr)==3){
 			array_splice($inparr,2,1);//remove ed-pp
 			$outparr[]=$inparr;
 			$outparr[]='ed-pp';
 			return $outparr;
 		}
-		elseif(isset($word[0]['ordnum'])&&$key=count($inparr)-1){
+	}
+	foreach($inparr as $key=>$word){
+		if(isset($word[0]['ordnum'])&&$key=count($inparr)-1){
 			for($i=0,$allwithcapital=true;$i<count($inparr)-1;$i++){
 				if(!(isset($inparr[$i]['firstiscapital'])&&$inparr[$i]['firstiscapital']==true)){
 					$allwithcapital=false;
@@ -738,7 +761,24 @@ function order_2($inparr){
 				return $outparr;
 			}
 		}
-		elseif(isset($word['w'])&&($word['w']=='for'||$word['w']=='of'||$word['w']=='with'||$word['w']=='to')&&$key>0){
+	}
+	for($i=count($inparr)-1;$i>=0;$i--){
+		$word=$inparr[$i];
+		$key=$i;
+		if(isset($word['w'])&&($word['w']=='and')){
+			$andblock=array_splice($inparr,$key);
+			$andsblock=array_splice($andblock,1);
+			order_2_if_needed($andsblock);
+			$andblock_new[0]=$andsblock;
+			$andblock_new[1]=$andblock[0];
+			order_2_if_needed($inparr);
+			$outparr[]=$andblock_new;
+			$outparr[]=$inparr;
+			return $outparr;
+		}
+	}
+	foreach($inparr as $key=>$word){
+		if(isset($word['w'])&&($word['w']=='for'||$word['w']=='of'||$word['w']=='with'||$word['w']=='to')&&$key>0){
 		//abbreviation for ..
 			$main=array_splice($inparr,0,$key);
 			if(count($inparr)>1){
@@ -753,7 +793,9 @@ function order_2($inparr){
 			$outparr[]=$main;
 			return $outparr;
 		}
-		elseif(isset($word['w'])&&($word['w']=='a'||$word['w']=='an')&&$key==0){
+	}
+	foreach($inparr as $key=>$word){
+		if(isset($word['w'])&&($word['w']=='a'||$word['w']=='an')&&$key==0){
 		//an abbreviation
 		//{{a [modern type]} {of ...}}
 			$prepishere=false;
@@ -779,7 +821,9 @@ function order_2($inparr){
 		}
 		//elseif(isset($word['w'])&&isset($inparr[$key+1])&&$word['w']=='type'&&$inparr[$key+1]=='three'){
 		//}
-		elseif($key==0&&isset($word[1]['w'])&&$word[1]['w']==','){
+	}
+	foreach($inparr as $key=>$word){
+		if($key==0&&isset($word[1]['w'])&&$word[1]['w']==','){
 			$intro=$word;
 			array_splice($inparr,0,1);//remove it
 			order_2_if_needed($inparr);
@@ -800,21 +844,6 @@ function order_2($inparr){
 			return $outparr;
 		}
 		*/
-	}
-	for($i=count($inparr)-1;$i>=0;$i--){
-		$word=$inparr[$i];
-		$key=$i;
-		if(isset($word['w'])&&($word['w']=='and')){
-			$andblock=array_splice($inparr,$key);
-			$andsblock=array_splice($andblock,1);
-			order_2_if_needed($andsblock);
-			$andblock_new[0]=$andsblock;
-			$andblock_new[1]=$andblock[0];
-			order_2_if_needed($inparr);
-			$outparr[]=$andblock_new;
-			$outparr[]=$inparr;
-			return $outparr;
-		}
 	}
 	return $inparr;
 }
