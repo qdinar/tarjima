@@ -737,5 +737,55 @@ echo nstd_to_str_2($result);
 //or
 //{higher-speed successor} {to DDR and DDR2}
 // the first is part of " a and b and c " and it is strange ...
+//after simply adding "to" now i have incorrect
+//{higher-speed successor} {[[[to DDR] [and DDR2]] [and predecessor]] [to DDR4 synchronous dynamic random access memory (SDRAM) chips]}
+//how should i choose , what to catch earlier, set at "upper" level: the first "to" or the second "and"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

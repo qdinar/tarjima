@@ -738,7 +738,7 @@ function order_2($inparr){
 				return $outparr;
 			}
 		}
-		elseif(isset($word['w'])&&($word['w']=='for'||$word['w']=='of'||$word['w']=='with')&&$key>0){
+		elseif(isset($word['w'])&&($word['w']=='for'||$word['w']=='of'||$word['w']=='with'||$word['w']=='to')&&$key>0){
 		//abbreviation for ..
 			$main=array_splice($inparr,0,$key);
 			if(count($inparr)>1){
