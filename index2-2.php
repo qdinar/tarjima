@@ -740,10 +740,14 @@ echo nstd_to_str_2($result);
 //after simply adding "to" now i have incorrect
 //{higher-speed successor} {[[[to DDR] [and DDR2]] [and predecessor]] [to DDR4 synchronous dynamic random access memory (SDRAM) chips]}
 //how should i choose , what to catch earlier, set at "upper" level: the first "to" or the second "and"
-
-
-
-
+//if it try the first "to" i will get
+//[higher-speed successor] [to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips]
+//then
+//to [[DDR and DDR2 and predecessor] to DDR4 synchronous dynamic random access memory (SDRAM) chips]
+//to [DDR and DDR2 and [predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips]]
+//to [[DDR and DDR2 and [predecessor to DDR4]] synchronous dynamic random access memory (SDRAM) chips]
+//to [DDR and [DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips]]
+//seems they all can be rejected because of a and b and c construction
 
 
 
