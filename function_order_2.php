@@ -1,13 +1,19 @@
 <?php
 function order_2_if_needed(&$inparr){
 	if(count($inparr)>1){
-		$inparr=order_2($inparr);
+		if(func_num_args()==2){
+			$params=func_get_arg(1);
+			$inparr=order_2($inparr,$params);
+		}else{
+			$inparr=order_2($inparr);
+		}
 	}else{
 		$inparr=$inparr[0];
 	}
 }
 
 
+//function order_2($inparr,$params){
 function order_2($inparr){
 	global $dic,$multiwords;
 	$outparr=array();
@@ -762,19 +768,25 @@ function order_2($inparr){
 			}
 		}
 	}
-	for($i=count($inparr)-1;$i>=0;$i--){
-		$word=$inparr[$i];
-		$key=$i;
-		if(isset($word['w'])&&($word['w']=='and')){
-			$andblock=array_splice($inparr,$key);
-			$andsblock=array_splice($andblock,1);
-			order_2_if_needed($andsblock);
-			$andblock_new[0]=$andsblock;
-			$andblock_new[1]=$andblock[0];
-			order_2_if_needed($inparr);
-			$outparr[]=$andblock_new;
-			$outparr[]=$inparr;
-			return $outparr;
+	if(func_num_args()==2){
+		$params=func_get_arg(1);
+	}
+	if(!isset($params['and_is_just_ordered'])){
+		for($i=count($inparr)-1;$i>=0;$i--){
+			$word=$inparr[$i];
+			$key=$i;
+			if(isset($word['w'])&&($word['w']=='and')){
+				$andblock=array_splice($inparr,$key);
+				$andsblock=array_splice($andblock,1);
+				order_2_if_needed($andsblock);
+				$andblock_new[0]=$andsblock;
+				$andblock_new[1]=$andblock[0];
+				//$and_is_just_ordered=true;
+				order_2_if_needed($inparr,array('and_is_just_ordered'=>true));
+				$outparr[]=$andblock_new;
+				$outparr[]=$inparr;
+				return $outparr;
+			}
 		}
 	}
 	foreach($inparr as $key=>$word){
@@ -792,6 +804,24 @@ function order_2($inparr){
 			$outparr[]=$inparr;
 			$outparr[]=$main;
 			return $outparr;
+		}
+	}
+	if(isset($params['and_is_just_ordered'])){
+		for($i=count($inparr)-1;$i>=0;$i--){
+			$word=$inparr[$i];
+			$key=$i;
+			if(isset($word['w'])&&($word['w']=='and')){
+				$andblock=array_splice($inparr,$key);
+				$andsblock=array_splice($andblock,1);
+				order_2_if_needed($andsblock);
+				$andblock_new[0]=$andsblock;
+				$andblock_new[1]=$andblock[0];
+				//$and_is_just_ordered=true;
+				order_2_if_needed($inparr,array('and_is_just_ordered'=>true));
+				$outparr[]=$andblock_new;
+				$outparr[]=$inparr;
+				return $outparr;
+			}
 		}
 	}
 	foreach($inparr as $key=>$word){

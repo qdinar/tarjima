@@ -670,6 +670,8 @@ $nounlikes['er-comp']=array('tt'=>'рәк','type'=>'nnp');//nnp - noun-noun-post
 $nounlikes['it']=array('tt'=>'ул','type'=>'noun');
 $nounlikes['DDR2']=array('tt'=>'DDR2','type'=>'noun');
 $nounlikes['predecessor']=array('tt'=>'алдан килүче','type'=>'noun'); 
+$nounlikes['DDR4']=array('tt'=>'DDR4','type'=>'noun');
+$nounlikes['DDR']=array('tt'=>'DDR','type'=>'noun');
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
@@ -763,8 +765,9 @@ echo nstd_to_str_2($result);
 //[[It [be (the (higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips))]] *s].
 // - that part/level is ok. inner is:
 // (((higher-speed successor) (to DDR)) and DDR2) (and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips)
-//so second "and" is ok but first "and" needs to be ordered later than "to"
-
+//so second "and" is ok but first "and" needs to be "ordered" later than "to"
+//(higher-speed successor (to (DDR and DDR2))) (and predecessor to (DDR4 synchronous dynamic random access memory (SDRAM) chips))
+//this part is done!
 
 
 
