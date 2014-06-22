@@ -187,7 +187,7 @@ function explode_into_morphemes($engtext){
 			//continue;
 		}
 		elseif($word=='-'){//for "high er-comp - speed"
-			$engtext2[$i-1]=array($engtext2[$i-1],$engtext[$key+1]);
+			$engtext2[$i-1]=array($engtext2[$i-1],array('w'=>$engtext[$key+1]));
 			$thenextwordisused=true;
 		}
 		else{
@@ -204,11 +204,14 @@ function explode_into_morphemes($engtext){
 			$thereisdot=false;
 		}
 		*/
+		/*
 		for($j=$i;$j<count($engtext2);$j++){
 			if(!is_array($engtext2[$j])){
 				$engtext2[$j]=array('w'=>$engtext2[$j]);
 			}
 		}
+		*/
+		$engtext2=set_w_keys($engtext2,$i);
 		if($firstiscapital){
 			$firstiscapital=false;
 			$engtext2[$i]['firstiscapital']=true;
@@ -221,3 +224,30 @@ function explode_into_morphemes($engtext){
 	}
 	return $engtext2;
 }
+
+
+
+
+function set_w_keys($engtext2,$i){
+	for($j=$i;$j<count($engtext2);$j++){
+		if(!is_array($engtext2[$j])){
+			$engtext2[$j]=array('w'=>$engtext2[$j]);
+		}
+		else{
+			$engtext2[$j]=set_w_keys($engtext2[$j],0);
+		}
+	}
+	return $engtext2;
+}
+
+
+
+
+
+
+
+
+
+
+
+
