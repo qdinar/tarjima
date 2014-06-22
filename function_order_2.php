@@ -15,7 +15,7 @@ function order_2_if_needed(&$inparr){
 
 //function order_2($inparr,$params){
 function order_2($inparr){
-	global $dic,$multiwords;
+	global $dic,$multiwords,$nounlikes;
 	$outparr=array();
 
 
@@ -38,6 +38,7 @@ function order_2($inparr){
 				&&(
 					isset($dic[$trynoun['w']])
 					&&$dic[$trynoun['w']]['type']=='noun'
+					||isset($nounlikes[$trynoun['w']])
 					||$trynoun['w']=='"'
 					||$trynoun['w']=='('
 					||$trynoun['w']==')'
@@ -395,7 +396,7 @@ function order_2($inparr){
 			//but should not it be {[({he [(the bug) read]} ed-pp) have]s} ? - i think no
 			if($inparr[$key-1]['w']=='have'||$inparr[$key-1]['w']=='be'||isset($dic[$inparr[$key-1]['w']])&&$dic[$inparr[$key-1]['w']]['type']=='verb'){
 				//var_dump($inparr);
-				if($inparr[0]['w']=='whom'||$inparr[0]['w']=='that'){
+				if(isset($inparr[0]['w'])&&($inparr[0]['w']=='whom'||$inparr[0]['w']=='that')){
 					$whoword=array_splice($inparr,0,1);
 					$whoword=$whoword[0];
 					$key--;

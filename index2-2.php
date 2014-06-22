@@ -654,10 +654,15 @@ echo'<br/>';
 $engtext='It is the higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips.';
 //$dic['compute']['type']='verb';
 $nounlikes['high']=array('tt'=>'биек','type'=>'adjective');
+$nounlikes['chip']=array('tt'=>'микросхема','type'=>'noun');
 $engtext2=explode_into_morphemes($engtext);
 echo'<pre>';
 print_r($engtext2);
 //$dic['double']['type']='noun';
+$nounlikes['high']=array('tt'=>'биек','type'=>'noun');
+$nounlikes['speed']=array('tt'=>'тизлек','type'=>'noun');
+$nounlikes['er-comp']=array('tt'=>'рәк','type'=>'noun');
+$nounlikes['successor']=array('tt'=>'соңрак килүче','type'=>'noun');
 $engtext2=order_2($engtext2);
 print_r($engtext2);
 echo'</pre>';
@@ -774,12 +779,18 @@ echo nstd_to_str_2($result);
 //see lines 775 and 810 (only the foreach block between that 2 blocks). (code is doubled) . i have tried to use function (&$inparr , &$outparr ) but that was unsuccessful.
 //and i have one more idea now : setting subroutine code into a variable and "eval"ing it - i have tried it , it does not work.
 //also i know from php.net/goto that using "goto" with variable label in "eval" won't work
-
-
-
-
-
-
+//now i need to do:
+//higher-speed successor
+//predecessor
+//DDR4 synchronous dynamic random access memory (SDRAM) chips
+//DDR
+//DDR2
+//first, i am going to separate the "or" suffixes and the "s" suffix.
+//no, i will not make "or", because both "success" and "predecess" do not work as grammatical for that
+//"chips" is done. next:
+//high er - speed successor -> (((high er) speed) successor)
+//temporary  : (high (er (speed successor) ))   -  it separated from left to right, the "high" at first.
+//(((high er) speed) successor) is done (for now)
 
 
 

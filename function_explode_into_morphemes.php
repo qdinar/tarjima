@@ -3,8 +3,10 @@
 function explode_into_morphemes($engtext){
 	$engtext=preg_split('/(?=[^a-zA-Z0-9])|(?<=[^a-zA-Z0-9])/',$engtext);
 	foreach($engtext as $key=>$word){
-		if($word==' '||$word==''){
-		//empty string appears at end , i do not know why.
+		if(
+			$word==' '||//may be i will need fix this for " - "
+			$word==''//empty string appears at end , i do not know why.
+		){
 			unset($engtext[$key]);
 		}
 	}
@@ -12,12 +14,20 @@ function explode_into_morphemes($engtext){
 	//global $thereisdotatendofsentence;
 	$engtext2=array();
 	$i=0;
-	$thereiscomma=false;
-	$thereisdot=false;
+	//$thereiscomma=false;
+	//$thereisdot=false;
 	$firstiscapital=false;
 	$firstletterofsentenceiscapital=true;
 	$thisisabbreviation=false;
+	$thenextwordisused=false;
 	foreach($engtext as $key=>$word){
+		if($thenextwordisused){
+			$thenextwordisused=false;
+			continue;
+		}
+		//echo($key);//0246781012...
+	//for($key=0;$key<count($engtext);$key++){
+		//if(!isset($engtext[$key])){continue;}else{$word=$engtext[$key];}
 		/*if(substr($word,-1)==','){
 			$thereiscomma=true;
 			$word=substr($word,0,strlen($word)-1);
@@ -69,11 +79,17 @@ function explode_into_morphemes($engtext){
 				if(isset($dic[$tryverb])&&$dic[$tryverb]['type']=='verb'){
 					$engtext2[]=$tryverb;
 					$engtext2[]='s';
-				}else{
+				}
+				elseif(isset($nounlikes[$tryverb])){
+					$engtext2[]=$tryverb;
+					$engtext2[]='s-pl';
+				}
+				else{
 					$engtext2[]=$word;
 				}
 			}
-		}elseif(mb_substr($word,-1)=='n'){
+		}
+		elseif(mb_substr($word,-1)=='n'){
 			if(mb_substr($word,0,mb_strlen($word)-1)=='know'){
 				$engtext2[]='know';
 				$engtext2[]='ed-pp';
@@ -83,7 +99,8 @@ function explode_into_morphemes($engtext){
 			}else{
 				$engtext2[]=$word;
 			}
-		}elseif(mb_substr($word,-1)=='t'){
+		}
+		elseif(mb_substr($word,-1)=='t'){
 			if(mb_substr($word,0,mb_strlen($word)-1)=='me'){
 				$engtext2[]='meet';
 				$engtext2[]='ed-pp';
@@ -102,25 +119,29 @@ function explode_into_morphemes($engtext){
 			}else{
 				$engtext2[]=$word;
 			}
-		}elseif(mb_substr($word,-2,2)=='ed'&&$word!='speed'){
+		}
+		elseif(mb_substr($word,-2,2)=='ed'&&$word!='speed'){
 			$engtext2[]=mb_substr($word,0,mb_strlen($word)-2);
 			if(isset($engtext2[count($engtext2)-3])&&($engtext2[count($engtext2)-3]=='be'||$engtext2[count($engtext2)-3]=='have')){
 				$engtext2[]='ed-pp';
 			}else{
 				$engtext2[]='ed';
 			}
-		}elseif(mb_substr($word,-2,2)=='er'){//er in teacher is also almost grammatical...
+		}
+		elseif(mb_substr($word,-2)=='er'){//er in teacher is also almost grammatical...
 			$word1=mb_substr($word,0,mb_strlen($word)-2);
 			if(isset($dic[$word1])&&$dic[$word1]['type']=='verb'){
 				$engtext2[]=$word1;
 				$engtext2[]='er';
 			}elseif(isset($nounlikes[$word1])){
-				$engtext2[]=$word1;
-				$engtext2[]='er-comp';
+				//$engtext2[]=$word1;
+				//$engtext2[]='er-comp';
+				$engtext2[]=array($word1,'er-comp');
 			}else{
 				$engtext2[]=$word;
 			}
-		}elseif(mb_substr($word,-2)=='rd'||mb_substr($word,-2)=='nd'||mb_substr($word,-2)=='th'){
+		}
+		elseif(mb_substr($word,-2)=='rd'||mb_substr($word,-2)=='nd'||mb_substr($word,-2)=='th'){
 				//$engtext2[]=mb_substr($word,0,mb_strlen($word)-2);
 				//$engtext2[]=mb_substr($word,-2);
 				$trynumber=mb_substr($word,0,mb_strlen($word)-2);
@@ -136,14 +157,16 @@ function explode_into_morphemes($engtext){
 				}else{
 					$engtext2[]=$word;
 				}
-		}elseif(mb_substr($word,-1)=='d'){
+		}
+		elseif(mb_substr($word,-1)=='d'){
 			if(mb_substr($word,0,mb_strlen($word)-1)=='rea'){
 				$engtext2[]='read';
 				$engtext2[]='ed-pp';
 			}else{
 				$engtext2[]=$word;
 			}
-		}elseif(mb_substr($word,-3)=='ing'){
+		}
+		elseif(mb_substr($word,-3)=='ing'){
 			$tryverb=mb_substr($word,0,mb_strlen($word)-3).'e';//compute
 			if(isset($dic[$tryverb])&&$dic[$tryverb]['type']=='verb'){
 				$engtext2[]=$tryverb;
@@ -151,21 +174,27 @@ function explode_into_morphemes($engtext){
 			}else{
 				$engtext2[]=$word;
 			}
-		}elseif(isset($dic[$word])&&$dic[$word]['type']=='verb'){
+		}
+		elseif(isset($dic[$word])&&$dic[$word]['type']=='verb'){
 			$engtext2[]=$word;
 			//$engtext2[]='pr-si';//present simple <-comment this out, i think it should be in order function
 		}
 		elseif($upperafterlower){
 			$separated=preg_split('/(?=[A-Z0-9])(?<=[a-z])/',$word);
-			$separated=explode_words_into_morphemes_2($separated);
+			$separated=explode_into_morphemes($separated);
 			$engtext2[]=$separated;
 			//$i=count($engtext2);
 			//continue;
+		}
+		elseif($word=='-'){//for "high er-comp - speed"
+			$engtext2[$i-1]=array($engtext2[$i-1],$engtext[$key+1]);
+			$thenextwordisused=true;
 		}
 		else{
 			$engtext2[]=$word;
 		}
 		
+		/*
 		if($thereiscomma){
 			$engtext2[]=',';
 			$thereiscomma=false;
@@ -174,6 +203,7 @@ function explode_into_morphemes($engtext){
 			$engtext2[]='.';
 			$thereisdot=false;
 		}
+		*/
 		for($j=$i;$j<count($engtext2);$j++){
 			if(!is_array($engtext2[$j])){
 				$engtext2[$j]=array('w'=>$engtext2[$j]);
