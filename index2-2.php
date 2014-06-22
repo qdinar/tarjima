@@ -663,6 +663,14 @@ $nounlikes['high']=array('tt'=>'биек','type'=>'noun');
 $nounlikes['speed']=array('tt'=>'тизлек','type'=>'noun');
 $nounlikes['er-comp']=array('tt'=>'рәк','type'=>'noun');
 $nounlikes['successor']=array('tt'=>'соңрак килүче','type'=>'noun');
+$nounlikes['DDR4']=array('tt'=>'DDR4','type'=>'noun');
+$nounlikes['synchronous']=array('tt'=>'синхрон','type'=>'noun');
+$nounlikes['dynamic']=array('tt'=>'динамик','type'=>'noun');
+$nounlikes['random']=array('tt'=>'теләсә-нинди','type'=>'noun');
+$nounlikes['access']=array('tt'=>'керү','type'=>'noun');
+$nounlikes['memory']=array('tt'=>'хәтер','type'=>'noun');
+$nounlikes['SDRAM']=array('tt'=>'SDRAM','type'=>'noun');
+$nounlikes['s-pl']=array('tt'=>'лар','type'=>'noun');
 $engtext2=order_2($engtext2);
 print_r($engtext2);
 echo'</pre>';
@@ -675,7 +683,6 @@ $nounlikes['er-comp']=array('tt'=>'рәк','type'=>'nnp');//nnp - noun-noun-post
 $nounlikes['it']=array('tt'=>'ул','type'=>'noun');
 $nounlikes['DDR2']=array('tt'=>'DDR2','type'=>'noun');
 $nounlikes['predecessor']=array('tt'=>'алдан килүче','type'=>'noun'); 
-$nounlikes['DDR4']=array('tt'=>'DDR4','type'=>'noun');
 $nounlikes['DDR']=array('tt'=>'DDR','type'=>'noun');
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
@@ -791,8 +798,12 @@ echo nstd_to_str_2($result);
 //high er - speed successor -> (((high er) speed) successor)
 //temporary  : (high (er (speed successor) ))   -  it separated from left to right, the "high" at first.
 //(((high er) speed) successor) is done (for now)
-
-
+//temp. result for DD4 ...:
+// { [DDR4 [synchronous [dynamic ((random access) memory)]]] (SDRAM) } chips
+// - "sdram" is "ordered" incorrectly
+//("ordering" is setting priorities of words, in other words)
+//how should my program know out that "(sdram)" refers to "synchronous dynamic random access memory" ?
+//currently it simply takes all words before "(".
 
 
 
