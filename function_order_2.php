@@ -78,6 +78,64 @@ function order_2($inparr){
 			}elseif(isset($noun['w'])&&$noun['w']=='('&&$key>0&&$key<count($inparr)-2){
 				for($i=count($inparr)-1;$i>1;$i--){
 					if($inparr[$i]['w']==')'){
+						$inparentheses=array_splice($inparr,$key+1,$i-$key-1);
+						order_2_if_needed($inparentheses);
+						if(isset($inparentheses['w'])&&$inparentheses['thisisabbreviation']==true){
+							$countcaps=preg_match_all('/[A-Z0-9]/u',$inparentheses['w'],$matches);
+						}
+						$additionalwordsc=0;
+						//print_r($matches);
+						for($j=$key-1;$j>=0;$j--){
+							//if($inparr[$j]['firstiscapital']==true){}
+							//-1*($j-($key-1))=-j+(k-1)=k-1-j
+							//cc-1-(k-1-j-awc)=cc-1-k+1+j+awc=cc-k+j+awc
+							//echo $inparr[$j]['w'].' '.$matches[0][$countcaps-$key+$j+$additionalwordsc].' ; ';
+							if(mb_strtolower(mb_substr($inparr[$j]['w'],0,1))==mb_strtolower($matches[0][$countcaps-$key+$j+$additionalwordsc])){
+								if($key-1-$j-$additionalwordsc==count($matches[0])-1){
+									$itmatches=true;
+									break;
+								}
+								//else{
+									//continue;
+								//}
+							}
+							elseif($inparr[$j]=='of'){
+								$additionalwords++;
+								//continue;
+							}
+							else{
+								$itmatches=false;
+								break;
+							}
+						}
+						if($itmatches){
+							$parenthesesfor=array_splice($inparr,$j,$key-$j);
+							if($j>0){
+								$beforebeforeparentheses=array_splice($inparr,0,$j);
+							}
+							order_2_if_needed($parenthesesfor);
+							$parenthesesgroup=array(array($inparentheses,array('w'=>'()')),$parenthesesfor);
+						}else{
+							$beforeparentheses=array_splice($inparr,0,$key);
+							$parenthesesgroup=array(array($inparentheses,array('w'=>'()')),$beforeparentheses);
+						}
+						//order_2_if_needed($beforeparentheses);
+						$afterparentheses=array_splice($inparr,2);
+						if(count($afterparentheses)==0){
+							unset($afterparentheses);
+							$inner=$parenthesesgroup;
+						}else{
+							order_2_if_needed($afterparentheses);
+							$inner=array($parenthesesgroup,$afterparentheses);
+						}
+						if(isset($beforebeforeparentheses)){
+							$outparr=$beforebeforeparentheses;
+							$outparr[]=$inner;
+						}else{
+							$outparr=$inner;
+						}
+						return $outparr;
+						/*
 						$beforeparentheses=array_splice($inparr,0,$key);
 						order_2_if_needed($beforeparentheses);
 						//count=8,key=2,i=5
@@ -104,6 +162,7 @@ function order_2($inparr){
 							$outparr[]=$beforeparentheses;
 						}
 						return $outparr;
+						*/
 						/*
 						$inparentheses=array_splice($inparr,$key+1,$i-$key-1);
 						order_2_if_needed($inparentheses);

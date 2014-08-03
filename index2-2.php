@@ -804,7 +804,7 @@ echo nstd_to_str_2($result);
 //("ordering" is setting priorities of words, in other words)
 //how should my program know out that "(sdram)" refers to "synchronous dynamic random access memory" ?
 //currently it simply takes all words before "(".
-
+//"ddr4" is set now before parentheses ...
 
 
 
