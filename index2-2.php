@@ -328,7 +328,7 @@ $nounlikes['data']=array('tt'=>'мәгълүмат','type'=>'noun');
 $nounlikes['dance']=array('tt'=>'бию','type'=>'noun');
 $nounlikes['random']=array('tt'=>'мәгълүмат','type'=>'adj');
 $nounlikes['high']=array('tt'=>'мәгълүмат','type'=>'adj');
-$nounlikes['dynamic']=array('tt'=>'мәгълүмат','type'=>'adj');
+$nounlikes['dynamic']=array('tt'=>'динамик','type'=>'adj');
 $nounlikes['synchronous']=array('tt'=>'мәгълүмат','type'=>'adj');
 $nounlikes['interface']=array('tt'=>'интерфейс','type'=>'noun');
 $nounlikes['memory']=array('tt'=>'хәтер','type'=>'noun');
@@ -664,13 +664,13 @@ $nounlikes['speed']=array('tt'=>'тизлек','type'=>'noun');
 $nounlikes['er-comp']=array('tt'=>'рәк','type'=>'noun');
 $nounlikes['successor']=array('tt'=>'соңрак килүче','type'=>'noun');
 $nounlikes['DDR4']=array('tt'=>'DDR4','type'=>'noun');
-$nounlikes['synchronous']=array('tt'=>'синхрон','type'=>'noun');
-$nounlikes['dynamic']=array('tt'=>'динамик','type'=>'noun');
+$nounlikes['synchronous']=array('tt'=>'синхрон','type'=>'adj');
+//$nounlikes['dynamic']=array('tt'=>'динамик','type'=>'adj');
 $nounlikes['random']=array('tt'=>'теләсә-нинди','type'=>'noun');
 $nounlikes['access']=array('tt'=>'керү','type'=>'noun');
 $nounlikes['memory']=array('tt'=>'хәтер','type'=>'noun');
 $nounlikes['SDRAM']=array('tt'=>'SDRAM','type'=>'noun');
-$nounlikes['s-pl']=array('tt'=>'лар','type'=>'noun');
+$nounlikes['s-pl']=array('tt'=>'лар','type'=>'suf');
 $engtext2=order_2($engtext2);
 print_r($engtext2);
 echo'</pre>';
@@ -805,6 +805,11 @@ echo nstd_to_str_2($result);
 //how should my program know out that "(sdram)" refers to "synchronous dynamic random access memory" ?
 //currently it simply takes all words before "(".
 //"ddr4" is set now before parentheses ...
+//now i have problem i said in line 585
+//there is "random acces memory of dynamic" in tatar. i should fix it. fixed.
+//also synchronous, SDRAM, plural s.
+//now i have redundant ны. fixed. almost ready! :
+//Ул — теге DDR һәм DDR2 кә биек рәк тизлек ле соңрак килүче һәм DDR4 синхрон динамик теләсә-ничек керү ле хәтер (SDRAM) микросхема лар кә алдан килүче.
 
 
 

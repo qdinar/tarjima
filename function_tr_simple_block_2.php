@@ -32,9 +32,9 @@ function tr_simple_block_2($simbl){
 	//add ны
 	if(
 		//((isset($simbl[1][1]['w'])&&$simbl[1][1]['w']=='read')||(isset($simbl[1]['w'])&&$simbl[1]['w']=='read'))
-		(isset($simbl[1][1]['w'])&&isset($dic[$simbl[1][1]['w']])&&$dic[$simbl[1][1]['w']]['type']=='verb'
+		(isset($simbl[1][1]['w'])&&isset($dic[$simbl[1][1]['w']])&&$dic[$simbl[1][1]['w']]['type']=='verb'&&$simbl[1][1]['w']!='be'
 			||
-			isset($simbl[1]['w'])&&isset($dic[$simbl[1]['w']])&&$dic[$simbl[1]['w']]['type']=='verb')
+			isset($simbl[1]['w'])&&isset($dic[$simbl[1]['w']])&&$dic[$simbl[1]['w']]['type']=='verb'&&$simbl[1]['w']!='be')
 		&&
 		(
 		isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='the'
@@ -447,7 +447,7 @@ function apply_fixes_after_1(&$simbl,&$s2){
 	}
 	if(isset($simbl[0]['w'])){
 		if(
-			isset($nounlikes[$simbl[0]['w']])&&$nounlikes[$simbl[0]['w']]['type']=='noun'
+			isset($nounlikes[$simbl[0]['w']])&&$nounlikes[$simbl[0]['w']]['type']=='noun'&&!isset($simbl[0]['thisisabbreviation'])
 		){
 			//echo'*!'.$sb0mainword['w'].'-'.$sb1mainword['w'];
 			//$mwadj=$s2[0];
@@ -457,12 +457,14 @@ function apply_fixes_after_1(&$simbl,&$s2){
 			//}else{
 				$lastword=get_main_word($s2[1]);
 			//}
-			if(is_soft($lastword['w'])){
-				$imorphem='е';
-			}else{
-				$imorphem='ы';
+			if(isset($nounlikes[$lastword['w']])&&$nounlikes[$lastword['w']]['type']=='noun'){
+				if(is_soft($lastword['w'])){
+					$imorphem='е';
+				}else{
+					$imorphem='ы';
+				}
+				$s2[1]=array($s2[1],array('w'=>$imorphem));
 			}
-			$s2[1]=array($s2[1],array('w'=>$imorphem));
 		}
 	//}elseif(!isset($s2[0]['w'])){
 		//$trynin=get_main_word($s2[0]);
