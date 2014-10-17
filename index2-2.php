@@ -811,7 +811,7 @@ echo nstd_to_str_2($result);
 //now i have redundant ны. fixed. almost ready! :
 //Ул — теге DDR һәм DDR2 кә биек рәк тизлек ле соңрак килүче һәм DDR4 синхрон динамик теләсә-ничек керү ле хәтер (SDRAM) микросхема лар кә алдан килүче.
 // i am going to continue development closed source , commiting in github for windows without syncing with github.com . because i think it will be hard for me to earn money with donations or with crowd funding because i think that things are not popular in tatar community. and main idea of the translating method is already published if any body wants ... but i will not struggle hard to hold my closed source codes safe because it is like impossible ... i will look whether i can earn money with this by translating and selling this program usage license.
-
+//i have not made yet anything . i do not want to make closed source program. 2014-oct-17 now. i think what license to use
 
 
 
