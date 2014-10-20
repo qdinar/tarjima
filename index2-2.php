@@ -817,6 +817,7 @@ echo nstd_to_str_2($result);
 //i have change my mind again. i will try to develop some time with "all rights reserved" and will not sync this branch , if god wills
 //here i will write comments about development. begin
 //end. ^there should be comments about development
+//test comment that i will not merge now into master
 
 
 
