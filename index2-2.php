@@ -816,6 +816,10 @@ echo nstd_to_str_2($result);
 //i have written by mistake here. i will merge this branch to master for now.
 //i have change my mind again. i will try to develop some time with "all rights reserved" and will not sync this branch , if god wills
 //here i will write comments about development. begin
+//this is open source.
+//i have made some commits into close-source branch
+//and i am going to merge this comments into closed source branch
+//and i am not going to merge commits of closed source into here and nor sync/upload them
 //end. ^there should be comments about development
 //test comment that i will not merge now into master
 //^ i have synced it by mistake
