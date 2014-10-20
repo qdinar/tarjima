@@ -818,7 +818,7 @@ echo nstd_to_str_2($result);
 //here i will write comments about development. begin
 //end. ^there should be comments about development
 //test comment that i will not merge now into master
-
+//^ i have synced it by mistake
 
 
 
