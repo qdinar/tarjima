@@ -815,7 +815,8 @@ echo nstd_to_str_2($result);
 //this is "closed source" branch
 //i have written by mistake here. i will merge this branch to master for now.
 //i have change my mind again. i will try to develop some time with "all rights reserved" and will not sync this branch , if god wills
-
+//here i will write comments about development. begin
+//end. ^there should be comments about development
 
 
 
