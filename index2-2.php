@@ -615,6 +615,18 @@ function get_main_word($simbl){
 		return get_main_word($simbl[1]);
 	}
 }
+function &get_main_word_ref(&$simbl){
+	if(isset($simbl['w'])){
+		return $simbl;
+	}
+	// if(isset($simbl[1]['w'])){
+		// return $simbl[1];
+	// }else{
+		// return get_main_word_ref($simbl[1]);
+	// }
+	$tmp=&get_main_word_ref($simbl[1]);
+	return $tmp;
+}
 //after some fixes i have:
 //Компьютер гыйлеме эчендә , өченче төрдәге икекатлы мәгълүмат тизлекылы синхрон динамик теләсә-ничек керүлы хәтер өчен бер аббревиатура булган DDR3 SDRAM бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлекы")лы интерфейс белән динамик теләсә-ничек керүлы хәтер (DRAM) ның бер яңа төры һәм 2007 таналып кулланылыш эчендә.
 //i want to change:
@@ -691,6 +703,9 @@ print_r($result);
 echo'</pre>';
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
+// echo'<pre>';
+// print_r($engtext2);
+// echo'</pre>';
 //need to "order":
 //higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips
 //it should become:
@@ -814,17 +829,25 @@ echo nstd_to_str_2($result);
 //i have not made yet anything . i do not want to make closed source program. 2014-oct-17 now. i think what license to use
 //this is "closed source" branch
 //i have written by mistake here. i will merge this branch to master for now.
-//i have change my mind again. i will try to develop some time with "all rights reserved" and will not sync this branch , if god wills
+//i have changed my mind again. i will try to develop some time with "all rights reserved" and will not sync this branch , if god wills
 //here i will write comments about development. begin
 //this is open source.
-//i have made some commits into close-source branch
+//i have made some commits into closed-source branch
 //and i am going to merge this comments into closed source branch
 //and i am not going to merge commits of closed source into here and nor sync/upload them
 //end. ^there should be comments about development
 //test comment that i will not merge now into master
 //^ i have synced it by mistake
-
-
+//2014nov20 what i need to do? :
+//теге DDR һәм DDR2 кә биек рәк тизлек ле соңрак килүче
+//->
+//DDR һәм DDR2 гә карата югарырак тизлекле соңрак килүче
+//
+//DDR4 синхрон динамик теләсә-ничек керү ле хәтер (SDRAM) микросхема лар кә алдан килүче
+//->
+//DDR4 синхрон динамик теләсә-ничек керүле хәтер (SDRAM) микросхемаларына карата алдан килүче
+//
+//биек тизлек -> югары тизлек is done
 
 
 

@@ -1,7 +1,7 @@
 <?php
 
 
-function tr_simple_block_2($simbl){
+function &tr_simple_block_2(&$simbl){
 
 	global $words,$dic,$recursionlevel,$mwdic,$nounlikes;
 	$recursionlevel++;
@@ -10,7 +10,7 @@ function tr_simple_block_2($simbl){
 		if(is_mw_eq($simbl,$mw['en'],$getinner)){
 			//echo'*';
 			if(isset($getinner)&&isset($getinner[0])){
-				$getinner=tr_simple_block_2($getinner);
+				$getinner=&tr_simple_block_2($getinner);
 			}
 			assign_mw_tr($s2,$mw['tt'],$getinner);
 			unset($getinner);
@@ -19,16 +19,36 @@ function tr_simple_block_2($simbl){
 			return $s2;
 		}
 	}
+	//$mainw=get_main_word($simbl[0]);
+	// $mainw=&get_main_word_ref($simbl[0]);
+	// if($mainw['w']=='high'){
+		// $mainw['ok']='ok';//echo 'OK';exit;
+	// }
+	// if(isset($simbl[0]['w'])&&$simbl[0]['w']=='high'){//if('high'==$simbl[0]['w']){
+		// $simbl[0]['ok']='ok';
+	// }
+	$mainw=&get_main_word_ref($simbl[0]);
+	if($mainw['w']=='high'){
+		$mainw['tr']='югары';//echo 'OK';exit;
+	}
+	//---------------------------------------------------------------------translate 1 of 2
 	if(!isset($simbl[0]['w'])){
-		$s2[0]=tr_simple_block_2($simbl[0]);
+		$s2[0]=&tr_simple_block_2($simbl[0]);
 	}else{
 		$s2[0]=$simbl[0];
+		if(isset($simbl[0]['tr'])){
+			$s2[0]['w']=$simbl[0]['tr'];
+		}
+		else
 		if(isset($words[$simbl[0]['w']])){
 			$s2[0]['w']=$words[$simbl[0]['w']];
 		}else{
 			$s2[0]['w']=$nounlikes[$simbl[0]['w']]['tt'];
 		}
 	}
+	// if(isset($simbl[0]['ok'])){
+		// $s2[0]['ok']='ok';
+	// }
 	//add ны
 	if(
 		//((isset($simbl[1][1]['w'])&&$simbl[1][1]['w']=='read')||(isset($simbl[1]['w'])&&$simbl[1]['w']=='read'))
@@ -72,6 +92,19 @@ function tr_simple_block_2($simbl){
 		//does not work, i do not know why. found. == instead of =.
 		//var_dump($s2);
 	}
+	// if(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='er-comp'&&$simbl[0][0]['w']&&$simbl[0][0]['w']=='high'){
+		// if($simbl[1]['w']=='speed'){
+			// $s2[0][0]['w']='югары';//instead of биек in dic
+		// }
+	// }
+	//need to make also "very high" etc// done, see line 30
+	//get_main_word is not enough fot that
+	//if(get_main_word($simbl[0])=='high'){
+	// if(isset($simbl[0]['w'])&&$simbl[0]['w']=='high'){
+		// if($simbl[1]['w']=='speed'){
+			// $s2[0]['w']='югары';//instead of биек in dic
+		// }
+	// }
 	if(!isset($simbl[0]['w'])){
 		$sb0mainword=get_main_word($simbl[0]);
 		//echo'*';print_r($sb0mainword);
@@ -135,9 +168,14 @@ function tr_simple_block_2($simbl){
 	//
 	//
 	//
+	//---------------------------------------------------------------------translate 2 of 2
 	if(!isset($simbl[1]['w'])){
-		$s2[1]=tr_simple_block_2($simbl[1]);
+		$s2[1]=&tr_simple_block_2($simbl[1]);
 	}else{
+		if(isset($simbl[0]['tr'])){
+			$s2[0]['w']=$simbl[0]['tr'];
+		}
+		else
 		if($simbl[1]['w']=='ed-pp'){
 			//$s2[1]['w']='лгән';
 			$s2[1]=$simbl[1];
