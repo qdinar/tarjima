@@ -822,6 +822,8 @@ echo nstd_to_str_2($result);
 //and i am not going to merge commits of closed source into here and nor sync/upload them
 //i have made first closed source commit
 //биек тизлек -> югары тизлек is done
+//2014-11-24:
+//кә -> кә карата
 //end. ^there should be comments about development
 
 
