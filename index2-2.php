@@ -820,6 +820,8 @@ echo nstd_to_str_2($result);
 //i have made some commits into close-source branch
 //and i am going to merge this comments into closed source branch
 //and i am not going to merge commits of closed source into here and nor sync/upload them
+//i have made first closed source commit
+//биек тизлек -> югары тизлек is done
 //end. ^there should be comments about development
 
 
