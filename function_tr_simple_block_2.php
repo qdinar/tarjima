@@ -5,6 +5,7 @@ function &tr_simple_block_2(&$simbl){
 
 	global $words,$dic,$recursionlevel,$mwdic,$nounlikes;
 	$recursionlevel++;
+	//echo'in level '.$recursionlevel.'<pre>';print_r($simbl);echo'</pre>';echo'*';
 	$s2=array();
 	foreach($mwdic as $mw){
 		if(is_mw_eq($simbl,$mw['en'],$getinner)){
@@ -386,6 +387,7 @@ function &tr_simple_block_2(&$simbl){
 		//}else{
 			//$s2[1]['w']=$words[$simbl[1]['w']];
 		}
+		//if($recursionlevel==13){echo'level '.$recursionlevel.'<pre>';var_dump($simbl);echo'</pre>';echo'*';}
 		if(!isset($s2[1])){//if it is array, it is set. if it is word and is not set , set here
 			$s2[1]=$simbl[1];
 			//$s2[1]['w']=$words[$simbl[1]['w']];
@@ -395,6 +397,7 @@ function &tr_simple_block_2(&$simbl){
 				$s2[1]['w']=$nounlikes[$simbl[1]['w']]['tt'];
 			}
 		}
+		//should not test simbl0 and simbl1 here because this place do not work if they are complex
 	}
 	apply_fixes_after_1($simbl,$s2);
 	/*
@@ -421,7 +424,7 @@ function &tr_simple_block_2(&$simbl){
 			$s2[$key]=$simbl[$key];
 		}
 	}
-	//var_dump($s2);echo'*';
+	//echo'out level '.$recursionlevel.'<pre>';print_r($simbl);echo'</pre>';echo'*';
 	$recursionlevel--;
 	return $s2;
 
@@ -430,8 +433,18 @@ function &tr_simple_block_2(&$simbl){
 function apply_fixes_after_1(&$simbl,&$s2){
 	//global $words,$dic,$recursionlevel,$mwdic,$nounlikes;
 	global $dic,$nounlikes;
-
-
+	//unset($mainw);
+	$mainw=get_main_word($simbl[1]);
+	if($recursionlevel==8){echo 'OK<pre>' ; var_dump($mainw); echo'</pre>'; }
+	if($mainw['w']=='successor'||$mainw['w']=='predecessor'){
+		//global $jjj;$jjj++;if($jjj==1){echo 'OK';echo '<pre>';print_r($simbl);exit;}
+		//$mainw['tr']='югары';//echo 'OK';exit;
+		if(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='to'){
+			//echo'level '.$recursionlevel.'<pre>';var_dump($simbl);echo'</pre>';echo'*';
+			$s2[0][0]=$s2[0];
+			$s2[0][1]=array('w'=>'карата');
+		}
+	}
 	if(isset($simbl[1]['w'])){
 		if($simbl[1]['w']=='s'||$simbl[1]['w']=='ed'||$simbl[1]['w']=='pr-si'){
 			if(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='i'){
