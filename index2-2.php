@@ -493,8 +493,17 @@ echo nstd_to_str_2($result);
 // кулланылыш эчендә -> кулланылышта
 // delete бул п куй а - done
 function is_mw_eq($simbl,$mw,&$inner){
-	if(is_array($mw[0])){
+	//$mainw=get_main_word($simbl[0]);
+	//if(is_array($mw[0])){//i comment this out because mw[mainw] is also array
+	if(isset($mw[0][0])){
+		if(isset($simbl[0]['w'])){
+			return false;
+		}
+		if(!is_mw_eq($simbl[0],$mw[0],$inner)){
+			return false;
+		}
 	}elseif($mw[0]=='<1>'){
+		//if(!isset($simbl[0])){echo'<pre>';print_r($simbl);exit;}
 		$inner=$simbl[0];
 	}else{
 		if(
@@ -506,7 +515,14 @@ function is_mw_eq($simbl,$mw,&$inner){
 			return false;
 		}
 	}
-	if(is_array($mw[1])){
+	//if(is_array($mw[1])){
+	if(isset($mw[1][0])){
+		if(isset($simbl[1]['w'])){
+			return false;
+		}
+		if(!is_mw_eq($simbl[1],$mw[1],$inner)){
+			return false;
+		}
 	}else{
 		if(!(isset($simbl[1]['w'])&&$simbl[1]['w']==$mw[1])){
 			//$notequal=true;
@@ -605,6 +621,8 @@ function assign_mw_tr(&$s2,$tr,$inner){
 //now i was going to use adjectives and nouns and adverbs together...
 //btw in wiktionary: data is only noun, dance is verb and noun
 //and i was going to use separate arrays for noun-likes and verbs... i think that is ok ... but will not i have problems while same word has noun and adverb and adjective variants? i do not know yet ...
+//nov25: now i have "DDR4 synchronous dynamic random access memory (SDRAM) chips" which is not working with that rule - it would be "DDR4SDRAM-ful chips" (by the rule), but it should be "DDR4SDRAM's chips" in tatar language.
+//may be there is no rule and all cases are by their semantic. in this case i can use dictionary item meaning memory chip is memory's chip.
 function get_main_word($simbl){
 	if(isset($simbl['w'])){
 		return $simbl;
@@ -696,6 +714,12 @@ $nounlikes['it']=array('tt'=>'ул','type'=>'noun');
 $nounlikes['DDR2']=array('tt'=>'DDR2','type'=>'noun');
 $nounlikes['predecessor']=array('tt'=>'алдан килүче','type'=>'noun'); 
 $nounlikes['DDR']=array('tt'=>'DDR','type'=>'noun');
+$mwdic[]=
+	array(
+		'en'=>array(array('mainw'=>'memory'),array('chip','s-pl')),
+		'tt'=>array(array(array('mainw'=>'хәтер'),array('микросхема','лар')),'ы')
+	)
+;
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
@@ -850,7 +874,10 @@ echo nstd_to_str_2($result);
 //биек тизлек -> югары тизлек is done
 //2014-11-24:
 //кә -> кә карата
-
+//november 25
+//i want to make separated files or functions for 1st and 2n parts of "simple block"
+//but i see russian and english languages lack term for the second part ie main part ie part which is being qualified/modified
+//i have named it "main part"
 
 
 

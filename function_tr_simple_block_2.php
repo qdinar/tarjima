@@ -51,6 +51,51 @@ function &tr_simple_block_2(&$simbl){
 		// $s2[0]['ok']='ok';
 	// }
 	//add ны
+	apply_fixes_after_0($simbl,$s2);
+	//
+	//
+	//
+	//
+	//---------------------------------------------------------------------translate 2 of 2
+	if(!isset($simbl[1]['w'])){
+		$s2[1]=&tr_simple_block_2($simbl[1]);
+	}else{
+		translate_single_main_part($simbl,$s2);
+	}
+	apply_fixes_after_1($simbl,$s2);
+	/*
+	//these work incorrectly when order is changed
+	if(isset($simbl[0]['firstiscapital'])){
+		$s2[0]['firstiscapital']=$simbl[0]['firstiscapital'];
+	}
+	if(isset($simbl[1]['firstiscapital'])){
+		$s2[1]['firstiscapital']=$simbl[1]['firstiscapital'];
+	}
+	//these work incorrectly when order is changed
+	foreach($simbl[0] as $key=>$word){
+		if(!isset($s2[0][$key])){
+			$s2[0][$key]=$simbl[0][$key];
+		}
+	}
+	foreach($simbl[1] as $key=>$word){
+		if(!isset($s2[1][$key])){
+			$s2[1][$key]=$simbl[1][$key];
+		}
+	}*/
+	foreach($simbl as $key=>$word){
+		if(!isset($s2[$key])){
+			$s2[$key]=$simbl[$key];
+		}
+	}
+	//echo'out level '.$recursionlevel.'<pre>';print_r($simbl);echo'</pre>';echo'*';
+	$recursionlevel--;
+	return $s2;
+
+}
+
+function apply_fixes_after_0(&$simbl,&$s2){
+	//global $words,$dic,$recursionlevel,$mwdic,$nounlikes;
+	global $nounlikes;
 	if(
 		//((isset($simbl[1][1]['w'])&&$simbl[1][1]['w']=='read')||(isset($simbl[1]['w'])&&$simbl[1]['w']=='read'))
 		(isset($simbl[1][1]['w'])&&isset($dic[$simbl[1][1]['w']])&&$dic[$simbl[1][1]['w']]['type']=='verb'&&$simbl[1][1]['w']!='be'
@@ -165,277 +210,248 @@ function &tr_simple_block_2(&$simbl){
 			$s2[0][1]['w']=' лы';
 		}
 	}
-	//
-	//
-	//
-	//
-	//---------------------------------------------------------------------translate 2 of 2
-	if(!isset($simbl[1]['w'])){
-		$s2[1]=&tr_simple_block_2($simbl[1]);
-	}else{
-		if(isset($simbl[0]['tr'])){
-			$s2[0]['w']=$simbl[0]['tr'];
+}
+
+
+
+
+function translate_single_main_part(&$simbl,&$s2){
+	global $dic,$nounlikes,$words;
+	if(isset($simbl[0]['tr'])){
+		$s2[0]['w']=$simbl[0]['tr'];
+	}
+	else
+	if($simbl[1]['w']=='ed-pp'){
+		//$s2[1]['w']='лгән';
+		$s2[1]=$simbl[1];
+		//this place is translation, not just fixing of ready translation, for that i copy here all properties
+		if(isset($simbl[0]['w'])){
+			$ofplace2=$simbl[0]['w'];
+		}else{
+			$ofplace2=false;
 		}
-		else
-		if($simbl[1]['w']=='ed-pp'){
-			//$s2[1]['w']='лгән';
+		if(isset($simbl[0][1]['w'])){
+			$ofplace1=$simbl[0][1]['w'];
+		}else{
+			$ofplace1=false;
+		}
+		if($ofplace1=='know'||$ofplace2=='know'){
+			$s2[1]['w']='енгән';
+		}elseif($ofplace1=='mention'||$ofplace2=='mention'){
+			$s2[1]['w']='ынган';
+		}elseif($ofplace1=='build'||$ofplace2=='build'){
+			$s2[1]['w']='лгән';
+		}else{
+			$s2[1]['w']='лган';
+		}
+	}elseif($simbl[1]['w']=='have'){
+		if(!isset($simbl[0]['w'])&&$simbl[0][1]['w']=='ed-pp'){
+			//$s2[1]['w']='ды';
+			//$s2[0]['w']=$s2[0][0];//$s2[0][1]['w']=translation of ed-pp becomes removed
+
+			//commented out previous way while reordering ды, and write this
+			//$s2[1]['w']='have';
+
+			//i should translate this if this is imperative
+			//i can translate this {п куй}
+			//commented out previous code again
 			$s2[1]=$simbl[1];
-			//this place is translation, not just fixing of ready translation, for that i copy here all properties
-			if(isset($simbl[0]['w'])){
-				$ofplace2=$simbl[0]['w'];
-			}else{
-				$ofplace2=false;
-			}
-			if(isset($simbl[0][1]['w'])){
-				$ofplace1=$simbl[0][1]['w'];
-			}else{
-				$ofplace1=false;
-			}
-			if($ofplace1=='know'||$ofplace2=='know'){
-				$s2[1]['w']='енгән';
-			}elseif($ofplace1=='mention'||$ofplace2=='mention'){
-				$s2[1]['w']='ынган';
-			}elseif($ofplace1=='build'||$ofplace2=='build'){
-				$s2[1]['w']='лгән';
-			}else{
-				$s2[1]['w']='лган';
-			}
-		}elseif($simbl[1]['w']=='have'){
-			if(!isset($simbl[0]['w'])&&$simbl[0][1]['w']=='ed-pp'){
-				//$s2[1]['w']='ды';
-				//$s2[0]['w']=$s2[0][0];//$s2[0][1]['w']=translation of ed-pp becomes removed
-
-				//commented out previous way while reordering ды, and write this
-				//$s2[1]['w']='have';
-
-				//i should translate this if this is imperative
-				//i can translate this {п куй}
-				//commented out previous code again
-				$s2[1]=$simbl[1];
-				$s2[1]['w']='куй';
-				$s2[0][1]['w']='п';
-			}
-		}elseif($simbl[1]['w']=='s'||$simbl[1]['w']=='ed'||$simbl[1]['w']=='pr-si'){
+			$s2[1]['w']='куй';
+			$s2[0][1]['w']='п';
+		}
+	}elseif($simbl[1]['w']=='s'||$simbl[1]['w']=='ed'||$simbl[1]['w']=='pr-si'){
+		//if($simbl[0][0]['w']=='whom'){
+		//	echo'*';
+		//}
+		//echo'*<pre>';
+		//print_r($simbl);
+		//echo'</pre>';
+		//return $s2[0];//$s2[1] should be translation of s but it becomes removed
+		//i see 'ды' should be reordered...
+		if(isset($simbl[0][1][1]['w'])&&$simbl[0][1][1]['w']=='have'&&$simbl[0][1][0][1]['w']=='ed-pp'){
+			$s2[0]/*hehave..*/[1]/*haveread..*/=$s2[0][1][0]/*read(pp)...*/[0]/*read...*/;
+			//have read ed-pp is translated like read
+			$s2[1]=$simbl[1];
+			$s2[1]['w']='ды';//past tense morphem is in place of s
+			//'ды' is reordered . subject is like adverbs etc, also in tatar...
+		}elseif(isset($simbl[0][0]['w'])&&($simbl[0][0]['w']=='that'||$simbl[0][0]['w']=='whom')){
 			//if($simbl[0][0]['w']=='whom'){
 			//	echo'*';
 			//}
-			//echo'*<pre>';
-			//print_r($simbl);
-			//echo'</pre>';
-			//return $s2[0];//$s2[1] should be translation of s but it becomes removed
-			//i see 'ды' should be reordered...
-			if(isset($simbl[0][1][1]['w'])&&$simbl[0][1][1]['w']=='have'&&$simbl[0][1][0][1]['w']=='ed-pp'){
-				$s2[0]/*hehave..*/[1]/*haveread..*/=$s2[0][1][0]/*read(pp)...*/[0]/*read...*/;
-				//have read ed-pp is translated like read
-				$s2[1]=$simbl[1];
-				$s2[1]['w']='ды';//past tense morphem is in place of s
-				//'ды' is reordered . subject is like adverbs etc, also in tatar...
-			}elseif(isset($simbl[0][0]['w'])&&($simbl[0][0]['w']=='that'||$simbl[0][0]['w']=='whom')){
-				//if($simbl[0][0]['w']=='whom'){
-				//	echo'*';
-				//}
-				if(($simbl[0][1][1]['w']=='be'||$simbl[0][1][1]['w']=='have')&&$simbl[0][1][0][1]['w']=='ed-pp'){
-				//if (($simbl[0]/*whom..met*/[1]/*we..met*/[1]/*havemet*/=='be'||$simbl[0][1][1]['w']=='have')&&$simbl[0][1][0]/*we*/[1]['w']=='ed-pp'){
-					//echo'*';
-					$verb=$s2[0][1][0][0];
-					$verbending=$s2[0][1][0][1];
-					$s2[0]=$verb;
-					$s2[1]=$verbending;
-					//кайсыискәалынганбулды->искәалынган
-					/*Array
-					(
-						[0] => Array
-							(
-								[0] => that
-								[1] => Array
-									(
-										[0] => Array
-											(
-												[0] => mention
-												[1] => ed-pp
-											)
-
-										[1] => be
-									)
-
-							)
-
-						[1] => ed
-					)*/
-				//}elseif($simbl[0][0]['w']=='whom'){
-					//echo'*';
-				}elseif(($simbl[0]/*whom..met*/[1]/*we...met*/[1]/*havemet*/[1]/*have*/['w']=='have'||$simbl[0][1][1][1]['w']=='be')&&$simbl[0][1][1][0]/*met*/[1]/*ed-pp*/['w']=='ed-pp'){
-					/*Array
-					(
-						[0] => Array
-							(
-								[0] => whom
-								[1] => Array
-									(
-										[0] => we
-										[1] => Array
-											(
-												[0] => Array
-													(
-														[0] => meet
-														[1] => ed-pp
-													)
-
-												[1] => have
-											)
-
-									)
-
-							)
-
-						[1] => pr-si
-					)
-					*/
-					//echo'*';
-					$subject=$s2[0][1][0];
-					$verb=$s2[0][1][1][0][0];
-					$s2[0][0]=$subject;
-					$s2[0][1]=$verb;
-					$s2[1]=$simbl[1];
-					$s2[1]['w']='кан';//this works, but probably is buggy with other sentences
-				//}else{
-					//$s2[1]['w']=$words[$simbl[1]['w']];
-				}elseif($dic[$simbl[0][1][1]['w']]['type']=='verb'){
-					// кайсы бер велосипед сатыпал ды -> велосипед сатыпал ган
-					/*Array
-					(
-						[0] => Array
-							(
-								[0] => that
-								[1] => Array
-									(
-										[0] => Array
-											(
-												[0] => a
-												[1] => bycicle
-											)
-
-										[1] => buy
-									)
-
-							)
-
-						[1] => ed
-					)*/
-					$s2[0]=$s2[0][1];
-					$s2[1]=$simbl[1];
-					$s2[1]['w']='ган';
-					if($simbl[0][1][0][0]['w']=='a'){
-						$s2[0][0]=$s2[0][0][1];
-						/*Array
+			if(($simbl[0][1][1]['w']=='be'||$simbl[0][1][1]['w']=='have')&&$simbl[0][1][0][1]['w']=='ed-pp'){
+			//if (($simbl[0]/*whom..met*/[1]/*we..met*/[1]/*havemet*/=='be'||$simbl[0][1][1]['w']=='have')&&$simbl[0][1][0]/*we*/[1]['w']=='ed-pp'){
+				//echo'*';
+				$verb=$s2[0][1][0][0];
+				$verbending=$s2[0][1][0][1];
+				$s2[0]=$verb;
+				$s2[1]=$verbending;
+				//кайсыискәалынганбулды->искәалынган
+				/*Array
+				(
+					[0] => Array
 						(
-							[0] => Array
+							[0] => that
+							[1] => Array
 								(
 									[0] => Array
 										(
-											[0] => бер
-											[1] => велосипед
+											[0] => mention
+											[1] => ed-pp
 										)
 
-									[1] => сатыпал
+									[1] => be
 								)
 
-							[1] => ган
-						)*/
-					}
-				}
+						)
+
+					[1] => ed
+				)*/
+			//}elseif($simbl[0][0]['w']=='whom'){
+				//echo'*';
+			}elseif(($simbl[0]/*whom..met*/[1]/*we...met*/[1]/*havemet*/[1]/*have*/['w']=='have'||$simbl[0][1][1][1]['w']=='be')&&$simbl[0][1][1][0]/*met*/[1]/*ed-pp*/['w']=='ed-pp'){
+				/*Array
+				(
+					[0] => Array
+						(
+							[0] => whom
+							[1] => Array
+								(
+									[0] => we
+									[1] => Array
+										(
+											[0] => Array
+												(
+													[0] => meet
+													[1] => ed-pp
+												)
+
+											[1] => have
+										)
+
+								)
+
+						)
+
+					[1] => pr-si
+				)
+				*/
+				//echo'*';
+				$subject=$s2[0][1][0];
+				$verb=$s2[0][1][1][0][0];
+				$s2[0][0]=$subject;
+				$s2[0][1]=$verb;
+				$s2[1]=$simbl[1];
+				$s2[1]['w']='кан';//this works, but probably is buggy with other sentences
 			//}else{
 				//$s2[1]['w']=$words[$simbl[1]['w']];
-				//echo'*';
-				//var_dump($simbl);
-			}elseif(isset($simbl[0][1][1]['w'])&&$simbl[0][1][1]['w']=='be'){
-				//remove "була" - copula "is" translation
-				$subj=$s2[0][0];
-				$obj=$s2[0][1][0];
-				$s2[0]=$subj;
-				$s2[1]=$obj;
-				unset($subj,$obj);
-				$s2[1]['dash']=true;
-			}elseif(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='be'){
-				//ddrsdram {is ... and has been in ...}
-				//remove "була" - copula "is" translation
-				$s2=$s2[0][0];
-				$s2['dash']=true;
-			}elseif(
-				isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='have'
-				&&isset($simbl[0][0][1]['w'])&&$simbl[0][0][1]['w']=='ed-pp'
-				&&isset($simbl[0][0][0][1][1]['w'])&&$simbl[0][0][0][1][1]['w']=='be'
-			){
-				//ddrsdram {is ... and has been in ...}
-				//remove "була" - copula "is" translation
-				$part1=$s2[0][0][0][0];//since 2007
-				$part2=$s2[0][0][0][1][0];//in use
-				$s2[0]=$part1;
-				$s2[1]=$part2;
-				$s2['dash']=true;
-			}
-		}elseif($simbl[1]['w']=='type'){
-			if(isset($simbl[0]['w'])&&$simbl[0]['w']=='three'){
-				$num=$s2[0];
-				$s2[0]=array($num,array('w'=>'енче'));
-				$s2[1]['w']='төрдәге';//instead of төр
-			}
-		}elseif($simbl[1]['w']==',,'){
-			if(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='the'){
-				$s2=$s2[0];
+			}elseif($dic[$simbl[0][1][1]['w']]['type']=='verb'){
+				// кайсы бер велосипед сатыпал ды -> велосипед сатыпал ган
+				/*Array
+				(
+					[0] => Array
+						(
+							[0] => that
+							[1] => Array
+								(
+									[0] => Array
+										(
+											[0] => a
+											[1] => bycicle
+										)
+
+									[1] => buy
+								)
+
+						)
+
+					[1] => ed
+				)*/
+				$s2[0]=$s2[0][1];
+				$s2[1]=$simbl[1];
+				$s2[1]['w']='ган';
+				if($simbl[0][1][0][0]['w']=='a'){
+					$s2[0][0]=$s2[0][0][1];
+					/*Array
+					(
+						[0] => Array
+							(
+								[0] => Array
+									(
+										[0] => бер
+										[1] => велосипед
+									)
+
+								[1] => сатыпал
+							)
+
+						[1] => ган
+					)*/
+				}
 			}
 		//}else{
 			//$s2[1]['w']=$words[$simbl[1]['w']];
+			//echo'*';
+			//var_dump($simbl);
+		}elseif(isset($simbl[0][1][1]['w'])&&$simbl[0][1][1]['w']=='be'){
+			//remove "була" - copula "is" translation
+			$subj=$s2[0][0];
+			$obj=$s2[0][1][0];
+			$s2[0]=$subj;
+			$s2[1]=$obj;
+			unset($subj,$obj);
+			$s2[1]['dash']=true;
+		}elseif(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='be'){
+			//ddrsdram {is ... and has been in ...}
+			//remove "була" - copula "is" translation
+			$s2=$s2[0][0];
+			$s2['dash']=true;
+		}elseif(
+			isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='have'
+			&&isset($simbl[0][0][1]['w'])&&$simbl[0][0][1]['w']=='ed-pp'
+			&&isset($simbl[0][0][0][1][1]['w'])&&$simbl[0][0][0][1][1]['w']=='be'
+		){
+			//ddrsdram {is ... and has been in ...}
+			//remove "була" - copula "is" translation
+			$part1=$s2[0][0][0][0];//since 2007
+			$part2=$s2[0][0][0][1][0];//in use
+			$s2[0]=$part1;
+			$s2[1]=$part2;
+			$s2['dash']=true;
 		}
-		//if($recursionlevel==13){echo'level '.$recursionlevel.'<pre>';var_dump($simbl);echo'</pre>';echo'*';}
-		if(!isset($s2[1])){//if it is array, it is set. if it is word and is not set , set here
-			$s2[1]=$simbl[1];
-			//$s2[1]['w']=$words[$simbl[1]['w']];
-			if(isset($words[$simbl[1]['w']])){
-				$s2[1]['w']=$words[$simbl[1]['w']];
-			}else{
-				$s2[1]['w']=$nounlikes[$simbl[1]['w']]['tt'];
-			}
+	}elseif($simbl[1]['w']=='type'){
+		if(isset($simbl[0]['w'])&&$simbl[0]['w']=='three'){
+			$num=$s2[0];
+			$s2[0]=array($num,array('w'=>'енче'));
+			$s2[1]['w']='төрдәге';//instead of төр
 		}
-		//should not test simbl0 and simbl1 here because this place do not work if they are complex
+	}elseif($simbl[1]['w']==',,'){
+		if(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='the'){
+			$s2=$s2[0];
+		}
+	//}else{
+		//$s2[1]['w']=$words[$simbl[1]['w']];
 	}
-	apply_fixes_after_1($simbl,$s2);
-	/*
-	//these work incorrectly when order is changed
-	if(isset($simbl[0]['firstiscapital'])){
-		$s2[0]['firstiscapital']=$simbl[0]['firstiscapital'];
-	}
-	if(isset($simbl[1]['firstiscapital'])){
-		$s2[1]['firstiscapital']=$simbl[1]['firstiscapital'];
-	}
-	//these work incorrectly when order is changed
-	foreach($simbl[0] as $key=>$word){
-		if(!isset($s2[0][$key])){
-			$s2[0][$key]=$simbl[0][$key];
+	//if($recursionlevel==13){echo'level '.$recursionlevel.'<pre>';var_dump($simbl);echo'</pre>';echo'*';}
+	if(!isset($s2[1])){//if it is array, it is set. if it is word and is not set , set here
+		$s2[1]=$simbl[1];
+		//$s2[1]['w']=$words[$simbl[1]['w']];
+		if(isset($words[$simbl[1]['w']])){
+			$s2[1]['w']=$words[$simbl[1]['w']];
+		}else{
+			$s2[1]['w']=$nounlikes[$simbl[1]['w']]['tt'];
 		}
 	}
-	foreach($simbl[1] as $key=>$word){
-		if(!isset($s2[1][$key])){
-			$s2[1][$key]=$simbl[1][$key];
-		}
-	}*/
-	foreach($simbl as $key=>$word){
-		if(!isset($s2[$key])){
-			$s2[$key]=$simbl[$key];
-		}
-	}
-	//echo'out level '.$recursionlevel.'<pre>';print_r($simbl);echo'</pre>';echo'*';
-	$recursionlevel--;
-	return $s2;
-
+	//should not test simbl0 and simbl1 here because this place do not work if they are complex
 }
+
+
 
 function apply_fixes_after_1(&$simbl,&$s2){
 	//global $words,$dic,$recursionlevel,$mwdic,$nounlikes;
 	global $dic,$nounlikes;
 	//unset($mainw);
 	$mainw=get_main_word($simbl[1]);
-	if($recursionlevel==8){echo 'OK<pre>' ; var_dump($mainw); echo'</pre>'; }
+	//if($recursionlevel==8){echo 'OK<pre>' ; var_dump($mainw); echo'</pre>'; }
 	if($mainw['w']=='successor'||$mainw['w']=='predecessor'){
 		//global $jjj;$jjj++;if($jjj==1){echo 'OK';echo '<pre>';print_r($simbl);exit;}
 		//$mainw['tr']='югары';//echo 'OK';exit;
@@ -468,24 +484,9 @@ function apply_fixes_after_1(&$simbl,&$s2){
 				}
 				
 			}
-		}else
-		if(isset($s2[1]['w'])){
-			if($s2[1]['w']=='ды'){
-				if(isset($s2[0][1][1][1]['w'])&&$s2[0][1][1][1]['w']=='йөре'){
-					$s2[1]['w']='де';
-				}
-			}else
-			if($s2[1]['w']=='тан'&&isset($s2[0][1]['w'])&&(mb_substr($s2[0][1]['w'],-1)=='а'||mb_substr($s2[0][1]['w'],-1)=='я')){
-				$s2[1]['w']='дан';
-			}else
-			if($s2[1]['w']=='ның'){
-				$lastword=get_main_word($s2[0]);
-				if(is_soft($lastword['w'])){
-					$s2[1]['w']='нең';
-				}
-			}
-		}else
-		if(isset($simbl[1]['thisisabbreviation'])&&substr($simbl[0]['w'],-1)=='s'){
+		}
+		else
+		if(isset($simbl[1]['thisisabbreviation'])&&isset($simbl[0]['w'])&&substr($simbl[0]['w'],-1)=='s'){
 			$s2[1]=array($s2[1],array('w'=>'е'));
 		}else
 		if($simbl[1]['w']=='.'){//top of sentence
@@ -520,7 +521,10 @@ function apply_fixes_after_1(&$simbl,&$s2){
 	//}elseif(!isset($s2[0]['w'])){
 		//$trynin=get_main_word($s2[0]);
 		//if($trynin['w']=='ның'){
-	}elseif(!isset($simbl[0]['w'])){
+	}
+	else
+	//if(!isset($simbl[0]['w']))
+	{
 		//$main=get_main_word($simbl[0]);
 		//if($main['w']=='of'){
 		if(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='of'){
@@ -553,8 +557,26 @@ function apply_fixes_after_1(&$simbl,&$s2){
 }
 
 function apply_fixes_after_1_by_s2(&$s2){
+	//this is also used in assign_mw_tr, index 2 2 php line 534
 	//global $words,$dic,$recursionlevel,$mwdic,$nounlikes;
 	//global $dic,$nounlikes;
+	//else
+	if(isset($s2[1]['w'])){
+		if($s2[1]['w']=='ды'){
+			if(isset($s2[0][1][1][1]['w'])&&$s2[0][1][1][1]['w']=='йөре'){
+				$s2[1]['w']='де';
+			}
+		}else
+		if($s2[1]['w']=='тан'&&isset($s2[0][1]['w'])&&(mb_substr($s2[0][1]['w'],-1)=='а'||mb_substr($s2[0][1]['w'],-1)=='я')){
+			$s2[1]['w']='дан';
+		}else
+		if($s2[1]['w']=='ның'){
+			$lastword=get_main_word($s2[0]);
+			if(is_soft($lastword['w'])){
+				$s2[1]['w']='нең';
+			}
+		}
+	}
 	if(isset($s2[1]['w'])&&$s2[1]['w']=='тан'){
 		//echo'*';
 		$lastword=get_main_word($s2[0]);
@@ -563,7 +585,6 @@ function apply_fixes_after_1_by_s2(&$s2){
 		}
 	}
 }
-
 
 
 

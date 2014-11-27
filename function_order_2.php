@@ -90,7 +90,7 @@ function order_2($inparr){
 							//-1*($j-($key-1))=-j+(k-1)=k-1-j
 							//cc-1-(k-1-j-awc)=cc-1-k+1+j+awc=cc-k+j+awc
 							//echo $inparr[$j]['w'].' '.$matches[0][$countcaps-$key+$j+$additionalwordsc].' ; ';
-							if(mb_strtolower(mb_substr($inparr[$j]['w'],0,1))==mb_strtolower($matches[0][$countcaps-$key+$j+$additionalwordsc])){
+							if(isset($inparentheses['thisisabbreviation'])&&mb_strtolower(mb_substr($inparr[$j]['w'],0,1))==mb_strtolower($matches[0][$countcaps-$key+$j+$additionalwordsc])){
 								if($key-1-$j-$additionalwordsc==count($matches[0])-1){
 									$itmatches=true;
 									break;
