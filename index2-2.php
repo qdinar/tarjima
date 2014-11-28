@@ -824,6 +824,11 @@ echo nstd_to_str_2($result);
 //биек тизлек -> югары тизлек is done
 //2014-11-24:
 //кә -> кә карата
+//i want to make separated files or functions for 1st and 2n parts of "simple block"
+//but i see russian and english languages lack term for the second part ie main part ie part which is being qualified/modified
+//i have named it "main part"
+//nov25: now i have "DDR4 synchronous dynamic random access memory (SDRAM) chips" which is not working with that rule - it would be "DDR4SDRAM-ful chips" (by the rule), but it should be "DDR4SDRAM's chips" in tatar language.
+//may be there is no rule and all cases are by their semantic. in this case i can use dictionary item meaning memory chip is memory's chip.
 //end. ^there should be comments about development
 
 
