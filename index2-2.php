@@ -110,13 +110,18 @@ function nstd_to_str_2($nstd){
 		if(
 			$word!='.'&&$word!='не'&&$word!='ны'&&$word!='е'&&$word!='гыз'
 			&&$word!='дан'&&$word!='нче'&&$word!='енче'&&$word!='ы'&&$word!='лы'
-			&&$word!='п'&&$word!='дән'
+			&&$word!='п'&&$word!='дән'&&$word!='кә'&&$word!='гә'
 		){
 			$result.=' ';
 		}elseif($word=='п'){
 			$main=get_main_word($nstd[0]);
 			if($main['w']=='ал'){
 				$result.='ы';
+			}
+		}elseif($word=='кә'||$word=='гә'){
+			$main=get_tr_last_word($nstd[0]);
+			if(isset($main['thisisabbreviation'])){
+				$result.='-';
 			}
 		}
 		if(isset($parentheses)){
@@ -924,8 +929,9 @@ function get_tr_last_word($tr_bl){
 		return get_main_word($tr_bl[1]);
 	}
 }
-
-
+//removed теге (the);
+//кә->гә
+//DDR2 гә -> DDR2-гә
 
 
 
