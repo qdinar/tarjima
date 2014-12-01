@@ -495,7 +495,10 @@ echo nstd_to_str_2($result);
 function is_mw_eq($simbl,$mw,&$inner){
 	//$mainw=get_main_word($simbl[0]);
 	//if(is_array($mw[0])){//i comment this out because mw[mainw] is also array
-	if(isset($mw[0][0])){
+	global $recursionlevel;
+	//if($recursionlevel==11){echo'in level '.$recursionlevel.' > MW<pre>';print_r($simbl);print_r($mw);echo'</pre>';echo'*';}
+	//if(isset($mw[0][0])){//seems this gets 1st character of string and so does not work
+	if(is_array($mw[0])&&!isset($mw[0]['mainw'])&&!isset($mw[0]['<1>'])){
 		if(isset($simbl[0]['w'])){
 			return false;
 		}
@@ -505,6 +508,12 @@ function is_mw_eq($simbl,$mw,&$inner){
 	}elseif($mw[0]=='<1>'){
 		//if(!isset($simbl[0])){echo'<pre>';print_r($simbl);exit;}
 		$inner=$simbl[0];
+	}elseif(isset($mw[0]['mainw'])){
+		$mainw=get_main_word($simbl[0]);
+		//if($recursionlevel==11){echo'Main<pre>';print_r($mainw);echo'</pre>';}
+		if($mainw['w']!=$mw[0]['mainw']){
+			return false;
+		}
 	}else{
 		if(
 			!(
@@ -516,11 +525,17 @@ function is_mw_eq($simbl,$mw,&$inner){
 		}
 	}
 	//if(is_array($mw[1])){
-	if(isset($mw[1][0])){
+	//if(isset($mw[1][0])){
+	if(is_array($mw[1])&&!isset($mw[1]['mainw'])&&!isset($mw[1]['<1>'])){
 		if(isset($simbl[1]['w'])){
 			return false;
 		}
 		if(!is_mw_eq($simbl[1],$mw[1],$inner)){
+			return false;
+		}
+	}elseif(isset($mw[1]['mainw'])){
+		$mainw=get_main_word($simbl[1]);
+		if($mainw['w']!=$mw[1]['mainw']){
 			return false;
 		}
 	}else{
@@ -531,19 +546,29 @@ function is_mw_eq($simbl,$mw,&$inner){
 	}
 	return true;
 }
-function assign_mw_tr(&$s2,$tr,$inner){
-	if(is_array($tr[0])){
+function assign_mw_tr(&$s2,$tr,$inner,&$simbl){
+	if(isset($tr[0]['mainw'])){
+		$mainw=&get_main_word_ref($simbl[0]);
+		$mainw['tr']=$tr[0]['mainw'];
+		unset($mainw);
+		$s2[0]=&tr_simple_block_2($simbl[0]);
+	}elseif(is_array($tr[0])){
 		$s2[0]=array();
-		assign_mw_tr($s2[0],$tr[0],$inner);
+		assign_mw_tr($s2[0],$tr[0],$inner,$simbl);
 	}elseif($tr[0]=='<1>'){
 		//$s2[0]=array();
 		$s2[0]=$inner;
 	}else{
 		$s2[0]=array('w'=>$tr[0]);
 	}
-	if(is_array($tr[1])){
+	if(isset($tr[1]['mainw'])){
+		$mainw=&get_main_word_ref($simbl[1]);
+		$mainw['tr']=$tr[1]['mainw'];
+		unset($mainw);
+		$s2[1]=&tr_simple_block_2($simbl[1]);
+	}elseif(is_array($tr[1])){
 		$s2[1]=array();
-		assign_mw_tr($s2[1],$tr[1],$inner);
+		assign_mw_tr($s2[1],$tr[1],$inner,$simbl);
 	}else{
 		$s2[1]=array('w'=>$tr[1]);
 	}
@@ -642,8 +667,12 @@ function &get_main_word_ref(&$simbl){
 	// }else{
 		// return get_main_word_ref($simbl[1]);
 	// }
-	$tmp=&get_main_word_ref($simbl[1]);
-	return $tmp;
+	elseif(is_array($simbl[1])){
+		$tmp=&get_main_word_ref($simbl[1]);
+		return $tmp;
+	}else{
+		//echo'OK';exit;
+	}
 }
 //after some fixes i have:
 //Компьютер гыйлеме эчендә , өченче төрдәге икекатлы мәгълүмат тизлекылы синхрон динамик теләсә-ничек керүлы хәтер өчен бер аббревиатура булган DDR3 SDRAM бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлекы")лы интерфейс белән динамик теләсә-ничек керүлы хәтер (DRAM) ның бер яңа төры һәм 2007 таналып кулланылыш эчендә.
@@ -878,7 +907,7 @@ echo nstd_to_str_2($result);
 //i want to make separated files or functions for 1st and 2n parts of "simple block"
 //but i see russian and english languages lack term for the second part ie main part ie part which is being qualified/modified
 //i have named it "main part"
-
+//multiword assign with detecting main word is done
 
 
 

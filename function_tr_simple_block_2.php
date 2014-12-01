@@ -6,14 +6,17 @@ function &tr_simple_block_2(&$simbl){
 	global $words,$dic,$recursionlevel,$mwdic,$nounlikes;
 	$recursionlevel++;
 	//echo'in level '.$recursionlevel.'<pre>';print_r($simbl);echo'</pre>';echo'*';
+	//if($recursionlevel==11){echo'in level '.$recursionlevel.'<pre>';print_r($simbl);echo'</pre>';echo'*';}
 	$s2=array();
 	foreach($mwdic as $mw){
 		if(is_mw_eq($simbl,$mw['en'],$getinner)){
+			//echo'OK';exit;
 			//echo'*';
-			if(isset($getinner)&&isset($getinner[0])){
+			//if(isset($getinner)&&isset($getinner[0])){
+			if(isset($getinner)&&!isset($getinner['w'])){
 				$getinner=&tr_simple_block_2($getinner);
 			}
-			assign_mw_tr($s2,$mw['tt'],$getinner);
+			assign_mw_tr($s2,$mw['tt'],$getinner,$simbl);
 			unset($getinner);
 			//echo'*';
 			//print_r( $s2 );
