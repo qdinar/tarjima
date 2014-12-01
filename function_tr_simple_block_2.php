@@ -524,6 +524,10 @@ function apply_fixes_after_1(&$simbl,&$s2){
 	//}elseif(!isset($s2[0]['w'])){
 		//$trynin=get_main_word($s2[0]);
 		//if($trynin['w']=='ның'){
+		//if(isset($simbl[0]['w'])&&$simbl[0]['w']=='the'&&used_in_the_paragraph($mainw)){
+		if($simbl[0]['w']=='the'&&!used_in_current_paragraph($mainw)){
+			$s2=$s2[1];
+		}
 	}
 	else
 	//if(!isset($simbl[0]['w']))
@@ -570,8 +574,18 @@ function apply_fixes_after_1_by_s2(&$s2){
 				$s2[1]['w']='де';
 			}
 		}else
-		if($s2[1]['w']=='тан'&&isset($s2[0][1]['w'])&&(mb_substr($s2[0][1]['w'],-1)=='а'||mb_substr($s2[0][1]['w'],-1)=='я')){
-			$s2[1]['w']='дан';
+		//if($s2[1]['w']=='тан'&&isset($s2[0][1]['w'])&&(mb_substr($s2[0][1]['w'],-1)=='а'||mb_substr($s2[0][1]['w'],-1)=='я')){
+		if($s2[1]['w']=='тан'){
+			if(isset($s2[0][1]['w'])&&(mb_substr($s2[0][1]['w'],-1)=='а'||mb_substr($s2[0][1]['w'],-1)=='я')){
+				$s2[1]['w']='дан';
+			}
+			//$s2[1]['w']='дан';
+			else{
+				$lastword=get_main_word($s2[0]);
+				if(is_soft($lastword['w'])){
+					$s2[1]['w']='дән';
+				}
+			}
 		}else
 		if($s2[1]['w']=='ның'){
 			$lastword=get_main_word($s2[0]);
@@ -579,12 +593,18 @@ function apply_fixes_after_1_by_s2(&$s2){
 				$s2[1]['w']='нең';
 			}
 		}
-	}
-	if(isset($s2[1]['w'])&&$s2[1]['w']=='тан'){
+	//}
+	//if(isset($s2[1]['w'])&&$s2[1]['w']=='тан'){
 		//echo'*';
-		$lastword=get_main_word($s2[0]);
-		if(is_soft($lastword['w'])){
-			$s2[1]['w']='дән';
+		// $lastword=get_main_word($s2[0]);
+		// if(is_soft($lastword['w'])){
+			// $s2[1]['w']='дән';
+		// }
+		elseif($s2[1]['w']=='кә'){
+			$lastword=get_tr_last_word($s2[0]);
+			if($lastword['w']=='DDR2'){
+				$s2[1]['w']='гә';
+			}
 		}
 	}
 }

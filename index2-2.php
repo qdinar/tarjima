@@ -122,6 +122,12 @@ function nstd_to_str_2($nstd){
 		if(isset($parentheses)){
 			$result.='(';
 		}
+		// if($word=='кә'){
+			// $main=get_main_word($nstd[0]);
+			// if($main['w']=='DDR2'){
+				// $word='гә';
+			// }
+		// }
 		$result.=$word;
 		$nstd_to_str_2_firstwordisready=true;
 	}
@@ -908,8 +914,16 @@ echo nstd_to_str_2($result);
 //but i see russian and english languages lack term for the second part ie main part ie part which is being qualified/modified
 //i have named it "main part"
 //multiword assign with detecting main word is done
-
-
+function used_in_current_paragraph($word){
+	return false;
+}
+function get_tr_last_word($tr_bl){
+	if(isset($tr_bl[0][1]['w'])&&$tr_bl[0][1]['w']=='һәм'){
+		return get_main_word($tr_bl[0][0]);
+	}else{
+		return get_main_word($tr_bl[1]);
+	}
+}
 
 
 
