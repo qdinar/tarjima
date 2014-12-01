@@ -830,6 +830,8 @@ echo nstd_to_str_2($result);
 //nov25: now i have "DDR4 synchronous dynamic random access memory (SDRAM) chips" which is not working with that rule - it would be "DDR4SDRAM-ful chips" (by the rule), but it should be "DDR4SDRAM's chips" in tatar language.
 //may be there is no rule and all cases are by their semantic. in this case i can use dictionary item meaning memory chip is memory's chip.
 //multiword assign with detecting main word is done
+//removed теге (the)
+//кә->гә
 //end. ^there should be comments about development
 
 
