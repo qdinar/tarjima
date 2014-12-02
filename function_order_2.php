@@ -789,7 +789,7 @@ function order_2($inparr){
 		}
 	}
 	foreach($inparr as $key=>$word){
-		if(isset($word['w'])&&isset($dic[$word['w']])&&$dic[$word['w']]['type']=='noun'&&$key==count($inparr)-1&&$inparr[$key-1]['w']=='ed-pp'){
+		if(isset($word['w'])&&isset($dic[$word['w']])&&$dic[$word['w']]['type']=='noun'&&$key==count($inparr)-1&&isset($inparr[$key-1]['w'])&&$inparr[$key-1]['w']=='ed-pp'){
 			array_splice($inparr,$key,1);//remove noun
 			if(count($inparr)>1){
 				$inparr=order_2($inparr);

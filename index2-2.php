@@ -37,7 +37,7 @@ $words[',,']='булган';
 include 'function_tr_simple_block_2.php';
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
-print_r($result);
+//print_r($result);
 echo'</pre>';
 
 function nstd_to_str_2($nstd){
@@ -949,6 +949,7 @@ function get_tr_last_word($tr_bl){
 //микросхема лар -> микросхемалар
 //seems this is ready:
 //Ул — DDR һәм DDR2-гә карата югарырак тизлекле соңрак килүче һәм DDR4 синхрон динамик теләсә-ничек керүле хәтер (SDRAM) микросхемаларына карата алдан килүче.
+//maybe i should change priority of -s plural suffix
 
 
 
@@ -956,4 +957,4 @@ function get_tr_last_word($tr_bl){
 
 
 
-
+include 'index2-3.php';

@@ -1,4 +1,7 @@
 <?php
+
+//deprecated
+
 //explode words into grammatical morphemes
 function explode_words_into_morphemes_2($engtext){	
 	global $dic,$firstletterofsentenceiscapital;

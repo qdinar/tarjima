@@ -3,7 +3,7 @@
 
 function &tr_simple_block_2(&$simbl){
 
-	global $words,$dic,$recursionlevel,$mwdic,$nounlikes;
+	global $words,$dic,$recursionlevel,$mwdic,$nounlikes,$verbs;
 	$recursionlevel++;
 	//echo'in level '.$recursionlevel.'<pre>';print_r($simbl);echo'</pre>';echo'*';
 	//if($recursionlevel==11){echo'in level '.$recursionlevel.'<pre>';print_r($simbl);echo'</pre>';echo'*';}
@@ -98,7 +98,7 @@ function &tr_simple_block_2(&$simbl){
 
 function apply_fixes_after_0(&$simbl,&$s2){
 	//global $words,$dic,$recursionlevel,$mwdic,$nounlikes;
-	global $nounlikes;
+	global $nounlikes,$verbs;
 	if(
 		//((isset($simbl[1][1]['w'])&&$simbl[1][1]['w']=='read')||(isset($simbl[1]['w'])&&$simbl[1]['w']=='read'))
 		(isset($simbl[1][1]['w'])&&isset($dic[$simbl[1][1]['w']])&&$dic[$simbl[1][1]['w']]['type']=='verb'&&$simbl[1][1]['w']!='be'
@@ -221,7 +221,7 @@ function apply_fixes_after_0(&$simbl,&$s2){
 
 
 function translate_single_main_part(&$simbl,&$s2){
-	global $dic,$nounlikes,$words;
+	global $dic,$nounlikes,$words,$verbs;
 	if(isset($simbl[0]['tr'])){
 		$s2[0]['w']=$simbl[0]['tr'];
 	}
@@ -438,12 +438,15 @@ function translate_single_main_part(&$simbl,&$s2){
 	}
 	//if($recursionlevel==13){echo'level '.$recursionlevel.'<pre>';var_dump($simbl);echo'</pre>';echo'*';}
 	if(!isset($s2[1])){//if it is array, it is set. if it is word and is not set , set here
-		$s2[1]=$simbl[1];
 		//$s2[1]['w']=$words[$simbl[1]['w']];
 		if(isset($words[$simbl[1]['w']])){
 			$s2[1]['w']=$words[$simbl[1]['w']];
-		}else{
+		}elseif(isset($nounlikes[$simbl[1]['w']])){
 			$s2[1]['w']=$nounlikes[$simbl[1]['w']]['tt'];
+		}elseif(isset($verbs[$simbl[1]['w']])){
+			$s2[1]['w']=$verbs[$simbl[1]['w']]['tt'];
+		}else{
+			$s2[1]=$simbl[1];
 		}
 	}
 	//should not test simbl0 and simbl1 here because this place do not work if they are complex
@@ -453,7 +456,7 @@ function translate_single_main_part(&$simbl,&$s2){
 
 function apply_fixes_after_1(&$simbl,&$s2){
 	//global $words,$dic,$recursionlevel,$mwdic,$nounlikes;
-	global $dic,$nounlikes;
+	global $dic,$nounlikes,$verbs;
 	//unset($mainw);
 	$mainw=get_main_word($simbl[1]);
 	//if($recursionlevel==8){echo 'OK<pre>' ; var_dump($mainw); echo'</pre>'; }

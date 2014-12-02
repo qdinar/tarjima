@@ -10,7 +10,7 @@ function explode_into_morphemes($engtext){
 			unset($engtext[$key]);
 		}
 	}
-	global $dic,$firstletterofsentenceiscapital,$nounlikes;
+	global $dic,$firstletterofsentenceiscapital,$nounlikes,$verbs;
 	//global $thereisdotatendofsentence;
 	$engtext2=array();
 	$i=0;
@@ -61,21 +61,23 @@ function explode_into_morphemes($engtext){
 			}
 		}
 		
-		if(!$thisisabbreviation&&$firstiscapital==true||$key==0){
+		if(!$thisisabbreviation&&($firstiscapital==true||$key==0)){
 			$word=strtolower($word);
 		}
 		if(mb_substr($word,-1)=='s'){
-			if(mb_substr($word,0,mb_strlen($word)-1)=='ha'){
+			$remaining=mb_substr($word,0,mb_strlen($word)-1);
+			if($remaining=='ha'){
 				$engtext2[]='have';
 				$engtext2[]='s';
-			}elseif(mb_substr($word,0,mb_strlen($word)-1)=='wa'){
+			}elseif($remaining=='wa'){
 				$engtext2[]='be';
 				$engtext2[]='ed';
-			}elseif(mb_substr($word,0,mb_strlen($word)-1)=='i'){
+			}elseif($remaining=='i'){
 				$engtext2[]='be';
 				$engtext2[]='s';
 			}else{
-				$tryverb=mb_substr($word,0,mb_strlen($word)-1);
+				//$tryverb=mb_substr($word,0,mb_strlen($word)-1);
+				$tryverb=$remaining;
 				if(isset($dic[$tryverb])&&$dic[$tryverb]['type']=='verb'){
 					$engtext2[]=$tryverb;
 					$engtext2[]='s';
@@ -133,12 +135,17 @@ function explode_into_morphemes($engtext){
 			if(isset($dic[$word1])&&$dic[$word1]['type']=='verb'){
 				$engtext2[]=$word1;
 				$engtext2[]='er';
-			}elseif(isset($nounlikes[$word1])){
-				//$engtext2[]=$word1;
-				//$engtext2[]='er-comp';
-				$engtext2[]=array($word1,'er-comp');
 			}else{
-				$engtext2[]=$word;
+				if(mb_substr($word1,-1)=='i'){
+					$word1=mb_substr($word1,0,mb_strlen($word1)-1).'y';
+				}
+				if(isset($nounlikes[$word1])){
+					//$engtext2[]=$word1;
+					//$engtext2[]='er-comp';
+					$engtext2[]=array($word1,'er-comp');
+				}else{
+					$engtext2[]=$word;
+				}
 			}
 		}
 		elseif(mb_substr($word,-2)=='rd'||mb_substr($word,-2)=='nd'||mb_substr($word,-2)=='th'){
@@ -167,12 +174,20 @@ function explode_into_morphemes($engtext){
 			}
 		}
 		elseif(mb_substr($word,-3)=='ing'){
-			$tryverb=mb_substr($word,0,mb_strlen($word)-3).'e';//compute
-			if(isset($dic[$tryverb])&&$dic[$tryverb]['type']=='verb'){
+			$tryverb=mb_substr($word,0,mb_strlen($word)-3);
+			//if(isset($dic[$tryverb])&&$dic[$tryverb]['type']=='verb'){
+			if(isset($dic[$tryverb])&&$dic[$tryverb]['type']=='verb'||isset($verbs[$tryverb])){
+				//if($word=='signaling'){echo $tryverb;exit;}
 				$engtext2[]=$tryverb;
 				$engtext2[]='ing';
 			}else{
-				$engtext2[]=$word;
+				$tryverb.='e';//compute
+				if(isset($dic[$tryverb])&&$dic[$tryverb]['type']=='verb'){
+					$engtext2[]=$tryverb;
+					$engtext2[]='ing';
+				}else{
+					$engtext2[]=$word;
+				}
 			}
 		}
 		elseif(isset($dic[$word])&&$dic[$word]['type']=='verb'){
