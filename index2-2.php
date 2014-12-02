@@ -832,6 +832,14 @@ echo nstd_to_str_2($result);
 //multiword assign with detecting main word is done
 //removed теге (the)
 //кә->гә
+//DDR2 гә -> DDR2-гә
+//рәк -> рак
+//ы кә -> ы на
+//югары рак -> югарырак
+//тизлек ле, керү ле  -> тизлекле, керүле
+//микросхема лар -> микросхемалар
+//seems this is ready:
+//Ул — DDR һәм DDR2-гә карата югарырак тизлекле соңрак килүче һәм DDR4 синхрон динамик теләсә-ничек керүле хәтер (SDRAM) микросхемаларына карата алдан килүче.
 //end. ^there should be comments about development
 
 
