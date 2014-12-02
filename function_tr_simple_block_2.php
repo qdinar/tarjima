@@ -183,7 +183,8 @@ function apply_fixes_after_0(&$simbl,&$s2){
 				$limorphem='лы';
 			}
 			$mwadj=$s2[0];
-			$s2[0]=array($mwadj,array('w'=>' '.$limorphem));
+			//$s2[0]=array($mwadj,array('w'=>' '.$limorphem));
+			$s2[0]=array($mwadj,array('w'=>$limorphem));
 		}
 	/*}else{
 		if(
@@ -210,7 +211,8 @@ function apply_fixes_after_0(&$simbl,&$s2){
 			&&
 			isset($nounlikes[$sb0mainword['w']])&&$nounlikes[$sb0mainword['w']]['type']=='noun'
 		){
-			$s2[0][1]['w']=' лы';
+			//$s2[0][1]['w']=' лы';
+			$s2[0][1]['w']='лы';
 		}
 	}
 }
@@ -604,6 +606,14 @@ function apply_fixes_after_1_by_s2(&$s2){
 			$lastword=get_tr_last_word($s2[0]);
 			if($lastword['w']=='DDR2'){
 				$s2[1]['w']='гә';
+			}elseif($lastword['w']=='ы'){
+				$s2[1]['w']='на';
+			}
+		}
+		elseif($s2[1]['w']=='рәк'){
+			$lastword=get_tr_last_word($s2[0]);
+			if($lastword['w']=='югары'){
+				$s2[1]['w']='рак';
 			}
 		}
 	}

@@ -21,12 +21,12 @@ include 'function_explode_words_into_morphemes_2.php';
 //$firstletterofsentenceiscapital=true;
 $engtext2=explode_words_into_morphemes_2($engtext);
 //i want to do something with commas and capital letters
-print_r($engtext2);
+//print_r($engtext2);
 echo'<pre>';
 $dic['wikipedia']['type']='noun';
 include 'function_order_2.php';
 $engtext2=order_2($engtext2);
-print_r($engtext2);
+//print_r($engtext2);
 echo'</pre>';
 $words['wikipedia']='википедия';
 $words['free']='бушлай';
@@ -107,11 +107,16 @@ function nstd_to_str_2($nstd){
 		if(isset($nstd[1]['firstiscapital'])&&$nstd[1]['firstiscapital']==true||!$nstd_to_str_2_firstwordisready){
 			$word=mb_strtoupper(mb_substr($word,0,1)).mb_substr($word,1);
 		}
+		//if($word=='ле'){echo'OK';exit;}
 		if(
 			$word!='.'&&$word!='не'&&$word!='ны'&&$word!='е'&&$word!='гыз'
-			&&$word!='дан'&&$word!='нче'&&$word!='енче'&&$word!='ы'&&$word!='лы'
-			&&$word!='п'&&$word!='дән'&&$word!='кә'&&$word!='гә'
+			&&$word!='дан'&&$word!='нче'&&$word!='енче'&&$word!='ы'
+			&&$word!='лы'&&$word!='ле'
+			&&$word!='п'&&$word!='дән'&&$word!='кә'&&$word!='гә'&&$word!='на'
+			&&$word!='рак'
+			&&$word!='лар'
 		){
+			//кушымчалардан башкаларын айырып язасы
 			$result.=' ';
 		}elseif($word=='п'){
 			$main=get_main_word($nstd[0]);
@@ -123,6 +128,8 @@ function nstd_to_str_2($nstd){
 			if(isset($main['thisisabbreviation'])){
 				$result.='-';
 			}
+		// }elseif($word==' ле'){
+			// $result.='***';
 		}
 		if(isset($parentheses)){
 			$result.='(';
@@ -169,11 +176,11 @@ $engtext='This article is about DDR3 SDRAM.';
 $engtext=explode(' ', $engtext);
 //$dic['buy']['type']='verb';
 $engtext2=explode_words_into_morphemes_2($engtext);
-print_r($engtext2);
+//print_r($engtext2);
 echo'<pre>';
 $dic['be']['type']='verb';
 $engtext2=order_2($engtext2);
-print_r($engtext2);
+//print_r($engtext2);
 echo'</pre>';
 $words['this']='бу';
 $words['article']='мәкалә';
@@ -184,7 +191,7 @@ $words['SDRAM']='SDRAM';
 $words['.']='.';
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
-print_r($result);
+//print_r($result);
 echo'</pre>';
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
@@ -201,11 +208,11 @@ $engtext='For graphics DDR3, see GDDR3.';
 $engtext=explode(' ', $engtext);
 //$dic['buy']['type']='verb';
 $engtext2=explode_words_into_morphemes_2($engtext);
-print_r($engtext2);
+//print_r($engtext2);
 echo'<pre>';
 $dic['see']['type']='verb';
 $engtext2=order_2($engtext2);
-print_r($engtext2);
+//print_r($engtext2);
 echo'</pre>';
 $words['for']='өчен';
 $words['graphics']='графика';
@@ -215,7 +222,7 @@ $words['GDDR3']='GDDR3';
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
-print_r($result);
+//print_r($result);
 echo'</pre>';
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
@@ -236,13 +243,13 @@ $engtext=explode(' ', $engtext);
 //$dic['buy']['type']='verb';
 $engtext2=explode_words_into_morphemes_2($engtext);
 //i have here redundant "pr-si" after "see", and 'w'=>'revolution' is absent
-print_r($engtext2);
+//print_r($engtext2);
 echo'<pre>';
 $dic['dance']['type']='noun';
 $dic['revolution']['type']='noun';
 $multiwords=array(0=>array('random','access'));
 $engtext2=order_2($engtext2);
-print_r($engtext2);
+//print_r($engtext2);
 echo'</pre>';
 $words['video']='видео';
 $words['game']='уен';
@@ -256,7 +263,7 @@ $nounlikes['revolution']=array('tt'=>'революция','type'=>'noun');
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
-print_r($result);
+//print_r($result);
 echo'</pre>';
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
@@ -283,7 +290,7 @@ $dic['compute']['type']='verb';
 include 'function_explode_into_morphemes.php';
 $engtext2=explode_into_morphemes($engtext);
 echo'<pre>';
-print_r($engtext2);
+//print_r($engtext2);
 $dic['double']['type']='noun';
 $dic['data']['type']='noun';
 $dic['rate']['type']='noun';
@@ -301,7 +308,7 @@ $dic['interface']['type']='noun';
 $dic['DDR3']['type']='noun';
 $dic['SDRAM']['type']='noun';
 $engtext2=order_2($engtext2);
-print_r($engtext2);
+//print_r($engtext2);
 echo'</pre>';
 $words['in']='эчендә';
 $words['modern']='яңа';
@@ -356,7 +363,7 @@ $mwdic[]=array('en'=>array('<1>','since'),'tt'=>array(array(array('<1>','тан'
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
-print_r($result);
+//print_r($result);
 echo'</pre>';
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
@@ -923,7 +930,10 @@ function used_in_current_paragraph($word){
 	return false;
 }
 function get_tr_last_word($tr_bl){
-	if(isset($tr_bl[0][1]['w'])&&$tr_bl[0][1]['w']=='һәм'){
+	if(isset($tr_bl['w'])){
+		return $tr_bl;
+	}
+	elseif(isset($tr_bl[0][1]['w'])&&$tr_bl[0][1]['w']=='һәм'){
 		return get_main_word($tr_bl[0][0]);
 	}else{
 		return get_main_word($tr_bl[1]);
@@ -932,11 +942,13 @@ function get_tr_last_word($tr_bl){
 //removed теге (the);
 //кә->гә
 //DDR2 гә -> DDR2-гә
-
-
-
-
-
+//рәк -> рак
+//ы кә -> ы на
+//югары рак -> югарырак
+//тизлек ле, керү ле  -> тизлекле, керүле
+//микросхема лар -> микросхемалар
+//seems this is ready:
+//Ул — DDR һәм DDR2-гә карата югарырак тизлекле соңрак килүче һәм DDR4 синхрон динамик теләсә-ничек керүле хәтер (SDRAM) микросхемаларына карата алдан килүче.
 
 
 
