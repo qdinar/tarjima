@@ -70,6 +70,7 @@ dec2
 1618-1630
 1740-1806
 -1819 github com connection problem
+i have known out that it was blocked in russia but i have synced my commits at that time, near at 3rd try.
 1834-1839
 2036-2138
 1744-1832
@@ -81,7 +82,8 @@ dec3
 211-222
 224-257
 
-
+dec5
+2353-127
 
 
 

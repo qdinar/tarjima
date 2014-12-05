@@ -86,7 +86,7 @@ echo nstd_to_str_2($result);
 // }
 // .
 //has taken "be" out of "be neither..."
-
+//has made "due to"
 
 
 

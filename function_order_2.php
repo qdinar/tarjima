@@ -551,28 +551,39 @@ function order_2($inparr){
 		}
 	}
 	foreach($inparr as $key=>$word){
-		if(isset($word['w'])&&$word['w']=='ed-pp'&&$key==1&&count($inparr)>2){
+		//divide before and after ed past participle at 2nd position
+		if(
+			$key==1
+			&&isset($word['w'])
+			&&$word['w']=='ed-pp'
+			&&count($inparr)>2
+		){
 			//seems 'built last year' should come here but it does not.
 			//probably it goes to the "verb & key=0" in external recursion
 			//that is fixed
 			array_splice($inparr,1,1);//remove ed-pp
-			if(count($inparr)>1){
-				$inparr=order_2($inparr);
-			}
+			// if(count($inparr)>1){
+				// $inparr=order_2($inparr);
+			// }
+			order_2_if_needed($inparr);
 			$outparr[]=$inparr;
 			$outparr[1]['w']='ed-pp';
 			return $outparr;
 		}
 	}
 	foreach($inparr as $key=>$word){
-		if(isset($word['w'])&&isset($dic[$word['w']])
-				&&$dic[$word['w']]['type']=='verb'
-				&&$key==0
-				&&($inparr[1]['w']=='the'
-					||$inparr[1]['w']=='a'
-					||isset($inparr[1]['thisisabbreviation'])
-					||isset($inparr[1]['firstiscapital'])
-				)
+		//separate after verb before noun
+		if(
+			$key==0
+			&&isset($word['w'])
+			&&isset($dic[$word['w']])
+			&&$dic[$word['w']]['type']=='verb'
+			&&(
+				$inparr[1]['w']=='the'
+				||$inparr[1]['w']=='a'
+				||isset($inparr[1]['thisisabbreviation'])
+				||isset($inparr[1]['firstiscapital'])
+			)
 		){
 			array_splice($inparr,0,1);//remove verb
 			//this will work incorrectly with "read the bug through tracker"
@@ -610,7 +621,15 @@ function order_2($inparr){
 		}
 	}
 	foreach($inparr as $key=>$word){
-		if(isset($word['w'])&&isset($dic[$word['w']])&&$dic[$word['w']]['type']=='verb'&&$key==0&&$inparr[1]['w']!='ed-pp'&&$inparr[1]['w']!='er'&&$inparr[1]['w']!='s'){
+		if(
+			$key==0
+			&&isset($word['w'])
+			&&isset($dic[$word['w']])
+			&&$dic[$word['w']]['type']=='verb'
+			&&$inparr[1]['w']!='ed-pp'
+			&&$inparr[1]['w']!='er'
+			&&$inparr[1]['w']!='s'
+		){
 			if($word['w']=='have'||$word['w']=='be'){
 				if($inparr[2]['w']=='ed-pp'){//have(0) do(1) ed(2)
 					array_splice($inparr,0,1);//remove have
@@ -641,8 +660,21 @@ function order_2($inparr){
 				}
 			}
 			if(!isset($thereisathat)){
+				//separate before preposition after some words after verb
 				for($i=count($inparr)-1;$i>=0;$i--){
-					if(isset($inparr[$i]['w'])&&($inparr[$i]['w']=='every'||$inparr[$i]['w']=='to'||$inparr[$i]['w']=='from'||$inparr[$i]['w']=='through'||$inparr[$i]['w']=='last'||$inparr[$i]['w']=='about'||$inparr[$i]['w']=='since'||$inparr[$i]['w']=='in')){//preposition or adverb
+					if(
+						isset($inparr[$i]['w'])
+						&&(
+							$inparr[$i]['w']=='every'
+							||($inparr[$i]['w']=='to'&&$inparr[$i-1]['w']!='due')
+							||$inparr[$i]['w']=='from'
+							||$inparr[$i]['w']=='through'
+							||$inparr[$i]['w']=='last'
+							||$inparr[$i]['w']=='about'
+							||$inparr[$i]['w']=='since'
+							||$inparr[$i]['w']=='in'
+						)
+					){//preposition or adverb
 					//adding ||$inparr[$i]['w']=='since' have not worked "correctly" - it has been separated too early
 					//with 'has been in use since 2007'
 					//as i see it should not have come here so early
@@ -657,7 +689,14 @@ function order_2($inparr){
 							$verb=$verb[0];
 						}*/
 						order_2_if_needed($verb);
-						if($inparr[0]['w']=='to'||$inparr[0]['w']=='from'||$inparr[0]['w']=='through'||$inparr[0]['w']=='about'||$inparr[0]['w']=='since'||$inparr[0]['w']=='in'){//preposition
+						if(
+							$inparr[0]['w']=='to'
+							||$inparr[0]['w']=='from'
+							||$inparr[0]['w']=='through'
+							||$inparr[0]['w']=='about'
+							||$inparr[0]['w']=='since'
+							||$inparr[0]['w']=='in'
+						){//preposition
 						//swapping preposition with its word
 							$prep=array_splice($inparr,0,1);
 							$prep=$prep[0];
@@ -679,6 +718,20 @@ function order_2($inparr){
 						}
 						$outparr[]=$inparr;
 						$outparr[]=$verb;
+						return $outparr;
+					}elseif(isset($inparr[$i]['w'])&&$inparr[$i]['w']=='to'&&$inparr[$i-1]['w']=='due'){
+						$verb=array_splice($inparr,0,$i-1);
+						order_2_if_needed($verb);
+						$outparr=array();
+						$outparr[]=array();
+						$outparr[]=$verb;
+						$outparr[0][]=array();
+						$outparr[0][]=$inparr[0];//due
+						$outparr[0][0][1]=$inparr[1];//to
+						array_splice($inparr,0,2);
+						order_2_if_needed($inparr);
+						$outparr[0][0][0]=$inparr;
+						ksort($outparr[0][0]);
 						return $outparr;
 					}
 				}
@@ -726,16 +779,31 @@ function order_2($inparr){
 			}
 		}
 	}
+	//divide after preposition
 	foreach($inparr as $key=>$word){
-		if(isset($word['w'])&&($word['w']=='the'||$word['w']=='through'||$word['w']=='from'||$word['w']=='for'||$word['w']=='in'||$word['w']=='of'||$word['w']=='with'||$word['w']=='to')&&$key==0){
+		if(
+			$key==0
+			&&isset($word['w'])
+			&&(
+				$word['w']=='the'
+				||$word['w']=='through'
+				||$word['w']=='from'
+				||$word['w']=='for'
+				||$word['w']=='in'
+				||$word['w']=='of'
+				||$word['w']=='with'
+				||$word['w']=='to'
+			)
+		){
 		//i have tried ||$word['w']=='a'||$word['w']=='an' here, it does not work as i expected
 		//i have got {a [modern type of ...]} but i want {{a [modern type]} {of ...}}
 		//no, when have removed this, i see "of" is already separated... indeed, it should be so, how it had come here before "of"? - at "a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface". i have set separation of "a" lower...
 			$inparrtry=$inparr;
 			array_splice($inparrtry,0,1);//remove the
-			if(count($inparrtry)>1){
-				$inparrtry=order_2($inparrtry);
-			}
+			// if(count($inparrtry)>1){
+				// $inparrtry=order_2($inparrtry);
+			// }
+			order_2_if_needed($inparrtry);
 			if(isset($inparrtry[1]['w'])&&($inparrtry[1]['w']=='s'||$inparrtry[1]['w']=='pr-si'||$inparrtry[1]['w']=='ed')){
 				//why is this? the | know n - process , the | know s - go out - that is impossible.. may be to go out from incorrect ordering. i have tried to search in github site for "unset($inparrtry);" but it shows just index2.php , not commit. then i have looked at script output for "the"s and i see error messages at top of page... the teacher... example is broken
 				//i have remembered this. this makes a try ordering.
@@ -862,23 +930,41 @@ function order_2($inparr){
 			}
 		}
 	}
+	//separate before preposition
 	foreach($inparr as $key=>$word){
-		if(isset($word['w'])&&($word['w']=='for'||$word['w']=='of'||$word['w']=='with'||$word['w']=='to')&&$key>0){
+		if(
+			$key>0
+			&&isset($word['w'])
+			&&(
+				$word['w']=='for'
+				||$word['w']=='of'
+				||$word['w']=='with'
+				||($word['w']=='to'&&$inparr[$key-1]['w']!='due')
+				// ||(//has not worked here, too late
+					// $word['w']=='due'
+					// &&isset($inparr[$key+1]['w'])
+					// &&$inparr[$key+1]['w']=='to'
+				// )
+			)
+		){
 		//abbreviation for ..
 			$main=array_splice($inparr,0,$key);
-			if(count($inparr)>1){
-				$inparr=order_2($inparr);
-			}
-			if(count($main)>1){
-				$main=order_2($main);
-			}else{
-				$main=$main[0];
-			}
+			// if(count($inparr)>1){
+				// $inparr=order_2($inparr);
+			// }
+			order_2_if_needed($inparr);
+			// if(count($main)>1){
+				// $main=order_2($main);
+			// }else{
+				// $main=$main[0];
+			// }
+			order_2_if_needed($main);
 			$outparr[]=$inparr;
 			$outparr[]=$main;
 			return $outparr;
 		}
 	}
+	//separate after be
 	if(isset($inparr[0]['w'])&&$inparr[0]['w']=='be'){
 		//try to order "be never ..." ... done...
 		$word=array_splice($inparr,0,1);//remove be
