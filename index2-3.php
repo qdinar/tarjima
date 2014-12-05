@@ -24,12 +24,68 @@ $nounlikes['any']=array('tt'=>'теләсә-кайсы','type'=>'attr');
 $nounlikes['neither']=array('tt'=>'түгел','type'=>'attr');
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
-print_r($result);
+//print_r($result);
 echo'</pre>';
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
-
-
+//i have now:
+// {
+	// {
+		// DDR3 SDRAM
+		// {
+			// {
+				// be neither forward nor backward compatible
+				// with
+					// {
+						// any
+						// {
+							// early er
+						// }
+						// type
+					// }
+					// of
+						// random access memory ( RAM ) due
+			// }
+			// to
+				// different signal ing voltage s , timing s
+					// and
+					// other factor s
+		// }
+	// }
+	// s
+// }
+// .
+//it should be:
+// {
+	// be:{
+		// DDR3 SDRAM
+		// be:{
+			// be:{
+				// with
+					// {
+						// any
+							// {
+								// early er
+							// }
+							// type
+					// }
+					// of
+						// random access memory ( RAM )
+				// be:{
+					// be
+					// neither forward nor backward compatible
+				// }
+			// }
+			// due to
+				// different signal ing voltage s , timing s
+					// and
+					// other factor s
+		// }
+	// }
+	// s
+// }
+// .
+//has taken "be" out of "be neither..."
 
 
 

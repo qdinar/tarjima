@@ -614,12 +614,19 @@ function order_2($inparr){
 			if($word['w']=='have'||$word['w']=='be'){
 				if($inparr[2]['w']=='ed-pp'){//have(0) do(1) ed(2)
 					array_splice($inparr,0,1);//remove have
-					if(count($inparr)>1){
-						$inparr=order_2($inparr);
-					}
+					// if(count($inparr)>1){
+						// $inparr=order_2($inparr);
+					// }
+					order_2_if_needed($inparr);
 					$outparr[]=$inparr;
 					$outparr[]=$word;
 					return $outparr;
+				// }else{//try to order "be never ..." ... it has run too early
+					// array_splice($inparr,0,1);//remove be
+					// order_2_if_needed($inparr);
+					// $outparr[]=$inparr;
+					// $outparr[]=$word;
+					// return $outparr;
 				}
 			}
 			//this is not 'have' nor 'be' <-this is not true now...
@@ -675,6 +682,12 @@ function order_2($inparr){
 						return $outparr;
 					}
 				}
+				//try to order "be never ..." ... it has run too early
+				// array_splice($inparr,0,1);//remove be
+				// order_2_if_needed($inparr);
+				// $outparr[]=$inparr;
+				// $outparr[]=$word;
+				// return $outparr;
 			}else{
 				//echo'*';
 				//walk through park that is built last year
@@ -865,6 +878,14 @@ function order_2($inparr){
 			$outparr[]=$main;
 			return $outparr;
 		}
+	}
+	if(isset($inparr[0]['w'])&&$inparr[0]['w']=='be'){
+		//try to order "be never ..." ... done...
+		$word=array_splice($inparr,0,1);//remove be
+		order_2_if_needed($inparr);
+		$outparr[]=$inparr;
+		$outparr[]=$word[0];
+		return $outparr;
 	}
 	if(isset($params['and_is_just_ordered'])){
 		for($i=count($inparr)-1;$i>=0;$i--){
