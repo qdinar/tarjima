@@ -840,6 +840,8 @@ echo nstd_to_str_2($result);
 //микросхема лар -> микросхемалар
 //seems this is ready:
 //Ул — DDR һәм DDR2-гә карата югарырак тизлекле соңрак килүче һәм DDR4 синхрон динамик теләсә-ничек керүле хәтер (SDRAM) микросхемаларына карата алдан килүче.
+//next sentence
+//has taken "be" out of "be neither..."
 //end. ^there should be comments about development
 
 

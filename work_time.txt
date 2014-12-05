@@ -69,7 +69,17 @@ dec1
 dec2
 1618-1630
 1740-1806
+-1819 github com connection problem
+1834-1839
+2036-2138
+1744-1832
+2240-2252
 
+github com is blocked
+
+dec3
+211-222
+224-257
 
 
 
