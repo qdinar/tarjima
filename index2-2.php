@@ -323,7 +323,7 @@ $words['data']='мәгълүмат';
 $words['high']='биек';
 $words['with']='белән';
 $words['dynamic']='динамик';
-$words['random']='теләсәкайсы';
+$words['random']='теләсә-нинди';
 $words['of']='ның';
 $words['since']='таналып';
 $words['2007']='2007';
@@ -344,10 +344,10 @@ $mwdic[]=array('en'=>array('high','bandwidth'),'tt'=>array('югары','үтк�
 $nounlikes=array();
 $nounlikes['data']=array('tt'=>'мәгълүмат','type'=>'noun');
 $nounlikes['dance']=array('tt'=>'бию','type'=>'noun');
-$nounlikes['random']=array('tt'=>'мәгълүмат','type'=>'adj');
-$nounlikes['high']=array('tt'=>'мәгълүмат','type'=>'adj');
+$nounlikes['random']=array('tt'=>'теләсә-нинди','type'=>'adj');
+$nounlikes['high']=array('tt'=>'югары','type'=>'adj');
 $nounlikes['dynamic']=array('tt'=>'динамик','type'=>'adj');
-$nounlikes['synchronous']=array('tt'=>'мәгълүмат','type'=>'adj');
+$nounlikes['synchronous']=array('tt'=>'синхрон','type'=>'adj');
 $nounlikes['interface']=array('tt'=>'интерфейс','type'=>'noun');
 $nounlikes['memory']=array('tt'=>'хәтер','type'=>'noun');
 $nounlikes['bandwidth']=array('tt'=>'үткәрүчәнлек','type'=>'noun');
@@ -747,7 +747,7 @@ $nounlikes['random']=array('tt'=>'теләсә-нинди','type'=>'noun');
 $nounlikes['access']=array('tt'=>'керү','type'=>'noun');
 $nounlikes['memory']=array('tt'=>'хәтер','type'=>'noun');
 $nounlikes['SDRAM']=array('tt'=>'SDRAM','type'=>'noun');
-$nounlikes['s-pl']=array('tt'=>'лар','type'=>'suf');
+//$nounlikes['s-pl']=array('tt'=>'лар','type'=>'suf');
 $engtext2=order_2($engtext2);
 print_r($engtext2);
 echo'</pre>';
@@ -974,7 +974,7 @@ function get_tr_last_word($tr_bl){
 //микросхема лар -> микросхемалар
 //seems this is ready:
 //Ул — DDR һәм DDR2-гә карата югарырак тизлекле соңрак килүче һәм DDR4 синхрон динамик теләсә-ничек керүле хәтер (SDRAM) микросхемаларына карата алдан килүче.
-//maybe i should change priority of -s plural suffix
+//maybe i should change priority of -s plural suffix -- done
 
 
 

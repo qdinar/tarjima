@@ -16,6 +16,8 @@ echo'<pre>';
 print_r($engtext2);
 $recursionlevel=0;
 $nounlikes['any']=array('tt'=>'теләсә-кайсы','type'=>'attr');
+$nounlikes['RAM']=array('tt'=>'RAM','type'=>'noun');
+$nounlikes['other']=array('tt'=>'башка','type'=>'attr');
 $engtext2=order_2($engtext2);
 print_r($engtext2);
 echo'</pre>';
@@ -90,9 +92,9 @@ echo nstd_to_str_2($result);
 //has made "due to"
 //i should not write work times at both branches , i am not sure that i can easily merge my branches now
 //(i have) fixed "any earlier type"
-
-
-
+//i have merged master branch into this branch
+//made "random access memory ( RAM )"
+//i have "other (factor s)" and need to change it to "(other factor) s" -- done
 
 
 
