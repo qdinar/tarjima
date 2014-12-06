@@ -843,6 +843,8 @@ echo nstd_to_str_2($result);
 //next sentence
 //has taken "be" out of "be neither..."
 //has made "due to"
+//i should not write work times at both branches , i am not sure that i can easily merge my branches now
+//(i have) fixed "any earlier type"
 //end. ^there should be comments about development
 
 
