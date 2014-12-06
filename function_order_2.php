@@ -16,6 +16,10 @@ function order_2_if_needed(&$inparr){
 //function order_2($inparr,$params){
 function order_2($inparr){
 	global $dic,$multiwords,$nounlikes;
+	global $recursionlevel;
+	$recursionlevel++;
+	//echo'in level '.$recursionlevel.'<pre>';print_r($inparr);echo'</pre>';echo'*';
+	//if($recursionlevel==9){echo'in level '.$recursionlevel.'<pre>';print_r($inparr);echo'</pre>';}
 	$outparr=array();
 
 
@@ -29,9 +33,22 @@ function order_2($inparr){
 		$outparr[]=$dot;
 		return $outparr;
 	}
-
+	// foreach($inparr as $trynoun){
+		// if(
+			// isset($trynoun[1]['w'])
+			// &&$trynoun[1]['w']=='er-comp'
+		// ){
+			// echo'OK';
+		// }
+	// }
 	$tryallarenouns=true;
 	foreach($inparr as $trynoun){
+		// if(
+			// isset($trynoun[1]['w'])
+			// &&$trynoun[1]['w']=='er-comp'
+		// ){
+			// echo'OK';
+		// }
 		if(
 			!(
 				isset($trynoun['w'])
@@ -43,10 +60,14 @@ function order_2($inparr){
 					||$trynoun['w']=='('
 					||$trynoun['w']==')'
 				)
-				||(
-					isset($trynoun[1]['w'])
-					&&$trynoun[1]['w']==',,'
-				)
+				||
+				isset($trynoun[1]['w'])
+				&&$trynoun[1]['w']==',,'
+				||
+				// !isset($trynoun['w'])
+				// &&
+				isset($trynoun[1]['w'])
+				&&$trynoun[1]['w']=='er-comp'
 			)
 		){
 			$tryallarenouns=false;
@@ -54,8 +75,15 @@ function order_2($inparr){
 		}
 	}
 	if($tryallarenouns){
+		//echo'nouns<pre>';print_r($inparr);echo'</pre>';
 		foreach($inparr as $key=>$noun){
-			if(isset($noun['w'])&&$noun['w']=='type'&&$inparr[$key+1]['w']=='three'&&$key>0&&$key<count($inparr)-2){
+			if(
+				isset($noun['w'])
+				&&$noun['w']=='type'
+				&&$inparr[$key+1]['w']=='three'
+				&&$key>0
+				&&$key<count($inparr)-2
+			){
 			//before and after "type three"
 				$beforetype=array_splice($inparr,0,$key);
 				/*if(count($beforetype)>1){
@@ -75,7 +103,12 @@ function order_2($inparr){
 				$outparr[]=array($typeblock,$beforetype);
 				$outparr[]=$inparr;
 				return $outparr;
-			}elseif(isset($noun['w'])&&$noun['w']=='('&&$key>0&&$key<count($inparr)-2){
+			}elseif(
+				isset($noun['w'])
+				&&$noun['w']=='('
+				&&$key>0
+				&&$key<count($inparr)-2
+			){
 				for($i=count($inparr)-1;$i>1;$i--){
 					if($inparr[$i]['w']==')'){
 						$inparentheses=array_splice($inparr,$key+1,$i-$key-1);
@@ -172,7 +205,11 @@ function order_2($inparr){
 						*/
 					}
 				}
-			}elseif(isset($noun['w'])&&$noun['w']=='"'&&$key<count($inparr)-1){
+			}elseif(
+				isset($noun['w'])
+				&&$noun['w']=='"'
+				&&$key<count($inparr)-1
+			){
 				for($i=count($inparr)-1;$i>0;$i--){
 					if($inparr[$i]['w']=='"'){
 						$beforequotes=array_splice($inparr,0,$key);
@@ -218,7 +255,11 @@ function order_2($inparr){
 						*/
 					}
 				}
-			}elseif(isset($noun[1]['w'])&&$noun[1]['w']==',,'&&$key==count($inparr)-1){
+			}elseif(
+				isset($noun[1]['w'])
+				&&$noun[1]['w']==',,'
+				&&$key==count($inparr)-1
+			){
 				/*
 				$described=$inparr[$key-1];
 				$inparr[$key-1]=array($noun,$described);
@@ -237,7 +278,10 @@ function order_2($inparr){
 		}
 
 
-		if(isset($inparr[0]['w'])&&$inparr[0]['w']=='type'){
+		if(
+			isset($inparr[0]['w'])
+			&&$inparr[0]['w']=='type'
+		){
 		//inside "type three"
 			$type=array_splice($inparr,0,1); //cut out "type"
 			/*if(count($inparr)>1){
@@ -1042,6 +1086,8 @@ function order_2($inparr){
 		}
 		*/
 	}
+	//echo'out level '.$recursionlevel.'<pre>';print_r($inparr);echo'</pre>';
+	$recursionlevel--;
 	return $inparr;
 }
 
