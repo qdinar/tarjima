@@ -906,6 +906,31 @@ echo nstd_to_str_2($result);
 //i have made some commits into closed-source branch
 //and i am going to merge this comments into closed source branch
 //and i am not going to merge commits of closed source into here and nor sync/upload them
+//i have made first closed source commit
+//биек тизлек -> югары тизлек is done
+//2014-11-24:
+//кә -> кә карата
+//i want to make separated files or functions for 1st and 2n parts of "simple block"
+//but i see russian and english languages lack term for the second part ie main part ie part which is being qualified/modified
+//i have named it "main part"
+//nov25: now i have "DDR4 synchronous dynamic random access memory (SDRAM) chips" which is not working with that rule - it would be "DDR4SDRAM-ful chips" (by the rule), but it should be "DDR4SDRAM's chips" in tatar language.
+//may be there is no rule and all cases are by their semantic. in this case i can use dictionary item meaning memory chip is memory's chip.
+//multiword assign with detecting main word is done
+//removed теге (the)
+//кә->гә
+//DDR2 гә -> DDR2-гә
+//рәк -> рак
+//ы кә -> ы на
+//югары рак -> югарырак
+//тизлек ле, керү ле  -> тизлекле, керүле
+//микросхема лар -> микросхемалар
+//seems this is ready:
+//Ул — DDR һәм DDR2-гә карата югарырак тизлекле соңрак килүче һәм DDR4 синхрон динамик теләсә-ничек керүле хәтер (SDRAM) микросхемаларына карата алдан килүче.
+//next sentence
+//has taken "be" out of "be neither..."
+//has made "due to"
+//i should not write work times at both branches , i am not sure that i can easily merge my branches now
+//(i have) fixed "any earlier type"
 //end. ^there should be comments about development
 //test comment that i will not merge now into master
 //^ i have synced it by mistake
