@@ -308,7 +308,7 @@ $dic['interface']['type']='noun';
 $dic['DDR3']['type']='noun';
 $dic['SDRAM']['type']='noun';
 $engtext2=order_2($engtext2);
-//print_r($engtext2);
+print_r($engtext2);
 echo'</pre>';
 $words['in']='эчендә';
 $words['modern']='яңа';
@@ -677,6 +677,7 @@ function get_main_word($simbl){
 	}
 }
 function &get_main_word_ref(&$simbl){
+	//echo'mw<pre>';print_r($simbl);echo'</pre>';
 	if(isset($simbl['w'])){
 		return $simbl;
 	}
@@ -686,10 +687,17 @@ function &get_main_word_ref(&$simbl){
 		// return get_main_word_ref($simbl[1]);
 	// }
 	elseif(is_array($simbl[1])){
+	//else{
+		//if($simbl[1]===NULL){echo'OK';exit;}
 		$tmp=&get_main_word_ref($simbl[1]);
 		return $tmp;
 	}else{
-		//echo'OK';exit;
+		//echo'<pre>';print_r($simbl);exit;
+		echo'<pre>';var_dump($simbl);exit;//null
+		//return '***';
+		//return $simbl;
+		// $tmp='***';
+		// return $tmp;
 	}
 }
 //after some fixes i have:

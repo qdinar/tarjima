@@ -31,6 +31,7 @@ function &tr_simple_block_2(&$simbl){
 	// if(isset($simbl[0]['w'])&&$simbl[0]['w']=='high'){//if('high'==$simbl[0]['w']){
 		// $simbl[0]['ok']='ok';
 	// }
+	//echo'send to mw from <pre>';var_dump($simbl);echo'</pre>';
 	$mainw=&get_main_word_ref($simbl[0]);
 	if($mainw['w']=='high'){
 		$mainw['tr']='югары';//echo 'OK';exit;
@@ -46,8 +47,10 @@ function &tr_simple_block_2(&$simbl){
 		else
 		if(isset($words[$simbl[0]['w']])){
 			$s2[0]['w']=$words[$simbl[0]['w']];
-		}else{
+		}elseif(isset($nounlikes[$simbl[0]['w']])){
 			$s2[0]['w']=$nounlikes[$simbl[0]['w']]['tt'];
+		}elseif(isset($verbs[$simbl[0]['w']])){
+			$s2[0]['w']=$verbs[$simbl[0]['w']]['tt'];
 		}
 	}
 	// if(isset($simbl[0]['ok'])){
