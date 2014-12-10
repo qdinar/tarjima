@@ -1092,12 +1092,34 @@ echo nstd_to_str($result);
 //  (NP (NNP Wikipedia) (, ,) (DT the) (JJ free) (NN encyclopedia)))
 //good
 
+//another program (  http://nlp.stanford.edu/software/lex-parser.shtml ) results:
+// (ROOT
+  // (S
+    // (PP (IN From)
+      // (NP (NNP Wikipedia)))
+    // (, ,)
+    // (NP (DT the) (JJ free))
+    // (VP (VBZ encyclopedia))
+    // (. .)))
+
+
 //print parser.parse("This article is about DDR3 SDRAM.")
 //(S
 //  (NP (DT this) (NN article))
 //  (VP (VBZ is) (PP (IN about) (NP (JJ DDR3) (NN SDRAM))))
 //  (. .))
 //good
+
+// (ROOT
+  // (S
+    // (NP (DT This) (NN article))
+    // (VP (VBZ is)
+      // (PP (IN about)
+        // (NP (NNP DDR3) (NNP SDRAM))))
+    // (. .)))
+
+
+
 
 //print parser.parse("For graphics DDR3, see GDDR3.")
 //(PRN+SBAR
@@ -1110,6 +1132,17 @@ echo nstd_to_str($result);
 //as i understand, it is :
 // For {graphics DDR3, see GDDR3.}
 //which is incorrect: "for" and dot are at incorrect place
+
+//stanfort:
+// (ROOT
+  // (S
+    // (PP (IN For)
+      // (NP (NNS graphics) (NN DDR3)))
+    // (, ,)
+    // (VP (VB see)
+      // (NP (NNP GDDR3)))
+    // (. .)))
+// - correct
 
 //print parser.parse("For the video game, see Dance Dance Revolution 3rdMix.")
 //(PRN+SBAR
@@ -1124,6 +1157,18 @@ echo nstd_to_str($result);
 //as i understand, it is :
 // For {the video game, see {{Dance Dance} Revolution 3rdMix}.}
 //where "for" and dot are at incorrect place
+
+// (ROOT
+  // (S
+    // (PP (IN For)
+      // (NP (DT the) (JJ video) (NN game)))
+    // (, ,)
+    // (VP (VB see)
+      // (S
+        // (NP (NNP Dance) (NNP Dance) (NNP Revolution))
+        // (ADJP (JJ 3rdMix))))
+    // (. .)))
+//correct
 
 //print parser.parse("In computing, DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory, is a modern type of dynamic random access memory (DRAM) with a high bandwidth (\"double data rate\") interface, and has been in use since 2007.")
 /*
@@ -1165,6 +1210,53 @@ echo nstd_to_str($result);
 //In {{computing, DDR3 SDRAM}, { {(an abbreviation) (for double data)} {rate type} {three synchronous} {dynamic random} {access memory} }, {is {{a modern type} {of dynamic random}}} {access memory} (DRAM) {with (a high bandwidth)} ("double data rate") interface, and {has been {in (use (since 2007))}}.}
 //there are many order mistakes/errors
 
+// (ROOT
+  // (S
+    // (PP (IN In)
+      // (NP (NN computing)))
+    // (, ,)
+    // (NP
+      // (NP (NNP DDR3) (NNP SDRAM))
+      // (, ,)
+      // (NP
+        // (NP
+          // (NP (DT an) (NN abbreviation))
+          // (PP (IN for)
+            // (NP (JJ double) (NN data) (NN rate) (NN type))))
+        // (NP (CD three) (JJ synchronous) (JJ dynamic) (JJ random) (NN access) (NN memory))))
+    // (VP
+      // (VP (VBZ is)
+        // (NP
+          // (NP (DT a) (JJ modern) (NN type))
+          // (PP (IN of)
+            // (NP
+              // (NP
+                // (NP (JJ dynamic) (JJ random) (NN access) (NN memory))
+                // (PRN (-LRB- -LRB-)
+                  // (NP (NNP DRAM))
+                  // (-RRB- -RRB-)))
+              // (PP (IN with)
+                // (NP (DT a) (JJ high) (NN bandwidth)
+                  // (PRN (-LRB- -LRB-) (`` ``)
+                    // (S
+                      // (VP (VB double)
+                        // (NP (NN data) (NN rate))))
+                    // ('' '') (-RRB- -RRB-))
+                  // (NN interface)))))))
+      // (, ,)
+      // (CC and)
+      // (VP (VBZ has)
+        // (VP (VBN been)
+          // (PP (IN in)
+            // (NP (NN use)))
+          // (PP (IN since)
+            // (NP (CD 2007))))))
+    // (. .)))
+//"three" is at wrong place.
+
+
+
+
 //print parser.parse("It is the higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips.")
 /*
 (SBARQ
@@ -1199,6 +1291,29 @@ echo nstd_to_str($result);
 //{It {is {  [the higher-speed successor {to {DDR [and DDR2 [and predecessor {to DDR4 synchronous} dynamic random access memory]]}} (SDRAM)  ] chips}}}.
 //there are several errors
 
+// (ROOT
+  // (S
+    // (NP (PRP It))
+    // (VP (VBZ is)
+      // (NP
+        // (NP
+          // (NP (DT the) (JJ higher-speed) (NN successor))
+          // (PP (TO to)
+            // (NP (NNP DDR)
+              // (CC and)
+              // (NNP DDR2))))
+        // (CC and)
+        // (NP
+          // (QP (CD predecessor) (TO to) (CD DDR4))
+          // (JJ synchronous) (JJ dynamic) (JJ random) (NN access) (NN memory)
+          // (PRN (-LRB- -LRB-)
+            // (NP (NNP SDRAM))
+            // (-RRB- -RRB-))
+          // (NNS chips))))
+    // (. .)))
+//wrong near "to ddr4"
+
+
 //print parser.parse("DDR3 SDRAM is neither forward nor backward compatible with any earlier type of random access memory (RAM) due to different signaling voltages, timings, and other factors.")
 /*
 (S+ADJP
@@ -1229,6 +1344,34 @@ echo nstd_to_str($result);
 */
 //there are many errors
 
+// (ROOT
+  // (S
+    // (NP (NNP DDR3) (NNP SDRAM))
+    // (VP (VBZ is) (RB neither)
+      // (ADVP (RB forward))
+      // (ADJP
+        // (ADJP (CC nor)
+          // (RB backward) (JJ compatible)
+          // (PP (IN with)
+            // (NP
+              // (NP (DT any) (JJR earlier) (NN type))
+              // (PP (IN of)
+                // (NP (JJ random) (NN access) (NN memory))))))
+        // (PRN (-LRB- -LRB-)
+          // (NP (NNP RAM))
+          // (-RRB- -RRB-)))
+      // (PP (JJ due) (TO to)
+        // (NP
+          // (NP (JJ different) (JJ signaling) (NNS voltages))
+          // (, ,)
+          // (NP (NNS timings))
+          // (, ,)
+          // (CC and)
+          // (NP (JJ other) (NNS factors)))))
+    // (. .)))
+//wrong at "forward nor ...", "voltages, timings".
+
+
 //print parser.parse("DDR3 is a DRAM interface specification.")
 /*
 (SBARQ
@@ -1239,6 +1382,14 @@ echo nstd_to_str($result);
   (. .))
 */
 //good
+
+// (ROOT
+  // (S
+    // (NP (NNP DDR3))
+    // (VP (VBZ is)
+      // (NP (DT a) (NNP DRAM) (NN interface) (NN specification)))
+    // (. .)))
+
 
 //print parser.parse("The actual DRAM arrays that store the data are similar to earlier types, with similar performance.")
 /*
@@ -1256,7 +1407,28 @@ echo nstd_to_str($result);
 */
 //good, but dot is at incorrect place. and i think it would be better if the part after comma would be in the "are similar ..."
 
+// (ROOT
+  // (S
+    // (NP (DT The) (JJ actual) (NNP DRAM))
+    // (VP (VBZ arrays)
+      // (SBAR
+        // (WHNP (WDT that) (NN store))
+        // (S
+          // (NP (DT the) (NNS data))
+          // (VP (VBP are)
+            // (ADJP (JJ similar)
+              // (PP (TO to)
+                // (NP (JJR earlier) (NNS types))))
+            // (, ,)
+            // (PP (IN with)
+              // (NP (JJ similar) (NN performance)))))))
+    // (. .)))
+//wrong at "dram arrays", "store the ...", "data are"
+
+
 //2014dec10 : seems i have found another statistical parser: http://nlp.stanford.edu/software/lex-parser.shtml , i should check/try it.
+//dec12 01:00 : i have tried it, some part, by first command in its readme.txt, results with my examples , i will write them upwards...
+
 
 //also want to say about that in apertium mailing lists, that there is great possibility with nltk
 //and i think, even may be apertium should be "dropped", especially for language pairs where much and long distance word reordering between them in translation. but i do not know apertium well, but as i know, it does not use dependency structure
