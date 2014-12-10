@@ -1052,7 +1052,7 @@ function order_2($inparr){
 		for($i=count($inparr)-1-1;$i>=0;$i--){
 			$word=$inparr[$i];
 			$key=$i;
-			if(isset($word['w'])&&($word['w']=='and'||$word['w']==',')){
+			if(isset($word['w'])&&($word['w']=='and'||$word['w']==','||($word['w']=='nor'&&$i==1&&count($inparr)==3))){
 				//echo'OK<pre>';print_r($inparr);exit;
 				$andblock=array_splice($inparr,$key);
 				$andsblock=array_splice($andblock,1);
@@ -1181,6 +1181,13 @@ function order_2($inparr){
 			goto return_outparr;//return $outparr;
 		}
 		*/
+	}
+	if(isset($nounlikes[ $inparr[count($inparr)-1]['w'] ] )&& $nounlikes[ $inparr[count($inparr)-1]['w'] ]['type']=='attr' ){
+		$last=array_splice($inparr,-1);
+		order_2_if_needed($inparr);
+		$outparr[]=$inparr;
+		$outparr[]=$last[0];
+		goto return_outparr;
 	}
 	if(isset($nounlikes[$inparr[0]['w']])&&$nounlikes[$inparr[0]['w']]['type']=='attr'){
 		$try=$inparr;
