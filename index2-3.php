@@ -18,15 +18,18 @@ $recursionlevel=0;
 $nounlikes['any']=array('tt'=>'теләсә-кайсы','type'=>'attr');
 $nounlikes['RAM']=array('tt'=>'RAM','type'=>'noun');
 $nounlikes['other']=array('tt'=>'башка','type'=>'attr');
-$nounlikes['different']=array('tt'=>'башка төрле','type'=>'attr');
+$nounlikes['different']=array('tt'=>'төрле','type'=>'attr');//башка төрле
 $multiwords[]=array('signal','ing');
 $nounlikes['neither']=array('tt'=>'түгел','type'=>'attr');
 $nounlikes['compatible']=array('tt'=>'яраучы','type'=>'attr');
+$nounlikes['due']=array('tt'=>'күрә','type'=>'noun');
 $engtext2=order_2($engtext2);
 print_r($engtext2);
 echo'</pre>';
 $recursionlevel=0;
 $nounlikes['DDR3']=array('tt'=>'DDR3','type'=>'noun');
+$nounlikes['backward']=array('tt'=>'артка','type'=>'noun');
+$nounlikes['forward']=array('tt'=>'алга','type'=>'noun');
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
 //print_r($result);
@@ -120,8 +123,10 @@ echo nstd_to_str_2($result);
 // }
 //"different signaling voltages, timings, and other factors" is done temporarily.
 //"neither forward nor backward compatible" is done
-
-
+//tr. "due"; fixed "s-pl" tr-n;
+//almost ready!
+//DDR3 SDRAM төрле белгерт у вольтажлар , вакытланышлар һәм башка факторларкә күрә теләсә-ничек керүле хәтер (RAM) нең теләсә-кайсы иртә рәк төр е белән түгел алга һәм түгел артка яраучы бул а.
+//i am writing comments for open source branch in work_time.txt now.
 
 
 

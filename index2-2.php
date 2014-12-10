@@ -56,7 +56,7 @@ function nstd_to_str_2($nstd){
 			$parentheses=$nstd[0];
 			$nstd[0]=$nstd[1];
 			$nstd[1]=$parentheses;
-		}elseif($nstd[0][1]['w']=='һәм'){
+		}elseif($nstd[0][1]['w']=='һәм'||$nstd[0][1]['w']=='һәм түгел'||$nstd[0][1]['w']==','){
 			$and=$nstd[0];//and's block
 			$nstd[0]=$nstd[1];//main block
 			$nstd[1]=$and;//swap

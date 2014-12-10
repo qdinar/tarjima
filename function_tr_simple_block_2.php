@@ -438,6 +438,10 @@ function translate_single_main_part(&$simbl,&$s2){
 		}
 	//}else{
 		//$s2[1]['w']=$words[$simbl[1]['w']];
+	}elseif($simbl[1]['w']=='s-pl'){
+		$s2[1]['w']='лар';
+	}elseif($simbl[1]['w']=='nor'){
+		$s2[1]['w']='һәм түгел';
 	}
 	//if($recursionlevel==13){echo'level '.$recursionlevel.'<pre>';var_dump($simbl);echo'</pre>';echo'*';}
 	if(!isset($s2[1])){//if it is array, it is set. if it is word and is not set , set here
