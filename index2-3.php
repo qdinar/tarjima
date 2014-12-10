@@ -28,11 +28,11 @@ print_r($engtext2);
 echo'</pre>';
 $recursionlevel=0;
 $nounlikes['DDR3']=array('tt'=>'DDR3','type'=>'noun');
-$nounlikes['backward']=array('tt'=>'артка','type'=>'noun');
-$nounlikes['forward']=array('tt'=>'алга','type'=>'noun');
+$nounlikes['backward']=array('tt'=>'артка таба','type'=>'noun');
+$nounlikes['forward']=array('tt'=>'алга таба','type'=>'noun');
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
-//print_r($result);
+print_r($result);
 echo'</pre>';
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
@@ -127,11 +127,27 @@ echo nstd_to_str_2($result);
 //almost ready!
 //DDR3 SDRAM төрле белгерт у вольтажлар , вакытланышлар һәм башка факторларкә күрә теләсә-ничек керүле хәтер (RAM) нең теләсә-кайсы иртә рәк төр е белән түгел алга һәм түгел артка яраучы бул а.
 //i am writing comments for open source branch in work_time.txt now.
-
-
-
-
-
+//need to fix "түгел алга һәм түгел артка". should be ...
+//need to fix "түгел алга һәм түгел артка яраучы" , it should be:
+//алга таба да артка таба да яраучы түгел
+// 0 {
+	// 0 арткатаба да
+	// 1 алгатаба да
+// }
+// 1 яраучы түгел
+//from
+// 0 {
+	// 0 neither
+	// 1 {
+		// 0 {
+			// 0 backward
+			// 1 nor
+		// }
+		// 1 forward
+	// }
+// }
+// 1 compatible
+//done
 
 
 

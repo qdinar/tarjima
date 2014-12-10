@@ -569,6 +569,37 @@ function apply_fixes_after_1(&$simbl,&$s2){
 			//simbl1 is 'a modern type' in 1st time and 's' in 2nd time
 			//i think i have understood it. first time it is regular translation, second time it is external level translation, the inner level is set to current level again. so i will check this by english word "of" - and it works.
 		}
+		if($simbl[0][0]['w']=='neither'){//isset($simbl[0][0]['w'])&&
+			//going to make
+			// 0 {
+				// 0 арткатаба да
+				// 1 алгатаба да
+			// }
+			// 1 яраучы түгел
+			//from
+			// 0 {
+				// 0 neither
+				// 1 {
+					// 0 {
+						// 0 backward
+						// 1 nor
+					// }
+					// 1 forward
+				// }
+			// }
+			// 1 compatible
+			$firstpart=$s2[0][1][1];//алга таба - forward
+			$secondpart=$s2[0][1][0][0];//артка таба - backward
+			$lastpart=$s2[1];
+			$new_s2[0][0][0]=$secondpart;
+			$new_s2[0][0][1]['w']='да';
+			$new_s2[0][1][0]=$firstpart;
+			$new_s2[0][1][1]['w']='да';
+			$new_s2[1][0]=$lastpart;
+			$new_s2[1][1]['w']='түгел';
+			$s2=$new_s2;
+			//works
+		}
 	}
 	apply_fixes_after_1_by_s2($s2);
 
