@@ -109,11 +109,21 @@ dec9
 
 dec10
 0110-0237
-
-
-
-
-
+2045-
+neither forward nor backward compatible
+-2123
+2151-
+almost ready!
+DDR3 SDRAM төрле белгерт у вольтажлар , вакытланышлар һәм башка факторларкә күрә теләсә-ничек керүле хәтер (RAM) нең теләсә-кайсы иртә рәк төр е белән түгел алга һәм түгел артка яраучы бул а.
+-2206
+2237-
+-1
+-2
+fixing түгел алга һәм түгел артка яраучы, done
+-2319-
+updated vbox, ubuntu, installed java, tried  http://nlp.stanford.edu/software/lex-parser.shtml , it works well
+may be i should make en-tt translator with such a program
+-0121
 
 
 
