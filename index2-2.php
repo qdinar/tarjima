@@ -939,6 +939,7 @@ echo nstd_to_str_2($result);
 //has made "due to"
 //i should not write work times at both branches , i am not sure that i can easily merge my branches now
 //(i have) fixed "any earlier type"
+//divide plural s earlier (outer)
 //end. ^there should be comments about development
 //test comment that i will not merge now into master
 //^ i have synced it by mistake
