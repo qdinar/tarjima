@@ -1256,6 +1256,7 @@ echo nstd_to_str($result);
 */
 //good, but dot is at incorrect place. and i think it would be better if the part after comma would be in the "are similar ..."
 
+//2014dec10 : seems i have found another statistical parser: http://nlp.stanford.edu/software/lex-parser.shtml , i should check/try it.
 
 //also want to say about that in apertium mailing lists, that there is great possibility with nltk
 //and i think, even may be apertium should be "dropped", especially for language pairs where much and long distance word reordering between them in translation. but i do not know apertium well, but as i know, it does not use dependency structure
