@@ -116,17 +116,18 @@ function apply_fixes_after_0(&$simbl,&$s2){
 		isset($simbl[0]['thisisheader'])
 		)
 	){
-		if(isset($simbl[0]['w'])&&$simbl[0]['thisisabbreviation']==true&&substr($simbl[0]['w'],-1)=='3'){
-			$suffiksno='не';
-		}else{
-			$suffiksno='ны';
-		}
+		// if(isset($simbl[0]['w'])&&$simbl[0]['thisisabbreviation']==true&&substr($simbl[0]['w'],-1)=='3'){
+			// $suffiksno='не';
+		// }else{
+			// $suffiksno='ны';
+		// }
 		//i had here problem, could not move 'thisisheader' properly, code at bottom also changed it
 		//i have tried and deleted many codes here...
 		//i am sorry i have tried this at 0-1 of clock at night and could not solve
 		//i think it is unproductive to work at night. but i have checked/tested that one more time...
 		//now i will just add 'ны' and then i am going to make new functions... - i have made a function but have deleted it. problem is solved
-		$s2[0]=array($s2[0],array('w'=>$suffiksno));
+		// $s2[0]=array($s2[0],array('w'=>$suffiksno));
+		$s2[0]=array($s2[0],array('w'=>'не'));
 	}
 	//
 	if(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='from'){
@@ -179,15 +180,16 @@ function apply_fixes_after_0(&$simbl,&$s2){
 			isset($nounlikes[$sb0mainword['w']])&&$nounlikes[$sb0mainword['w']]['type']=='noun'
 		){
 			//echo'*!'.$sb0mainword['w'].'-'.$sb1mainword['w'];
-			$lastword=get_main_word($s2[0]);
-			if(is_soft($lastword['w'])){
-				$limorphem='ле';
-			}else{
-				$limorphem='лы';
-			}
+			// $lastword=get_main_word($s2[0]);
+			// if(is_soft($lastword['w'])){
+				// $limorphem='ле';
+			// }else{
+				// $limorphem='лы';
+			// }
 			$mwadj=$s2[0];
 			//$s2[0]=array($mwadj,array('w'=>' '.$limorphem));
-			$s2[0]=array($mwadj,array('w'=>$limorphem));
+			// $s2[0]=array($mwadj,array('w'=>$limorphem));
+			$s2[0]=array($mwadj,array('w'=>'ле'));
 		}
 	/*}else{
 		if(
@@ -215,7 +217,8 @@ function apply_fixes_after_0(&$simbl,&$s2){
 			isset($nounlikes[$sb0mainword['w']])&&$nounlikes[$sb0mainword['w']]['type']=='noun'
 		){
 			//$s2[0][1]['w']=' лы';
-			$s2[0][1]['w']='лы';
+			//$s2[0][1]['w']='лы';
+			$s2[0][1]['w']='ле';
 		}
 	}
 }
@@ -243,15 +246,16 @@ function translate_single_main_part(&$simbl,&$s2){
 		}else{
 			$ofplace1=false;
 		}
-		if($ofplace1=='know'||$ofplace2=='know'){
-			$s2[1]['w']='енгән';
-		}elseif($ofplace1=='mention'||$ofplace2=='mention'){
-			$s2[1]['w']='ынган';
-		}elseif($ofplace1=='build'||$ofplace2=='build'){
-			$s2[1]['w']='лгән';
-		}else{
-			$s2[1]['w']='лган';
-		}
+		// if($ofplace1=='know'||$ofplace2=='know'){
+			// $s2[1]['w']='енгән';
+		// }elseif($ofplace1=='mention'||$ofplace2=='mention'){
+			// $s2[1]['w']='ынган';
+		// }elseif($ofplace1=='build'||$ofplace2=='build'){
+			// $s2[1]['w']='лгән';
+		// }else{
+			// $s2[1]['w']='лган';
+		// }
+		$s2[1]['w']='лгән';
 	}elseif($simbl[1]['w']=='have'){
 		if(!isset($simbl[0]['w'])&&$simbl[0][1]['w']=='ed-pp'){
 			//$s2[1]['w']='ды';
@@ -280,7 +284,8 @@ function translate_single_main_part(&$simbl,&$s2){
 			$s2[0]/*hehave..*/[1]/*haveread..*/=$s2[0][1][0]/*read(pp)...*/[0]/*read...*/;
 			//have read ed-pp is translated like read
 			$s2[1]=$simbl[1];
-			$s2[1]['w']='ды';//past tense morphem is in place of s
+			//$s2[1]['w']='ды';//past tense morphem is in place of s
+			$s2[1]['w']='де';
 			//'ды' is reordered . subject is like adverbs etc, also in tatar...
 		}elseif(isset($simbl[0][0]['w'])&&($simbl[0][0]['w']=='that'||$simbl[0][0]['w']=='whom')){
 			//if($simbl[0][0]['w']=='whom'){
@@ -349,7 +354,8 @@ function translate_single_main_part(&$simbl,&$s2){
 				$s2[0][0]=$subject;
 				$s2[0][1]=$verb;
 				$s2[1]=$simbl[1];
-				$s2[1]['w']='кан';//this works, but probably is buggy with other sentences
+				//$s2[1]['w']='кан';//this works, but probably is buggy with other sentences
+				$s2[1]['w']='ган';
 			//}else{
 				//$s2[1]['w']=$words[$simbl[1]['w']];
 			}elseif($dic[$simbl[0][1][1]['w']]['type']=='verb'){
@@ -429,7 +435,8 @@ function translate_single_main_part(&$simbl,&$s2){
 	}elseif($simbl[1]['w']=='type'){
 		if(isset($simbl[0]['w'])&&$simbl[0]['w']=='three'){
 			$num=$s2[0];
-			$s2[0]=array($num,array('w'=>'енче'));
+			//$s2[0]=array($num,array('w'=>'енче'));
+			$s2[0]=array($num,array('w'=>'нче'));
 			$s2[1]['w']='төрдәге';//instead of төр
 		}
 	}elseif($simbl[1]['w']==',,'){
@@ -525,12 +532,13 @@ function apply_fixes_after_1(&$simbl,&$s2){
 				$lastword=get_main_word($s2[1]);
 			//}
 			if(isset($nounlikes[$lastword['w']])&&$nounlikes[$lastword['w']]['type']=='noun'){
-				if(is_soft($lastword['w'])){
-					$imorphem='е';
-				}else{
-					$imorphem='ы';
-				}
-				$s2[1]=array($s2[1],array('w'=>$imorphem));
+				// if(is_soft($lastword['w'])){
+					// $imorphem='е';
+				// }else{
+					// $imorphem='ы';
+				// }
+				// $s2[1]=array($s2[1],array('w'=>$imorphem));
+				$s2[1]=array($s2[1],array('w'=>'ы'));
 			}
 		}
 	//}elseif(!isset($s2[0]['w'])){
@@ -558,13 +566,14 @@ function apply_fixes_after_1(&$simbl,&$s2){
 			//print_r($s2);
 			//print_r($simbl[1]);
 			//echo'</pre>';
-			$lastword=get_main_word($s2[1]);
-			if(is_soft($lastword['w'])){
-				$imorphem='е';
-			}else{
-				$imorphem='ы';
-			}
-			$s2[1]=array($s2[1],array('w'=>' '.$imorphem));
+			// $lastword=get_main_word($s2[1]);
+			// if(is_soft($lastword['w'])){
+				// $imorphem='е';
+			// }else{
+				// $imorphem='ы';
+			// }
+			// $s2[1]=array($s2[1],array('w'=>' '.$imorphem));
+			$s2[1]=array($s2[1],array('w'=>'ы'));
 			//this works 2 times - adds it 2 times, somehow
 			//simbl1 is 'a modern type' in 1st time and 's' in 2nd time
 			//i think i have understood it. first time it is regular translation, second time it is external level translation, the inner level is set to current level again. so i will check this by english word "of" - and it works.
@@ -601,11 +610,12 @@ function apply_fixes_after_1(&$simbl,&$s2){
 			//works
 		}
 	}
-	apply_fixes_after_1_by_s2($s2);
+	//apply_fixes_after_1_by_s2($s2);
 
 
 }
 
+/*
 function apply_fixes_after_1_by_s2(&$s2){
 	//this is also used in assign_mw_tr, index 2 2 php line 534
 	//global $words,$dic,$recursionlevel,$mwdic,$nounlikes;
@@ -659,7 +669,7 @@ function apply_fixes_after_1_by_s2(&$s2){
 		}
 	}
 }
-
+*/
 
 
 
