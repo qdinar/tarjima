@@ -125,6 +125,53 @@ updated vbox, ubuntu, installed java, tried  http://nlp.stanford.edu/software/le
 may be i should make en-tt translator with such a program
 -0121
 
+dec19
+1043-
+removed all morphem fonetic changes from translate function
+-1103
+written work time, comments
+-1105
+
+dec22 00:00 : i do not want to write work times
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
