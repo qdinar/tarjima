@@ -68,10 +68,10 @@ function nstd_to_str_2($nstd){
 		}
 		//if($word=='ле'){echo'OK';exit;}
 		if(
-			$word!='.'&&$word!='не'&&$word!='ны'&&$word!='е'&&$word!='гыз'
-			&&$word!='дан'&&$word!='нче'&&$word!='енче'&&$word!='ы'
-			&&$word!='лы'&&$word!='ле'
-			&&$word!='п'&&$word!='дән'&&$word!='кә'&&$word!='гә'&&$word!='на'
+			$word!='.'&&$word!='не'&&$word!='е'&&$word!='гыз'
+			&&$word!='тан'&&$word!='нче'
+			&&$word!='ле'
+			&&$word!='п'&&$word!='кә'
 			&&$word!='рак'
 			&&$word!='лар'
 		){
@@ -82,7 +82,7 @@ function nstd_to_str_2($nstd){
 			if($main['w']=='ал'){
 				$result.='ы';
 			}
-		}elseif($word=='кә'||$word=='гә'){
+		}elseif($word=='кә'){
 			$main=get_tr_last_word($nstd[0]);
 			if(isset($main['thisisabbreviation'])){
 				$result.='-';
@@ -99,6 +99,17 @@ function nstd_to_str_2($nstd){
 				// $word='гә';
 			// }
 		// }
+		$lastword=get_main_word($nstd[0]);
+		if($word=='ы'){
+			if(is_soft($lastword['w'])){
+				$word='е';
+			}
+		}
+		elseif($word=='у'){
+			if(is_soft($lastword['w'])){
+				$word='ү';
+			}
+		}
 		$result.=$word;
 		$nstd_to_str_2_firstwordisready=true;
 	}

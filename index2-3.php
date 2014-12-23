@@ -6,7 +6,7 @@
 echo'<br/>';
 $engtext='DDR3 SDRAM is neither forward nor backward compatible with any earlier type of random access memory (RAM) due to different signaling voltages, timings, and other factors.';
 $verbs=array();
-$verbs['signal']=array('tt'=>'белгерт');
+$verbs['signal']=array('tt'=>'ишарәлә');
 $nounlikes['early']=array('tt'=>'иртә','type'=>'attr');
 $nounlikes['voltage']=array('tt'=>'вольтаж','type'=>'noun');
 $nounlikes['timing']=array('tt'=>'вакытланыш','type'=>'noun');

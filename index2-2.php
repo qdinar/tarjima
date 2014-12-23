@@ -602,7 +602,10 @@ function &get_main_word_ref(&$simbl){
 //add long "-" after ... DDR3 SDRAM (and before бер югары үткәрүчәнлек ...) - done
 //make лы->ле ы->е where needed - done
 function is_soft($s){
-	if($s=='тизлек'||$s=='төр'||$s=='е'||$s=='керү'||$s=='үткәрүчәнлек'||$s=='хәтер'||$s=='2007'){
+	if(preg_match('/([әеиөү])[бвгджҗзйклмнпрстфхцчшщ]*$/ui',$s,$lastvowel)){
+		return true;
+	}
+	if($s=='2007'){
 		return true;
 	}else{
 		return false;

@@ -1,4 +1,6 @@
 <?php
+mb_internal_encoding('UTF-8');
+header('Content-Type: text/html; charset=utf-8');
 
 
 // echo preg_match_all('/[A-Z0-9]/u','AsaAAAssssssddddSSEFRFRG0',$matches);
@@ -51,7 +53,8 @@
 // print_r( $arr[0]['up'] );
 
 
-
-
+preg_match('/([әеиөү])[бвгджҗзйклмнпрстфхцчшщ]*$/ui','төр',$lastvowel);
+echo'<pre>';
+print_r($lastvowel);
 
 ?>
