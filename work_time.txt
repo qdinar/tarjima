@@ -133,12 +133,25 @@ written work time, comments
 -1105
 
 dec22 00:00 : i do not want to write work times
+but i continue
+
+dec23
+2252-2323 ph. changes
 
 
+dec24
+0601-0613 ка-кә-га-гә
++2
 
-
-
-
+2133-
+space before comma removed
+-2200
+-2207 interr 2210-
+add ы for this case
+-2222
+removed була an i get:
+DDR3 SDRAM төрле ишарәләү вольтажлары, вакытланышлары һәм башка факторларга күрә теләсә-ничек керүле хәтер (RAM) ның теләсә-кайсы иртәрәк төре белән артка таба да алга таба да яраучы түгел.
+-2305
 
 
 
