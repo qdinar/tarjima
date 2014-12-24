@@ -68,12 +68,10 @@ function nstd_to_str_2($nstd){
 		}
 		//if($word=='ле'){echo'OK';exit;}
 		if(
-			$word!='.'&&$word!='не'&&$word!='е'&&$word!='гыз'
-			&&$word!='тан'&&$word!='нче'
-			&&$word!='ле'
-			&&$word!='п'&&$word!='кә'
-			&&$word!='рак'
-			&&$word!='лар'
+			$word!='.'&&$word!='не'&&$word!='ы'&&$word!='гыз'
+			&&$word!='тан'&&$word!='нче'&&$word!='ле'
+			&&$word!='п'&&$word!='кә'&&$word!='у'
+			&&$word!='рәк'&&$word!='лар'&&$word!='а'
 		){
 			//кушымчалардан башкаларын айырып язасы
 			$result.=' ';
@@ -108,6 +106,22 @@ function nstd_to_str_2($nstd){
 		elseif($word=='у'){
 			if(is_soft($lastword['w'])){
 				$word='ү';
+			}
+		}
+		elseif($word=='кә'){
+			$isbreath=is_breath($lastword['w']);
+			if(!is_soft($lastword['w'])){
+				if($isbreath){
+					$word='ка';
+				}else{
+					$word='га';
+				}
+			}else{
+				if($isbreath){
+					$word='кә';
+				}else{
+					$word='гә';
+				}
 			}
 		}
 		$result.=$word;
