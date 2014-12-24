@@ -15,14 +15,31 @@ function nstd_to_str_2($nstd){
 			$parentheses=$nstd[0];
 			$nstd[0]=$nstd[1];
 			$nstd[1]=$parentheses;
+			//a
+			//()
+			//
+			//()
+			//a
 		}elseif($nstd[0][1]['w']=='һәм'||$nstd[0][1]['w']=='һәм түгел'||$nstd[0][1]['w']==','){
 			$and=$nstd[0];//and's block
 			$nstd[0]=$nstd[1];//main block
 			$nstd[1]=$and;//swap
+			//0Band
+			//1A
+			//
+			//0A
+			//1Band
 			$and=$nstd[1][1];
 			//swapping the word 'and' with dependent block
 			$nstd[1][1]=$nstd[1][0];
 			$nstd[1][0]=$and;
+			//0A
+			//1B
+			//1and
+			//
+			//0A
+			//1and
+			//1B
 			if(
 				isset($nstd[1][1]['dash'])//possible dash of external and block , that is positioned later
 				//&&isset($nstd[0][0][1]['w'])//possible 'and' of inner and block
@@ -56,7 +73,9 @@ function nstd_to_str_2($nstd){
 		}
 	}
 	if(!isset($nstd[1]['w'])){
-		$result.=' ';
+		if(!isset($nstd[1][0]['w'])||$nstd[1][0]['w']!=','){
+			$result.=' ';
+		}
 		if(isset($parentheses)){
 			$result.='(';
 		}
@@ -68,7 +87,8 @@ function nstd_to_str_2($nstd){
 		}
 		//if($word=='ле'){echo'OK';exit;}
 		if(
-			$word!='.'&&$word!='не'&&$word!='ы'&&$word!='гыз'
+			$word!='.'&&$word!=','&&
+			$word!='не'&&$word!='ы'&&$word!='гыз'
 			&&$word!='тан'&&$word!='нче'&&$word!='ле'
 			&&$word!='п'&&$word!='кә'&&$word!='у'
 			&&$word!='рәк'&&$word!='лар'&&$word!='а'

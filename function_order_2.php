@@ -1208,6 +1208,8 @@ function order_2($inparr){
 	return_outparr:{
 		//echo'out level '.$recursionlevel.'<pre>';print_r($inparr);echo'</pre>';
 		$recursionlevel--;
+		// $outparr[0]['up']=&$outparr;
+		// $outparr[1]['up']=&$outparr;
 		return $outparr;
 	}
 }

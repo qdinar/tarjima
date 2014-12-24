@@ -414,6 +414,9 @@ function translate_single_main_part(&$simbl,&$s2){
 			$s2[1]=$obj;
 			unset($subj,$obj);
 			$s2[1]['dash']=true;
+		}elseif(isset($simbl[0][1][1][1][1]['w'])&&$simbl[0][1][1][1][1]['w']=='be'){
+			$s2[0][1][1][1]=$s2[0][1][1][1][0];
+			$s2=$s2[0];
 		}elseif(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='be'){
 			//ddrsdram {is ... and has been in ...}
 			//remove "була" - copula "is" translation
@@ -554,7 +557,10 @@ function apply_fixes_after_1(&$simbl,&$s2){
 	{
 		//$main=get_main_word($simbl[0]);
 		//if($main['w']=='of'){
-		if(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='of'){
+		if(
+			isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='of'
+			||isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='ing'
+		){
 			//$lastword=get_main_word($s2[0][0]);
 			//if(is_soft($lastword['w'])){
 				//$s2[0][1]['w']='нең';
@@ -573,7 +579,15 @@ function apply_fixes_after_1(&$simbl,&$s2){
 				// $imorphem='ы';
 			// }
 			// $s2[1]=array($s2[1],array('w'=>' '.$imorphem));
-			$s2[1]=array($s2[1],array('w'=>'ы'));
+			if(
+				isset($s2[1][0][1]['w'])
+				&&$s2[1][0][1]['w']==','
+			){
+				$s2[1][1]=array($s2[1][1],array('w'=>'ы'));
+				$s2[1][0][0]=array($s2[1][0][0],array('w'=>'ы'));
+			}else{
+				$s2[1]=array($s2[1],array('w'=>'ы'));
+			}
 			//this works 2 times - adds it 2 times, somehow
 			//simbl1 is 'a modern type' in 1st time and 's' in 2nd time
 			//i think i have understood it. first time it is regular translation, second time it is external level translation, the inner level is set to current level again. so i will check this by english word "of" - and it works.
