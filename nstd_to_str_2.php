@@ -9,7 +9,12 @@ function nstd_to_str_2($nstd){
 	if(isset($nstd['thisisheader'])||isset($nstd['inquotes'])){
 		$result.='"';
 	}
+	if(isset($nstd['w'])){
+		$result.=$nstd['w'];
+		goto ret_res;
+	}
 	if(isset($nstd[0][1]['w'])){
+		/*
 		if($nstd[0][1]['w']=='()'){
 			//swap
 			$parentheses=$nstd[0];
@@ -52,6 +57,30 @@ function nstd_to_str_2($nstd){
 			}
 		//}elseif($nstd[0][1]['w']==',,'){
 		}
+		*/
+		if(
+			$nstd[0][1]['w']=='һәм'
+			||$nstd[0][1]['w']=='һәм түгел'
+			||$nstd[0][1]['w']==','
+			||$nstd[0][1]['w']=='()'
+		){
+			$result.=nstd_to_str_2($nstd[1]);
+			if($nstd[0][1]['w']=='()'){
+				$result.=' (';
+			}elseif($nstd[0][1]['w']==','){
+				$result.=', ';
+			}else{
+				$result.=' '.$nstd[0][1]['w'];
+			}
+			if($nstd[0][1]['w']!='()'){
+				$result.=' ';
+			}
+			$result.=nstd_to_str_2($nstd[0][0]);
+			if($nstd[0][1]['w']=='()'){
+				$result.=') ';
+			}
+			goto ret_res;
+		}
 	}
 	if(!isset($nstd[0]['w'])){
 		$result.=nstd_to_str_2($nstd[0]);
@@ -66,19 +95,23 @@ function nstd_to_str_2($nstd){
 		$result.=$word;
 		$nstd_to_str_2_firstwordisready=true;
 	}
+	/*
 	if(isset($nstd[1][1]['w'])){
 		if($nstd[1][1]['w']=='()'){
 			$nstd[1]=$nstd[1][0];
 			$parentheses=true;
 		}
 	}
+	*/
 	if(!isset($nstd[1]['w'])){
 		if(!isset($nstd[1][0]['w'])||$nstd[1][0]['w']!=','){
 			$result.=' ';
 		}
+		/*
 		if(isset($parentheses)){
 			$result.='(';
 		}
+		*/
 		$result.=nstd_to_str_2($nstd[1]);
 	}else{
 		$word=$nstd[1]['w'];
@@ -92,6 +125,7 @@ function nstd_to_str_2($nstd){
 			&&$word!='тан'&&$word!='нче'&&$word!='ле'
 			&&$word!='п'&&$word!='кә'&&$word!='у'
 			&&$word!='рәк'&&$word!='лар'&&$word!='а'
+			&&$word!='ның'
 		){
 			//кушымчалардан башкаларын айырып язасы
 			$result.=' ';
@@ -100,17 +134,23 @@ function nstd_to_str_2($nstd){
 			if($main['w']=='ал'){
 				$result.='ы';
 			}
-		}elseif($word=='кә'){
+		//}elseif($word=='кә'){
+		// }elseif($word==' ле'){
+			// $result.='***';
+		}else{
 			$main=get_tr_last_word($nstd[0]);
 			if(isset($main['thisisabbreviation'])){
 				$result.='-';
 			}
-		// }elseif($word==' ле'){
-			// $result.='***';
+			if(isset($nstd[0][0][1]['w'])&&$nstd[0][0][1]['w']=='()'){
+				$result.='-';
+			}
 		}
+		/*
 		if(isset($parentheses)){
 			$result.='(';
 		}
+		*/
 		// if($word=='кә'){
 			// $main=get_main_word($nstd[0]);
 			// if($main['w']=='DDR2'){
@@ -147,12 +187,15 @@ function nstd_to_str_2($nstd){
 		$result.=$word;
 		$nstd_to_str_2_firstwordisready=true;
 	}
+	ret_res:
 	if(isset($nstd['thisisheader'])||isset($nstd['inquotes'])){
 		$result.='"';
 	}
+	/*
 	if(isset($parentheses)){
 		$result.=')';
 		unset($parentheses);
 	}
+	*/
 	return $result;
 }

@@ -21,7 +21,7 @@ $nounlikes['other']=array('tt'=>'башка','type'=>'attr');
 $nounlikes['different']=array('tt'=>'төрле','type'=>'attr');//башка төрле
 $multiwords[]=array('signal','ing');
 $nounlikes['neither']=array('tt'=>'түгел','type'=>'attr');
-$nounlikes['compatible']=array('tt'=>'яраучы','type'=>'attr');
+$nounlikes['compatible']=array('tt'=>'ярашучы','type'=>'attr');
 $nounlikes['due']=array('tt'=>'күрә','type'=>'noun');
 $engtext2=order_2($engtext2);
 print_r($engtext2);
