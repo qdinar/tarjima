@@ -592,6 +592,32 @@ function &get_main_word_ref(&$simbl){
 		// return $tmp;
 	}
 }
+
+function &get_main_word_upper_ref(&$simbl){
+	//echo'mw<pre>';print_r($simbl);echo'</pre>';
+	if(isset($simbl[1]['w'])){
+		return $simbl;
+	}
+	// if(isset($simbl[1]['w'])){
+		// return $simbl[1];
+	// }else{
+		// return get_main_word_ref($simbl[1]);
+	// }
+	elseif(is_array($simbl[1][1])){
+	//else{
+		//if($simbl[1]===NULL){echo'OK';exit;}
+		$tmp=&get_main_word_upper_ref($simbl[1][1]);
+		return $tmp;
+	}else{
+		//echo'<pre>';print_r($simbl);exit;
+		echo'<pre>';var_dump($simbl);exit;//null
+		//return '***';
+		//return $simbl;
+		// $tmp='***';
+		// return $tmp;
+	}
+}
+
 //after some fixes i have:
 //Компьютер гыйлеме эчендә , өченче төрдәге икекатлы мәгълүмат тизлекылы синхрон динамик теләсә-ничек керүлы хәтер өчен бер аббревиатура булган DDR3 SDRAM бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлекы")лы интерфейс белән динамик теләсә-ничек керүлы хәтер (DRAM) ның бер яңа төры һәм 2007 таналып кулланылыш эчендә.
 //i want to change:

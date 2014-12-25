@@ -628,6 +628,13 @@ function apply_fixes_after_1(&$simbl,&$s2){
 		}
 	}
 	//apply_fixes_after_1_by_s2($s2);
+	$lastw=get_main_word($s2[0]);
+	if($s2[1]['w']=='лар'&&$lastw['w']=='ы'){
+		$s2=$s2[0];
+		$lastwupper=&get_main_word_upper_ref($s2);
+		echo'OK:<pre>';print_r($lastwupper);echo'</pre>';
+		$lastwupper[0]=array($lastwupper[0],array('w'=>'лар'));
+	}
 
 
 }

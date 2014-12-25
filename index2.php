@@ -3,6 +3,7 @@
 mb_internal_encoding('UTF-8');
 header('Content-Type: text/html; charset=utf-8');
 ini_set('display_errors', '1');
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
 
 /*
 $words=array('good'=>'әйбәт','school'=>'мәктәп');

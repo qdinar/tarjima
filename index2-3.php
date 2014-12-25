@@ -150,7 +150,7 @@ echo nstd_to_str_2($result);
 //done
 //i think i probably should remove all morphem fonetic changes from translate function and set them into nstd function, "nstd" means "from nested to string".
 //removed from translate function
-
+//i am writing almost all comments in work time txt now
 
 
 

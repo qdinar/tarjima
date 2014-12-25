@@ -169,18 +169,22 @@ function nstd_to_str_2($nstd){
 			}
 		}
 		elseif($word=='кә'){
-			$isbreath=is_breath($lastword['w']);
-			if(!is_soft($lastword['w'])){
-				if($isbreath){
-					$word='ка';
-				}else{
-					$word='га';
-				}
+			if($lastword['w']=='ы'){
+				$word='на';
 			}else{
-				if($isbreath){
-					$word='кә';
+				$isbreath=is_breath($lastword['w']);
+				if(!is_soft($lastword['w'])){
+					if($isbreath){
+						$word='ка';
+					}else{
+						$word='га';
+					}
 				}else{
-					$word='гә';
+					if($isbreath){
+						$word='кә';
+					}else{
+						$word='гә';
+					}
 				}
 			}
 		}
