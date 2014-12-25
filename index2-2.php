@@ -416,11 +416,14 @@ function is_mw_eq($simbl,$mw,&$inner){
 		//if(!isset($simbl[0])){echo'<pre>';print_r($simbl);exit;}
 		$inner=$simbl[0];
 	}elseif(isset($mw[0]['mainw'])){
+		//echo'OK';
 		$mainw=get_main_word($simbl[0]);
+		//echo $mainw['w'],'; ';
 		//if($recursionlevel==11){echo'Main<pre>';print_r($mainw);echo'</pre>';}
 		if($mainw['w']!=$mw[0]['mainw']){
 			return false;
 		}
+		//echo $mainw['w'],'; ';
 	}else{
 		if(
 			!(
@@ -605,11 +608,10 @@ function is_soft($s){
 	if(preg_match('/([әеиөү])[бвгджҗзйклмнпрстфхцчшщ]*$/ui',$s,$lastvowel)){
 		return true;
 	}
-	if($s=='2007'){
+	if(preg_match('/([1234578]|([012578]0))$/ui',$s,$lastvowel)){
 		return true;
-	}else{
-		return false;
 	}
+	return false;
 }
 function is_breath($s){
 	if(preg_match('/[кпстфхцчшщ]$/ui',$s,$lastvowel)){
@@ -669,8 +671,18 @@ $nounlikes['predecessor']=array('tt'=>'алдан килүче','type'=>'noun');
 $nounlikes['DDR']=array('tt'=>'DDR','type'=>'noun');
 $mwdic[]=
 	array(
-		'en'=>array(array('mainw'=>'memory'),array('chip','s-pl')),
-		'tt'=>array(array(array('mainw'=>'хәтер'),array('микросхема','лар')),'ы')
+		'en'=>
+			array(
+				array('mainw'=>'memory'),
+				'chip',
+			)
+		,
+		'tt'=>
+			array(
+				array('mainw'=>'хәтер'),
+				array('микросхема','ы'),
+			)
+		,
 	)
 ;
 $recursionlevel=0;

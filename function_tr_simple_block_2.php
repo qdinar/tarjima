@@ -12,6 +12,9 @@ function &tr_simple_block_2(&$simbl){
 		if(is_mw_eq($simbl,$mw['en'],$getinner)){
 			//echo'OK';exit;
 			//echo'*';
+			// echo'<pre>';
+			// print_r($mw);
+			// echo'</pre>';
 			//if(isset($getinner)&&isset($getinner[0])){
 			if(isset($getinner)&&!isset($getinner['w'])){
 				$getinner=&tr_simple_block_2($getinner);

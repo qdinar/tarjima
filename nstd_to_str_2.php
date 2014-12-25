@@ -157,7 +157,7 @@ function nstd_to_str_2($nstd){
 				// $word='гә';
 			// }
 		// }
-		$lastword=get_main_word($nstd[0]);
+		$lastword=get_tr_last_word($nstd[0]);
 		if($word=='ы'){
 			if(is_soft($lastword['w'])){
 				$word='е';
@@ -182,6 +182,11 @@ function nstd_to_str_2($nstd){
 				}else{
 					$word='гә';
 				}
+			}
+		}
+		elseif($word=='рәк'){
+			if(!is_soft($lastword['w'])){
+				$word='рак';
 			}
 		}
 		$result.=$word;
