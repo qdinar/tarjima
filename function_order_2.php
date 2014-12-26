@@ -371,7 +371,7 @@ function order_2($inparr){
 	global $dic,$multiwords,$nounlikes;
 	global $recursionlevel;
 	$recursionlevel++;
-	//echo'in level '.$recursionlevel.'<pre>';print_r($inparr);echo'</pre>';echo'*';
+	echo'in level '.$recursionlevel.'<pre>';print_r($inparr);echo'</pre>';echo'*';
 	//if($recursionlevel==3){echo'in level '.$recursionlevel.'<pre>';print_r($inparr);echo'</pre>';}
 	$outparr=array();
 
@@ -432,10 +432,22 @@ function order_2($inparr){
 				//&&$inparr[$key+2]['w']!='s'
 				//but if i add this my example becomes broken...
 				//i need to do something with all commas, probably - done
+				&&$inparr[0]['w']=='for'
 				||
 				$inparr[0]['w']=='in'
 				//In computing
 			){
+				// if($inparr[0]['w']=='in'){
+					// echo 'OK<pre>';
+					// echo $key;
+					// print_r ($inparr);
+					// echo '</pre>';
+					// $test=true;
+				// }
+				// echo 'OK<pre>';
+				// echo $key;
+				// print_r ($inparr);
+				// echo '</pre>';
 				/*
 				$verb=array_splice($inparr,$key+1);
 				array_splice($inparr,$key);//remove comma
@@ -449,8 +461,18 @@ function order_2($inparr){
 				$intro=array_splice($inparr,0,$key);
 				order_2_if_needed($intro);
 				//1st (0th) element of inparr is "," now
-				$inparr[0]=array($intro,array('w'=>','));
-				break;
+				$outparr[]=array($intro,array('w'=>'intro'));
+				array_splice($inparr,0,1);
+				order_2_if_needed($inparr);
+				$outparr[]=$inparr;
+				goto return_outparr;
+				// if($test){
+					// echo 'OK2<pre>';
+					// echo $key;
+					// print_r ($inparr);
+					// echo '</pre>';
+				// }
+				//break;
 				//after finding 1 introductory i assume there are none other one
 			}
 		}
@@ -619,9 +641,22 @@ function order_2($inparr){
 					goto return_outparr;//return $outparr;
 				}
 				array_splice($inparr,1,1);//remove s
-				if(count($inparr)>1){
-					$inparr=order_2($inparr);
+				//is a modern type of ..., and has been in use since ...
+				//need to remove also second pr-si...
+				foreach($inparr as $key2=>$word2){
+					if(
+						$word2['w']=='and'
+						&&$inparr[$key2+1]['w']=='have'
+						&&$inparr[$key2+2]['w']=='pr-si'
+					){
+						array_splice($inparr,$key2+2,1);//remove pr-si
+						//break;
+					}
 				}
+				// if(count($inparr)>1){
+					// $inparr=order_2($inparr);
+				// }
+				order_2_if_needed($inparr);
 				if(isset($whoword)){
 					$outparr[]=array();//outparr0
 					$outparr[0][]=$whoword;
@@ -1159,15 +1194,15 @@ function order_2($inparr){
 		//elseif(isset($word['w'])&&isset($inparr[$key+1])&&$word['w']=='type'&&$inparr[$key+1]=='three'){
 		//}
 	}
-	foreach($inparr as $key=>$word){
-		if($key==0&&isset($word[1]['w'])&&$word[1]['w']==','){
-			$intro=$word;
-			array_splice($inparr,0,1);//remove it
-			order_2_if_needed($inparr);
-			$outparr[]=$intro;
-			$outparr[]=$inparr;
-			goto return_outparr;//return $outparr;
-		}
+	//foreach($inparr as $key=>$word){
+		// if($key==0&&isset($word[1]['w'])&&$word[1]['w']==','){
+			// $intro=$word;
+			// array_splice($inparr,0,1);//remove it
+			// order_2_if_needed($inparr);
+			// $outparr[]=$intro;
+			// $outparr[]=$inparr;
+			// goto return_outparr;//return $outparr;
+		// }
 		/*
 		elseif(isset($word['w'])&&($word['w']=='and')){
 			$andblock=array_splice($inparr,$key);
@@ -1181,7 +1216,7 @@ function order_2($inparr){
 			goto return_outparr;//return $outparr;
 		}
 		*/
-	}
+	//}
 	if(isset($nounlikes[ $inparr[count($inparr)-1]['w'] ] )&& $nounlikes[ $inparr[count($inparr)-1]['w'] ]['type']=='attr' ){
 		$last=array_splice($inparr,-1);
 		order_2_if_needed($inparr);

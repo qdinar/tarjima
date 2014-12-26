@@ -68,19 +68,19 @@ function explode_into_morphemes($engtext){
 			$remaining=mb_substr($word,0,mb_strlen($word)-1);
 			if($remaining=='ha'){
 				$engtext2[]='have';
-				$engtext2[]='s';
+				$engtext2[]='pr-si';
 			}elseif($remaining=='wa'){
 				$engtext2[]='be';
 				$engtext2[]='ed';
 			}elseif($remaining=='i'){
 				$engtext2[]='be';
-				$engtext2[]='s';
+				$engtext2[]='pr-si';
 			}else{
 				//$tryverb=mb_substr($word,0,mb_strlen($word)-1);
 				$tryverb=$remaining;
 				if(isset($dic[$tryverb])&&$dic[$tryverb]['type']=='verb'){
 					$engtext2[]=$tryverb;
-					$engtext2[]='s';
+					$engtext2[]='pr-si';
 				}
 				elseif(isset($nounlikes[$tryverb])){
 					$engtext2[]=$tryverb;

@@ -252,7 +252,7 @@ $mwdic[]=array('en'=>array('<1>','since'),'tt'=>array(array(array('<1>','тан'
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
-//print_r($result);
+print_r($result);
 echo'</pre>';
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
@@ -641,6 +641,12 @@ function is_soft($s){
 }
 function is_breath($s){
 	if(preg_match('/[кпстфхцчшщ]$/ui',$s,$lastvowel)){
+		return true;
+	}
+	return false;
+}
+function last_conson($s){
+	if(preg_match('/[бвгджҗзйклмнпрстфхцчшщ]$/ui',$s,$lastvowel)){
 		return true;
 	}
 	return false;

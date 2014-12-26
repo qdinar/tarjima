@@ -129,10 +129,14 @@ function nstd_to_str_2($nstd){
 		){
 			//кушымчалардан башкаларын айырып язасы
 			$result.=' ';
-		}elseif($word=='п'){
+		}elseif($word=='п'||$word=='нче'){
 			$main=get_main_word($nstd[0]);
-			if($main['w']=='ал'){
-				$result.='ы';
+			if(last_conson($main['w'])){
+				if(is_soft($main['w'])){
+					$result.='е';
+				}else{
+					$result.='ы';
+				}
 			}
 		//}elseif($word=='кә'){
 		// }elseif($word==' ле'){
