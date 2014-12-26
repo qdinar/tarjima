@@ -71,6 +71,8 @@ dec2
 1740-1806
 -1819 github com connection problem
 i have known out that it was blocked in russia but i have synced my commits at that time, near at 3rd try.
+
+--new sentence started here--
 1834-1839
 2036-2138
 1744-1832
@@ -145,44 +147,101 @@ dec24
 
 2133-
 space before comma removed
--2200
+-2200-
 -2207 interr 2210-
 add ы for this case
--2222
+-2222-
 removed була an i get:
 DDR3 SDRAM төрле ишарәләү вольтажлары, вакытланышлары һәм башка факторларга күрә теләсә-ничек керүле хәтер (RAM) ның теләсә-кайсы иртәрәк төре белән артка таба да алга таба да яраучы түгел.
 -2305
 
+dec25
+1251-
+-1307 interr
+1359-
+remade parentheses, comma, 'and' code in nstd
+-1429-
+added dash at "RAM) -ның"
+-1435-
+read docs to change php warnings
+-1439
 
+1706-
+changed a word and seems it is ready:
+DDR3 SDRAM төрле ишарәләү вольтажлары, вакытланышлары һәм башка факторларга күрә теләсә-ничек керүле хәтер (RAM) -ның теләсә-кайсы иртәрәк төре белән артка таба да алга таба да ярашучы түгел.
+-1708-
+commit
+-1711-
 
+how much time this example has taken?
+but i have not fixed any errors which have appeared in the previous example yet
+it is
+Ул — DDR һәм DDR2-га карата югарырәк тизлекле соңрак килүче һәм DDR4 синхрон динамик теләсә-ничек керүле хәтер (SDRAM) -ле микросхемаларга карата алдан килүче.
+it was
+Ул — DDR һәм DDR2-гә карата югарырак тизлекле соңрак килүче һәм DDR4 синхрон динамик теләсә-ничек керүле хәтер (SDRAM) микросхемаларына карата алдан килүче.
 
+-1715-
 
+-2 interruption, talk
 
+fixed DDR2-гә and югарырак
+-1727-
+fixed 'memory chip' mwdic item, removed 's'.
+marked current sentence start at this work time log.
+-1806-
+commit
+-1809
 
+1945-
+read php docs to remove notices
+-1950-
+undef. var. notices removed
+-1953-
+need to fix:
+0{
+	0ddr
+	1{
+		0 s d r a m ( ... )
+		1{
+			0микросхема
+			1ы
+		}
+	}
+}
+1лар
+i will change it to:
+0ddr
+1{
+	0 s d r a m ( ... )
+	1{
+		0{
+			микросхема
+			лар
+		}
+		1ы
+	}
+}
+lost near 20 minutes by looking incorrectly at last sentence
+-2035-
+done :  микросхемаларыга
+-2043-
+микросхемаларына - prev. example is fixed
+-2049-
+example before previous:
 
+Өчнче төрдәге икекатлы мәгълүмат тизлекле синхрон динамик теләсә-ничек керүле хәтер өчен бер аббревиатура булган DDR3 SDRAM, 
+компьютер гыйлем е эчендәе 
+бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлек") -ле интерфейсле динамик теләсә-ничек керүле хәтер (DRAM) ның бер яңа төре, һәм бул 2007тан алып кулланылыш эчендә бул деа.
 
+it was some time ago:
 
+Компьютер гыйлеме эчендә , 
+өченче төрдәге икекатлы мәгълүмат тизлеге ле синхрон динамик теләсә-ничек керү ле хәтер өчен бер аббревиатура булган DDR3 SDRAM — 
+бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлеге") ле интерфейс лы динамик теләсә-ничек керү ле хәтер (DRAM) нең бер яңа төр е һәм 2007дән алып кулланылыш эчендә.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-2054-
+commit
+-2103
 
 
 
