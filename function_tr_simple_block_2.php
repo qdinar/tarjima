@@ -192,7 +192,11 @@ function apply_fixes_after_0(&$simbl,&$s2){
 			$mwadj=$s2[0];
 			//$s2[0]=array($mwadj,array('w'=>' '.$limorphem));
 			// $s2[0]=array($mwadj,array('w'=>$limorphem));
-			$s2[0]=array($mwadj,array('w'=>'ле'));
+			if($sb0mainword['w']=='type'){
+				$s2[0]=array($mwadj,array('w'=>'дәге'));
+			}else{
+				$s2[0]=array($mwadj,array('w'=>'ле'));
+			}
 		}
 	/*}else{
 		if(
@@ -411,12 +415,12 @@ function translate_single_main_part(&$simbl,&$s2){
 			//var_dump($simbl);
 		}elseif(isset($simbl[0][1][1]['w'])&&$simbl[0][1][1]['w']=='be'){
 			//remove "була" - copula "is" translation
-			$subj=$s2[0][0];
-			$obj=$s2[0][1][0];
-			$s2[0]=$subj;
-			$s2[1]=$obj;
-			unset($subj,$obj);
-			$s2[1]['dash']=true;
+			// $subj=$s2[0][0];
+			// $obj=$s2[0][1][0];
+			// $s2[0]=$subj;
+			// $s2[1]=$obj;
+			// unset($subj,$obj);
+			// $s2[1]['dash']=true;
 		}elseif(isset($simbl[0][1][1][1][1]['w'])&&$simbl[0][1][1][1][1]['w']=='be'){
 			$s2[0][1][1][1]=$s2[0][1][1][1][0];
 			$s2=$s2[0];
@@ -443,7 +447,7 @@ function translate_single_main_part(&$simbl,&$s2){
 			$num=$s2[0];
 			//$s2[0]=array($num,array('w'=>'енче'));
 			$s2[0]=array($num,array('w'=>'нче'));
-			$s2[1]['w']='төрдәге';//instead of төр
+			//$s2[1]['w']='төрдәге';//instead of төр
 		}
 	}elseif($simbl[1]['w']==',,'){
 		if(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='the'){
@@ -515,7 +519,7 @@ function apply_fixes_after_1(&$simbl,&$s2){
 		}
 		else
 		if(isset($simbl[1]['thisisabbreviation'])&&isset($simbl[0]['w'])&&substr($simbl[0]['w'],-1)=='s'){
-			$s2[1]=array($s2[1],array('w'=>'е'));
+			$s2[1]=array($s2[1],array('w'=>'ы'));
 		}else
 		if($simbl[1]['w']=='.'){//top of sentence
 			//echo'*';
@@ -535,7 +539,7 @@ function apply_fixes_after_1(&$simbl,&$s2){
 			//if(isset($s2[1]['w'])){
 				//$lastword=$s2[1]['w'];
 			//}else{
-				$lastword=get_main_word($s2[1]);
+				$lastword=get_main_word($simbl[1]);
 			//}
 			if(isset($nounlikes[$lastword['w']])&&$nounlikes[$lastword['w']]['type']=='noun'){
 				// if(is_soft($lastword['w'])){
@@ -575,7 +579,7 @@ function apply_fixes_after_1(&$simbl,&$s2){
 			//print_r($s2);
 			//print_r($simbl[1]);
 			//echo'</pre>';
-			// $lastword=get_main_word($s2[1]);
+			$lastword=get_main_word($simbl[1]);
 			// if(is_soft($lastword['w'])){
 				// $imorphem='е';
 			// }else{
@@ -588,7 +592,8 @@ function apply_fixes_after_1(&$simbl,&$s2){
 			){
 				$s2[1][1]=array($s2[1][1],array('w'=>'ы'));
 				$s2[1][0][0]=array($s2[1][0][0],array('w'=>'ы'));
-			}else{
+			}elseif($lastword['w']=='s'||$nounlikes[$lastword['w']]['type']=='noun'){
+			//}else{
 				$s2[1]=array($s2[1],array('w'=>'ы'));
 			}
 			//this works 2 times - adds it 2 times, somehow
@@ -632,7 +637,7 @@ function apply_fixes_after_1(&$simbl,&$s2){
 	if($s2[1]['w']=='лар'&&$lastw['w']=='ы'){
 		$s2=$s2[0];
 		$lastwupper=&get_main_word_upper_ref($s2);
-		echo'OK:<pre>';print_r($lastwupper);echo'</pre>';
+		//echo'OK:<pre>';print_r($lastwupper);echo'</pre>';
 		$lastwupper[0]=array($lastwupper[0],array('w'=>'лар'));
 	}
 

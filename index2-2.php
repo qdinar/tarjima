@@ -227,7 +227,7 @@ $words['memory']='хәтер';
 $words['interface']='интерфейс';
 $words['DRAM']='DRAM';
 $words['()']='()';
-$mwdic[]=array('en'=>array('compute','ing'),'tt'=>array('компьютер',array('гыйлем','е')));
+$mwdic[]=array('en'=>array('compute','ing'),'tt'=>array('компьютер',array('гыйлем','ы')));
 $mwdic[]=array('en'=>array('random','access'),'tt'=>array('теләсә-ничек','керү'));
 $mwdic[]=array('en'=>array('high','bandwidth'),'tt'=>array('югары','үткәрүчәнлек'));
 $nounlikes=array();
@@ -243,6 +243,7 @@ $nounlikes['bandwidth']=array('tt'=>'үткәрүчәнлек','type'=>'noun');
 $nounlikes['access']=array('tt'=>'керү','type'=>'noun');
 $nounlikes['rate']=array('tt'=>'тизлек','type'=>'noun');
 $mwdic[]=array('en'=>array('<1>','since'),'tt'=>array(array(array('<1>','тан'),'ал'),'п'));
+$nounlikes['type']=array('tt'=>'төр','type'=>'noun');
 //in wiktionary:
 //synchronous - adj
 //dynamic - adj and noun
@@ -631,6 +632,10 @@ function &get_main_word_upper_ref(&$simbl){
 //add long "-" after ... DDR3 SDRAM (and before бер югары үткәрүчәнлек ...) - done
 //make лы->ле ы->е where needed - done
 function is_soft($s){
+	//интерфейс
+	if(preg_match('/^интер.*/ui',$s,$lastvowel)){
+		return false;
+	}
 	if(preg_match('/([әеиөү])[бвгджҗзйклмнпрстфхцчшщ]*$/ui',$s,$lastvowel)){
 		return true;
 	}

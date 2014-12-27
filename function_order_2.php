@@ -371,7 +371,7 @@ function order_2($inparr){
 	global $dic,$multiwords,$nounlikes;
 	global $recursionlevel;
 	$recursionlevel++;
-	echo'in level '.$recursionlevel.'<pre>';print_r($inparr);echo'</pre>';echo'*';
+	//echo'in level '.$recursionlevel.'<pre>';print_r($inparr);echo'</pre>';echo'*';
 	//if($recursionlevel==3){echo'in level '.$recursionlevel.'<pre>';print_r($inparr);echo'</pre>';}
 	$outparr=array();
 

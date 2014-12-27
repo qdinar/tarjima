@@ -89,7 +89,7 @@ function nstd_to_str_2($nstd){
 		if(isset($nstd[0]['firstiscapital'])&&$nstd[0]['firstiscapital']==true||!$nstd_to_str_2_firstwordisready){
 			$word=mb_strtoupper(mb_substr($word,0,1)).mb_substr($word,1);
 		}
-		if(isset($nstd[1]['w'])&&$nstd[1]['w']=='е'&&$word=='тизлек'){
+		if(isset($nstd[1]['w'])&&$nstd[1]['w']=='ы'&&$word=='тизлек'){
 			$word='тизлег';
 		}
 		$result.=$word;
@@ -125,7 +125,8 @@ function nstd_to_str_2($nstd){
 			&&$word!='тан'&&$word!='нче'&&$word!='ле'
 			&&$word!='п'&&$word!='кә'&&$word!='у'
 			&&$word!='рәк'&&$word!='лар'&&$word!='а'
-			&&$word!='ның'
+			&&$word!='ның'&&$word!='дәге'
+			&&$word!='intro'
 		){
 			//кушымчалардан башкаларын айырып язасы
 			$result.=' ';
@@ -167,6 +168,15 @@ function nstd_to_str_2($nstd){
 				$word='е';
 			}
 		}
+		elseif($word=='ле'){
+			if($lastword['w']=='ы'){
+				$word='нле';
+			}else{
+				if(!is_soft($lastword['w'])){
+					$word='лы';
+				}
+			}
+		}
 		elseif($word=='у'){
 			if(is_soft($lastword['w'])){
 				$word='ү';
@@ -192,11 +202,34 @@ function nstd_to_str_2($nstd){
 				}
 			}
 		}
+		elseif($word=='тан'){
+			if($lastword['w']=='ы'){
+				$word='ннан';
+			}else{
+				$isbreath=is_breath($lastword['w']);
+				if(!is_soft($lastword['w'])){
+					if($isbreath){
+						$word='тан';
+					}else{
+						$word='дан';
+					}
+				}else{
+					if($isbreath){
+						$word='тән';
+					}else{
+						$word='дән';
+					}
+				}
+			}
+		}
 		elseif($word=='рәк'){
 			if(!is_soft($lastword['w'])){
 				$word='рак';
 			}
 		}
+		elseif($word=='intro'){
+			$word=',';
+		}		
 		$result.=$word;
 		$nstd_to_str_2_firstwordisready=true;
 	}
