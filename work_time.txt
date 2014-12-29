@@ -244,6 +244,120 @@ commit
 -2103
 
 
+dec26
+1636-
+өченче
+-1642-
+-1645
+1647-1656
+1739-1806
+1843-
+intro "in computing" fixed
+-1856-
+-1903 1906-
+-1920
+2154-2157
+2203-
+fixed order, removed pr-si from and have pr-si been ...
+so pr-si will be one for is and has now
+-2232-
+commit
+-2236-
+fix incorrect commit
+-2246
+
+2307-
+latest commit is 8af4d9614ff23936309331762261d8591b361f50
+there are 41 unsynced commits
+introduction comma was marked as intro (at 18:56). i have fixed now its appearance
+-2320-
+
+now i have:
+Компьютер гыйлем е эчендәе, өченче төрдәге икекатлы мәгълүмат тизлекле синхрон динамик теләсә-ничек керүле хәтер өчен бер аббревиатура булган DDR3 SDRAM — бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлек") -ле интерфейсле динамик теләсә-ничек керүле хәтер (DRAM) ның бер яңа төре һәм 2007тан алып кулланылыш эчендә булып куй.
+it was some time ago:
+Компьютер гыйлеме эчендә , өченче төрдәге икекатлы мәгълүмат тизлеге ле синхрон динамик теләсә-ничек керү ле хәтер өчен бер аббревиатура булган DDR3 SDRAM — бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлеге") ле интерфейс лы динамик теләсә-ничек керү ле хәтер (DRAM) нең бер яңа төр е һәм 2007дән алып кулланылыш эчендә.
+
+
+made 2007дән
+-2326-
+fixed эчендә
+-2346-
+-2350
+
+dec27
+1542-
+need to fix a new bug : төрдәгеле
+fixed
+-1603-
+fixed тизлек ы
+-1611-
+fix: тизлеге
+-1614-
+temporary fix: тизлегенле
+this form does not exist in tatar language and is hypothetic
+-1619-
+fixed интерфейслы
+-1623
+interr
+1625-
+going to fix copula translation
+-1631
+1642-
+-1648
+1651-
+need to move "be" to inner level
+-1703-
+commit
+-1713
+
+dec28
+2210-2238
+
+dec29
+1619-
+'be' is fixed but latest example has a bug now
+-1702-
+fixed
+-1728-
+
+it was some time ago:
+Компьютер гыйлеме эчендә , өченче төрдәге икекатлы мәгълүмат тизлеге ле синхрон динамик теләсә-ничек керү ле хәтер өчен бер аббревиатура булган DDR3 SDRAM — бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлеге") ле интерфейс лы динамик теләсә-ничек керү ле хәтер (DRAM) нең бер яңа төр е һәм 2007дән алып кулланылыш эчендә.
+now i have:
+Компьютер гыйлеме эчендә, өченче төрдәге икекатлы мәгълүмат тизлегенле синхрон динамик теләсә-ничек керүле хәтер өчен бер аббревиатура булган DDR3 SDRAM бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлеге") -ле интерфейслы динамик теләсә-ничек керүле хәтер (DRAM) ның бер яңа төре бул һәм 2007дән алып кулланылыш эчендә булып куйа.
+
+i should remake "have been in use".
+-1734-
+commit
+-1737-
+i have to use, for changes in this file (work time txt) after commit (like this comments), work time txt at separate location, to be able to switch to master branch if i want
+-1741
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
