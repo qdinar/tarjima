@@ -368,7 +368,7 @@ function separate_a_mw($inparr){
 
 //function order_2($inparr,$params){
 function order_2($inparr){
-	global $dic,$multiwords,$nounlikes;
+	global $dic,$multiwords,$nounlikes,$verbs;
 	global $recursionlevel;
 	$recursionlevel++;
 	//echo'in level '.$recursionlevel.'<pre>';print_r($inparr);echo'</pre>';echo'*';
@@ -739,6 +739,8 @@ function order_2($inparr){
 	}
 	foreach($inparr as $key=>$word){
 		//separate after verb before noun
+		//read a book
+		//be a modern type ...
 		if(
 			$key==0
 			&&isset($word['w'])
@@ -751,16 +753,32 @@ function order_2($inparr){
 				||isset($inparr[1]['firstiscapital'])
 			)
 		){
+			for($i=count($inparr)-1-1;$i>=0;$i--){
+				$word2=$inparr[$i];
+				$key2=$i;
+				//is ... and have ...
+				if(($word2['w']=='and')&&isset($verbs[$inparr[$i+1]['w']])){//=='have'
+					$andblock=array_splice($inparr,$key2);
+					$andsblock=array_splice($andblock,1);
+					order_2_if_needed($andsblock);
+					$andblock_new[0]=$andsblock;
+					$andblock_new[1]=$andblock[0];
+					//$and_is_just_ordered=true;
+					if($inparr[count($inparr)-1]['w']==','){
+						unset($inparr[count($inparr)-1]);
+					}
+					order_2_if_needed($inparr,array('and_is_just_ordered'=>true));
+					$outparr[]=$andblock_new;
+					$outparr[]=$inparr;
+					goto return_outparr;//return $outparr;
+				}
+			}
 			array_splice($inparr,0,1);//remove verb
 			//this will work incorrectly with "read the bug through tracker"
-			/*if(count($inparr)>1){
-				$inparr=order_2($inparr);
-			}else{
-				$inparr=$inparr[0];
-			}*/
 			order_2_if_needed($inparr);
 			$outparr[]=$inparr;
 			$outparr[]=$word;
+			//$outparr[1]['test']='test';
 			goto return_outparr;//return $outparr;
 			//i should make dictionary with (several) properties (instead of word-per-word translations) (i need it now because i need check whether morphem is verb)
 		//}elseif(isset($word['w'])&&$word['w']==','){
@@ -786,6 +804,11 @@ function order_2($inparr){
 			//}
 		}
 	}
+	//separate after be... before something ...
+	//be ...ed
+	//be .... from ...
+	//be ... that ...
+	//see also line 1157, 740
 	foreach($inparr as $key=>$word){
 		if(
 			$key==0
@@ -946,6 +969,7 @@ function order_2($inparr){
 		}
 	}
 	//divide after preposition
+	//from ...
 	foreach($inparr as $key=>$word){
 		if(
 			$key==0
@@ -993,6 +1017,7 @@ function order_2($inparr){
 			//i see "last know ed bug", it can be {subject verb object}, but it is not "knowed", it is "known", for that i will replace ed to ed-pp (past participle). no. i replace it to en. no. en is used itself in texts, change back.
 		}
 	}
+	// ... that ...
 	foreach($inparr as $key=>$word){
 		if(isset($word['w'])&&($word['w']=='whom'||$word['w']=='that')&&$key>0){
 			//this code separates : teacher | whom ...
@@ -1035,6 +1060,7 @@ function order_2($inparr){
 			goto return_outparr;//return $outparr;
 		}
 	}
+	//...ed / bug
 	foreach($inparr as $key=>$word){
 		if(isset($word['w'])&&isset($dic[$word['w']])&&$dic[$word['w']]['type']=='noun'&&$key==count($inparr)-1&&isset($inparr[$key-1]['w'])&&$inparr[$key-1]['w']=='ed-pp'){
 			array_splice($inparr,$key,1);//remove noun
@@ -1047,6 +1073,7 @@ function order_2($inparr){
 			//i see {last know ed-pp}. {(last know) n} or {last (know n)}? it is (usually) the 1st one, but how to select with program? if it is {last (know n)}, it would be {last (known bug)}...
 		}
 	}
+	//last know / ed
 	foreach($inparr as $key=>$word){
 		if(isset($word['w'])&&$word['w']=='last'&&$key==0&&$inparr[1]['w']=='know'&&$inparr[2]['w']=='ed-pp'&&count($inparr)==3){
 			array_splice($inparr,2,1);//remove ed-pp
@@ -1055,6 +1082,8 @@ function order_2($inparr){
 			goto return_outparr;//return $outparr;
 		}
 	}
+	//see explode func line 159
+	//... ... / 3 rd mix
 	foreach($inparr as $key=>$word){
 		if(isset($word[0]['ordnum'])&&$key=count($inparr)-1){
 			for($i=0,$allwithcapital=true;$i<count($inparr)-1;$i++){
@@ -1083,6 +1112,7 @@ function order_2($inparr){
 	if(func_num_args()==2){
 		$params=func_get_arg(1);
 	}
+	//... ... ... / [,] and / ...
 	if(!isset($params['and_is_just_ordered'])){
 		for($i=count($inparr)-1-1;$i>=0;$i--){
 			$word=$inparr[$i];
@@ -1106,6 +1136,7 @@ function order_2($inparr){
 		}
 	}
 	//separate before preposition
+	//... ... / for ... ...
 	foreach($inparr as $key=>$word){
 		if(
 			$key>0
@@ -1140,12 +1171,15 @@ function order_2($inparr){
 		}
 	}
 	//separate after be
+	//be / ... ...
+	//see also line 790, 740
 	if(isset($inparr[0]['w'])&&$inparr[0]['w']=='be'){
 		//try to order "be never ..." ... done...
 		$word=array_splice($inparr,0,1);//remove be
 		order_2_if_needed($inparr);
 		$outparr[]=$inparr;
 		$outparr[]=$word[0];
+		//$outparr[1]['test']='test';
 		goto return_outparr;//return $outparr;
 	}
 	if(isset($params['and_is_just_ordered'])){

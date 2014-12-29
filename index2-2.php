@@ -196,6 +196,8 @@ $dic['bandwidth']['type']='noun';
 $dic['interface']['type']='noun';
 $dic['DDR3']['type']='noun';
 $dic['SDRAM']['type']='noun';
+$verbs=array();
+$verbs['have']=array('tt'=>'тот');
 $engtext2=order_2($engtext2);
 print_r($engtext2);
 echo'</pre>';
