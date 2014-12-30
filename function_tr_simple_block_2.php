@@ -274,9 +274,25 @@ function translate_single_main_part(&$simbl,&$s2){
 			//i should translate this if this is imperative
 			//i can translate this {п куй}
 			//commented out previous code again
+			/*
 			$s2[1]=$simbl[1];
 			$s2[1]['w']='куй';
 			$s2[0][1]['w']='п';
+			*/
+			/*
+			if(
+				$simbl[0][1]['w']=='ed-pp'
+				&&$simbl[0][0][1][1]['w']=='be'
+			){
+				//ddrsdram {is ... and has been in ...}
+				//remove "була" - copula "is" translation
+				$part1=$s2[0][0][0];//since 2007
+				$part2=$s2[0][0][1][0];//in use
+				$s2[0]=$part1;
+				$s2[1]=$part2;
+				$s2['dash']=true;
+			}
+			*/
 		}
 	}elseif($simbl[1]['w']=='s'||$simbl[1]['w']=='ed'||$simbl[1]['w']=='pr-si'){
 		//if($simbl[0][0]['w']=='whom'){
@@ -413,15 +429,25 @@ function translate_single_main_part(&$simbl,&$s2){
 			//$s2[1]['w']=$words[$simbl[1]['w']];
 			//echo'*';
 			//var_dump($simbl);
-		}elseif(isset($simbl[0][1][1]['w'])&&$simbl[0][1][1]['w']=='be'){
+		}
+		//elseif(isset($simbl[0][1][1]['w'])&&$simbl[0][1][1]['w']=='be'){
+		elseif($simbl[0][1][1][1]['w']=='be'){//after "s" has become shared for is and has
+			/*
 			//remove "була" - copula "is" translation
-			// $subj=$s2[0][0];
-			// $obj=$s2[0][1][0];
-			// $s2[0]=$subj;
-			// $s2[1]=$obj;
-			// unset($subj,$obj);
-			// $s2[1]['dash']=true;
-		}elseif(isset($simbl[0][1][1][1][1]['w'])&&$simbl[0][1][1][1][1]['w']=='be'){
+			$subj=$s2[0][0];//0:ddrbe...//00:ddr
+			//$obj=$s2[0][1][0];//0:ddrbe...//01:be...//010:...
+			$obj=$s2[0][1][1][0];//after "s" has become shared for is and has
+			//^//0:ddrbe...andhave...//01:be...andhave...//011:be...//0110:...
+			$andb=$s2[0][1][0];//after "s" has become shared for is and has
+			$s2[0]=$subj;
+			//$s2[1]=$obj;
+			$s2[1]=array($andb,$obj);
+			//unset($subj,$obj);
+			unset($subj,$obj,$andb);//after "s" has become shared for is and has
+			$s2[1]['dash']=true;
+			*/
+		}
+		elseif(isset($simbl[0][1][1][1][1]['w'])&&$simbl[0][1][1][1][1]['w']=='be'){
 			$s2[0][1][1][1]=$s2[0][1][1][1][0];
 			$s2=$s2[0];
 		}elseif(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='be'){
@@ -429,7 +455,9 @@ function translate_single_main_part(&$simbl,&$s2){
 			//remove "була" - copula "is" translation
 			$s2=$s2[0][0];
 			$s2['dash']=true;
-		}elseif(
+		}
+		/*
+		elseif(
 			isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='have'
 			&&isset($simbl[0][0][1]['w'])&&$simbl[0][0][1]['w']=='ed-pp'
 			&&isset($simbl[0][0][0][1][1]['w'])&&$simbl[0][0][0][1][1]['w']=='be'
@@ -442,6 +470,7 @@ function translate_single_main_part(&$simbl,&$s2){
 			$s2[1]=$part2;
 			$s2['dash']=true;
 		}
+		*/
 	}elseif($simbl[1]['w']=='type'){
 		if(isset($simbl[0]['w'])&&$simbl[0]['w']=='three'){
 			$num=$s2[0];
@@ -640,8 +669,25 @@ function apply_fixes_after_1(&$simbl,&$s2){
 		//echo'OK:<pre>';print_r($lastwupper);echo'</pre>';
 		$lastwupper[0]=array($lastwupper[0],array('w'=>'лар'));
 	}
-
-
+	if($s2[1]['w']=='а'){
+		if($s2[0][1][0][1]['w']=='һәм'){
+			/*
+			$s2[0][1][0][0]=array($s2[0][1][0][0],array('w'=>'а'));
+			$s2[0][1][1]=array($s2[0][1][1],array('w'=>'а'));
+			$s2=$s2[0];
+			*/
+			$s2[0][1][0][0]=$s2[0][1][0][0][0];
+			$s2[0][1][1]=$s2[0][1][1][0];
+			$s2=$s2[0];
+			$s2[1]['dash']=true;
+		}
+	}
+	if($s2[1]['w']=='лгән'){
+		$lastw=get_tr_last_word($s2[0]);
+		if($lastw['w']=='бул'){
+			$s2[1]['w']='ган';
+		}
+	}
 }
 
 /*

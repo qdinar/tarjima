@@ -325,20 +325,43 @@ it was some time ago:
 now i have:
 Компьютер гыйлеме эчендә, өченче төрдәге икекатлы мәгълүмат тизлегенле синхрон динамик теләсә-ничек керүле хәтер өчен бер аббревиатура булган DDR3 SDRAM бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлеге") -ле интерфейслы динамик теләсә-ничек керүле хәтер (DRAM) ның бер яңа төре бул һәм 2007дән алып кулланылыш эчендә булып куйа.
 
-i should remake "have been in use".
--1734
+i should remake "have been in use" and "be a modern type ...".
+-1734-
+commit
+-1737-
+i have to use, for changes in this file (work time txt) after commit (like this comments), work time txt at separate location, to be able to switch to master branch if i want
+-1741-
+commit to master (just this file, comments are there)
+-1744
 
+2209-
+now i have 2 dashes
+-2255-
+commit to closed-source, its sha is ... undoed
+-2259
+these latest 2 comments
+-2301
 
+dec30
+1124-
+undo most recent commit
+its name was: get 2 dashes in tatar "is ... and has been ..."
+dash is only in present time, dash should not be there in past time.
+-1132
 
+1739-
+set present simple suffix back at 2 parts at nested-to-string stage
+-1759-
+new commit "put present simple to inner verbs at nstd" - undoed
+44 commits are not published
+-1802
 
-
-
-
-
-
-
-
-
+1812-
+make 1 dash
+-1817-
+undoed most recent commit because it is not in nstd, but in translate
+бул лгән -> булган
+-1827-
 
 
 

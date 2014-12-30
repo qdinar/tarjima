@@ -203,7 +203,7 @@ print_r($engtext2);
 echo'</pre>';
 $words['in']='эчендә';
 $words['modern']='яңа';
-$words['have']='have';
+$words['have']='тот';
 $words['compute']='хисапла';
 $words['an']='бер';
 $words['abbreviation']='аббревиатура';
