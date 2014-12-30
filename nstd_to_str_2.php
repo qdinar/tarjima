@@ -144,10 +144,11 @@ function nstd_to_str_2($nstd){
 			// $result.='***';
 		}else{
 			$main=get_tr_last_word($nstd[0]);
-			if(isset($main['thisisabbreviation'])){
-				$result.='-';
-			}
-			if(isset($nstd[0][0][1]['w'])&&$nstd[0][0][1]['w']=='()'){
+			if(
+				isset($main['thisisabbreviation'])
+				||$nstd[0][0][1]['w']=='()'
+				||preg_match('/\d/',mb_substr($main['w'],-1),$tmp)
+			){
 				$result.='-';
 			}
 		}

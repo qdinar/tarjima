@@ -362,10 +362,19 @@ make 1 dash
 undoed most recent commit because it is not in nstd, but in translate
 бул лгән -> булган
 -1827-
+new commit 9699b1ce161786a5ff7a579778d91cb85ae25226
+-1831
 
-
-
-
+1841-
+-1 interr
+add dash to prev. ex.
+hyphen at 2007-дән
+add dash to latest example
+seems all examples are ok now, except several first which work with old functions
+-1926-
+commit
+45 commits are not published
+-1930
 
 
 

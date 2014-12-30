@@ -447,14 +447,24 @@ function translate_single_main_part(&$simbl,&$s2){
 			$s2[1]['dash']=true;
 			*/
 		}
-		elseif(isset($simbl[0][1][1][1][1]['w'])&&$simbl[0][1][1][1][1]['w']=='be'){
+		elseif($simbl[0][1][1][1][1]['w']=='be'){
+			//0subjbe...1prsi
+			//00subj01be...
+			//011be...010dueto...
+			//0111be...0110with...
+			//01111be01110...
 			$s2[0][1][1][1]=$s2[0][1][1][1][0];
 			$s2=$s2[0];
+			$s2[1]['dash']=true;
 		}elseif(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='be'){
 			//ddrsdram {is ... and has been in ...}
 			//remove "була" - copula "is" translation
 			$s2=$s2[0][0];
 			$s2['dash']=true;
+		}else{
+			// $lastw=get_tr_last_word($simbl[0]);
+			// if($lastw['w']=='be'){
+			// }
 		}
 		/*
 		elseif(
@@ -676,11 +686,22 @@ function apply_fixes_after_1(&$simbl,&$s2){
 			$s2[0][1][1]=array($s2[0][1][1],array('w'=>'а'));
 			$s2=$s2[0];
 			*/
-			$s2[0][1][0][0]=$s2[0][1][0][0][0];
-			$s2[0][1][1]=$s2[0][1][1][0];
-			$s2=$s2[0];
-			$s2[1]['dash']=true;
+			$lastw=get_tr_last_word($s2[0][1][0][0]);
+			if($lastw['w']=='бул'||$lastw['w']=='тот'){
+				$s2[0][1][0][0]=$s2[0][1][0][0][0];
+			}
+			$lastw=get_tr_last_word($s2[0]);
+			if($lastw['w']=='бул'||$lastw['w']=='тот'){
+				$s2[0][1][1]=$s2[0][1][1][0];
+			}
+		}else{
+			$lastw=get_tr_last_word($s2[0]);
+			if($lastw['w']=='бул'||$lastw['w']=='тот'){
+				$s2[0][1]=$s2[0][1][0];
+			}
 		}
+		$s2=$s2[0];
+		$s2[1]['dash']=true;
 	}
 	if($s2[1]['w']=='лгән'){
 		$lastw=get_tr_last_word($s2[0]);
