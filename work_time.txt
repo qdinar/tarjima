@@ -94,6 +94,7 @@ dec6
 -10
 -2
 -1413
+unpublished closed source started here
 1814-1906
 1939-1955
 
@@ -130,7 +131,7 @@ may be i should make en-tt translator with such a program
 dec19
 1043-
 removed all morphem fonetic changes from translate function
--1103
+-1103-
 written work time, comments
 -1105
 
@@ -372,9 +373,138 @@ hyphen at 2007-дән
 add dash to latest example
 seems all examples are ok now, except several first which work with old functions
 -1926-
-commit
+commit b92c57bceedacb58c231544cfa806f5f66313fbe
 45 commits are not published
--1930
+-1931-
+-3-1
+
+how much time has taken the latest example?
+dec3
++11+6+27
+dec5
++7+60+34
+dec6
++60+13-14+16+36+21-5
+dec7
++25
+dec8
++2+19-2+20
+dec9
++30+67
+dec10
++50+37+15+23+9+6+23+19-3+41+60+21
+dec19
++17+5
+dec23
++8+23
+dec24
++12+2+27+7+50+5
+dec25
++9+7+1+39+54+9-2+15+63
+dec26
++4+15+3+6+41+6+17+3+14+3+43+43
+dec27
++18+23+6+6+9+13
+dec28
++28
+dec29
++41+44+51+1
+dec30
++6+2+21+2+18+1+19+26-1
+
+dec3-dec30:
++11+6+27+7+60+34+60+13-14+16+36+21-5+25+2+19-2+20+30+67+50+37+15+23+9+6+23+19-3+41+60+21+17+5+8+23+12+2+27+7+50+5+9+7+1+39+54+9-2+15+63+4+15+3+6+41+6+17+3+14+3+43+43+18+23+6+6+9+13+28+41+44+51+1+6+2+21+2+18+1+19+26-1
+=1617 minutes
+how much price for programming i could be paid?
+if 5 rubles per minute than it is
+5*60=300 rubles per hour
+5*1617=8085 rubles for the last sentence addition
+in usd it is , with 56 rubles per usd, 8085/56=144
+300 rub/h is 300/56=5.36 usd/h
+
+-2003-
+1617 minutes are 1617/60=26.95 hours
+how many days really:
+1dec3
+2dec5
+3dec6
+4dec7
+5dec8
+6dec9
+7dec10
+8dec19
+9dec23
+10dec24
+11dec25
+12dec26
+13dec27
+14dec28
+15dec29
+16dec30
+-16 days
+if 4 hours per day it would be
+26.95/4=6.7 days
+-2008
+
+dec31
+945-
+next ex.
+DDR3 is a DRAM interface specification.
+fix спецификациясы.
+"DRAM interface specification" is correctly ordered (in english) now.
+it is translated as "(dram interface)-ful specification" (in tatar)
+but it should be "(dram interface)'s specification".
+-1020
+1029-
+see index2-2.php line 538 about this problem
+i think in more cases noun after noun is noun's noun. and will try to change code that way.
+-1127
+1131-
+latest ex. itself is ready.
+fixing prev. examples.
+-1204
+1247-
+fixing "in computing, " now.
+-1343
+1422-1425
+nearly 1429-
+-1450
+1540-
+i want to see how many are any of different types of "noun noun" translation.
+indeed "noun's noun" are more than "noun-ful noun".
+-1720
+
+
+1741-
+-1758
+
+1833-
+-1837
+
+1935-
+the wikipedia ddr3 examples are ready:
+Бушлай энциклопедия Википедиядан
+Бу мәкалә — DDR3 SDRAM-ы турында.
+Графика DDR3-е өчен, GDDR3-не карагыз.
+Видео уен өчен, "Бию Бию Революция 3-нче Болгатма"-ны карагыз.
+Компьютер гыйлеме эчендә, өченче төрдәге икекатлы мәгълүмат тизлегенле синхрон динамик теләсә-ничек керүле хәтер өчен бер аббревиатура булган DDR3 SDRAM-ы — бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлеге") -ле интерфейслы динамик теләсә-ничек керүле хәтер (DRAM) -нең бер яңа төре һәм 2007-дән алып кулланылыш эчендә булган.
+Ул — DDR һәм DDR2-гә карата югарырак тизлекле соңрак килүче һәм DDR4 синхрон динамик теләсә-ничек керүле хәтер (SDRAM) микросхемаларына карата алдан килүче.
+DDR3 SDRAM-ы — төрле ишарәләү вольтажлары, вакытланышлары һәм башка факторларга күрә теләсә-ничек керүле хәтер (RAM) -нең теләсә-кайсы иртәрәк төре белән артка таба да алга таба да ярашучы түгел.
+DDR3 — бер DRAM интерфейсы спецификациясы.
+-2028
+
+
+2159-
+
+
+
+
+
+
+
+
+
+
 
 
 

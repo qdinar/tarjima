@@ -10,14 +10,44 @@ function &tr_simple_block_2(&$simbl){
 	$s2=array();
 	foreach($mwdic as $mw){
 		if(is_mw_eq($simbl,$mw['en'],$getinner)){
+			// if($getinner===NULL){
+				// echo'NULL:<pre>';
+				// print_r($simbl);
+				// print_r($mw['en']);
+				// echo'</pre>';
+			// }
 			//echo'OK';exit;
 			//echo'*';
 			// echo'<pre>';
 			// print_r($mw);
 			// echo'</pre>';
 			//if(isset($getinner)&&isset($getinner[0])){
-			if(isset($getinner)&&!isset($getinner['w'])){
-				$getinner=&tr_simple_block_2($getinner);
+			//if(!isset($getinner['w'])&&isset($getinner[0])){
+			if($getinner!==NULL){
+				if(!isset($getinner['w'])){
+					$getinner=&tr_simple_block_2($getinner);
+				}else{
+					//NULL
+					// if(!isset($getinner['w'])&&!isset($getinner[0])){
+						// echo'<pre>';
+						// var_dump($getinner);
+						// echo'</pre>';
+						// exit;
+					// }
+					//$getinner=tr_simple_block_2($getinner);
+					//translate_single_modifier_part($simbl,$s2);
+					if(isset($getinner['tr'])){
+						$getinner['w']=$getinner['tr'];
+					}
+					else
+					if(isset($words[$getinner['w']])){
+						$getinner['w']=$words[$getinner['w']];
+					}elseif(isset($nounlikes[$getinner['w']])){
+						$getinner['w']=$nounlikes[$getinner['w']]['tt'];
+					}elseif(isset($verbs[$getinner['w']])){
+						$getinner['w']=$verbs[$getinner['w']]['tt'];
+					}
+				}
 			}
 			assign_mw_tr($s2,$mw['tt'],$getinner,$simbl);
 			unset($getinner);
@@ -43,6 +73,7 @@ function &tr_simple_block_2(&$simbl){
 	if(!isset($simbl[0]['w'])){
 		$s2[0]=&tr_simple_block_2($simbl[0]);
 	}else{
+		//translate_single_modifier_part($simbl,$s2);
 		$s2[0]=$simbl[0];
 		if(isset($simbl[0]['tr'])){
 			$s2[0]['w']=$simbl[0]['tr'];
@@ -102,9 +133,26 @@ function &tr_simple_block_2(&$simbl){
 
 }
 
+function translate_single_modifier_part(&$simbl,&$s2){
+	global $nounlikes,$verbs,$words;
+	$s2[0]=$simbl[0];
+	if(isset($simbl[0]['tr'])){
+		$s2[0]['w']=$simbl[0]['tr'];
+	}
+	else
+	if(isset($words[$simbl[0]['w']])){
+		$s2[0]['w']=$words[$simbl[0]['w']];
+	}elseif(isset($nounlikes[$simbl[0]['w']])){
+		$s2[0]['w']=$nounlikes[$simbl[0]['w']]['tt'];
+	}elseif(isset($verbs[$simbl[0]['w']])){
+		$s2[0]['w']=$verbs[$simbl[0]['w']]['tt'];
+	}
+}
+
+
 function apply_fixes_after_0(&$simbl,&$s2){
 	//global $words,$dic,$recursionlevel,$mwdic,$nounlikes;
-	global $nounlikes,$verbs;
+	global $nounlikes,$verbs,$dic;
 	if(
 		//((isset($simbl[1][1]['w'])&&$simbl[1][1]['w']=='read')||(isset($simbl[1]['w'])&&$simbl[1]['w']=='read'))
 		(isset($simbl[1][1]['w'])&&isset($dic[$simbl[1][1]['w']])&&$dic[$simbl[1][1]['w']]['type']=='verb'&&$simbl[1][1]['w']!='be'
@@ -130,6 +178,7 @@ function apply_fixes_after_0(&$simbl,&$s2){
 		//i think it is unproductive to work at night. but i have checked/tested that one more time...
 		//now i will just add 'ны' and then i am going to make new functions... - i have made a function but have deleted it. problem is solved
 		// $s2[0]=array($s2[0],array('w'=>$suffiksno));
+		//echo'OK';
 		$s2[0]=array($s2[0],array('w'=>'не'));
 	}
 	//
@@ -161,6 +210,7 @@ function apply_fixes_after_0(&$simbl,&$s2){
 			// $s2[0]['w']='югары';//instead of биек in dic
 		// }
 	// }
+	/*
 	if(!isset($simbl[0]['w'])){
 		$sb0mainword=get_main_word($simbl[0]);
 		//echo'*';print_r($sb0mainword);
@@ -194,19 +244,12 @@ function apply_fixes_after_0(&$simbl,&$s2){
 			// $s2[0]=array($mwadj,array('w'=>$limorphem));
 			if($sb0mainword['w']=='type'){
 				$s2[0]=array($mwadj,array('w'=>'дәге'));
-			}else{
-				$s2[0]=array($mwadj,array('w'=>'ле'));
+			//}else{
+				//$s2[0]=array($mwadj,array('w'=>'ле'));
 			}
 		}
-	/*}else{
-		if(
-			isset($nounlikes[$simbl[0]['w']])&&$nounlikes[$simbl[0]['w']]['type']=='noun'
-		){
-			//echo'*!'.$sb0mainword['w'].'-'.$sb1mainword['w'];
-			$mwadj=$s2[0];
-			$s2[0]=array($mwadj,array('w'=>'s'));
-		}*/
 	}
+	*/
 	if(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='with'){
 		//if(isset($simbl[0][0]['w'])){
 			//$sb0mainword=$simbl[0][0];
@@ -228,6 +271,7 @@ function apply_fixes_after_0(&$simbl,&$s2){
 			$s2[0][1]['w']='ле';
 		}
 	}
+	
 }
 
 
@@ -235,13 +279,25 @@ function apply_fixes_after_0(&$simbl,&$s2){
 
 function translate_single_main_part(&$simbl,&$s2){
 	global $dic,$nounlikes,$words,$verbs;
-	if(isset($simbl[0]['tr'])){
-		$s2[0]['w']=$simbl[0]['tr'];
+	$s2[1]=$simbl[1];
+	//if(!isset($s2[1])){//if it is array, it is set. if it is word and is not set , set here
+		//$s2[1]['w']=$words[$simbl[1]['w']];
+		if(isset($words[$simbl[1]['w']])){
+			$s2[1]['w']=$words[$simbl[1]['w']];
+		}elseif(isset($nounlikes[$simbl[1]['w']])){
+			$s2[1]['w']=$nounlikes[$simbl[1]['w']]['tt'];
+		}elseif(isset($verbs[$simbl[1]['w']])){
+			$s2[1]['w']=$verbs[$simbl[1]['w']]['tt'];
+		}else{
+			$s2[1]=$simbl[1];
+		}
+	//}
+	if(isset($simbl[1]['tr'])){
+		$s2[1]['w']=$simbl[1]['tr'];
 	}
 	else
 	if($simbl[1]['w']=='ed-pp'){
 		//$s2[1]['w']='лгән';
-		$s2[1]=$simbl[1];
 		//this place is translation, not just fixing of ready translation, for that i copy here all properties
 		if(isset($simbl[0]['w'])){
 			$ofplace2=$simbl[0]['w'];
@@ -500,19 +556,13 @@ function translate_single_main_part(&$simbl,&$s2){
 		$s2[1]['w']='һәм түгел';
 	}
 	//if($recursionlevel==13){echo'level '.$recursionlevel.'<pre>';var_dump($simbl);echo'</pre>';echo'*';}
-	if(!isset($s2[1])){//if it is array, it is set. if it is word and is not set , set here
-		//$s2[1]['w']=$words[$simbl[1]['w']];
-		if(isset($words[$simbl[1]['w']])){
-			$s2[1]['w']=$words[$simbl[1]['w']];
-		}elseif(isset($nounlikes[$simbl[1]['w']])){
-			$s2[1]['w']=$nounlikes[$simbl[1]['w']]['tt'];
-		}elseif(isset($verbs[$simbl[1]['w']])){
-			$s2[1]['w']=$verbs[$simbl[1]['w']]['tt'];
-		}else{
-			$s2[1]=$simbl[1];
-		}
-	}
 	//should not test simbl0 and simbl1 here because this place do not work if they are complex
+
+	// foreach($simbl[1] as $key=>$word){
+		// if(!isset($s2[1][$key])){
+			// $s2[1][$key]=$simbl[1][$key];
+		// }
+	// }
 }
 
 
@@ -568,7 +618,63 @@ function apply_fixes_after_1(&$simbl,&$s2){
 			}
 		}
 	}
+	$sb0mainword=get_main_word($simbl[0]);
+	$sb1mainword=get_main_word($simbl[1]);
+	if(
+		(
+			$sb0mainword['w']=='access'
+			||$sb0mainword['w']=='rate'
+		)
+		&&$sb1mainword['w']=='memory'
+		||
+		$sb0mainword['w']=='bandwidth'
+		&&$sb1mainword['w']=='interface'
+		||
+		$sb0mainword['w']=='speed'
+		&&$sb1mainword['w']=='successor'
+	){
+		$s2[0]=array($s2[0],array('w'=>'ле'));
+	}
+	elseif(
+		$sb0mainword['w']=='type'
+		&&$nounlikes[$sb1mainword['w']]['type']=='noun'
+	){
+		$s2[0]=array($s2[0],array('w'=>'дәге'));
+	}
+	elseif(
+		$sb0mainword['w']=='of'
+		||
+		$sb0mainword['w']=='memory'
+		&&$sb1mainword['w']=='chip'
+		||
+		$sb0mainword['w']=='DRAM'
+		&&$sb1mainword['w']=='interface'
+		||
+		$sb0mainword['w']=='interface'
+		&&$sb1mainword['w']=='specification'
+		||
+		$sb0mainword['w']=='ing'
+		&&$sb1mainword['w']=='s-pl'
+		||
+		$sb0mainword['w']=='DDR3'
+		&&$sb1mainword['w']=='SDRAM'
+		||
+		$sb0mainword['w']=='data'
+		&&$sb1mainword['w']=='rate'
+	){
+		if(
+			$s2[1][0][1]['w']==','
+		){
+			$s2[1][1]=array($s2[1][1],array('w'=>'ы'));
+			$s2[1][0][0]=array($s2[1][0][0],array('w'=>'ы'));
+		}else{
+			$s2[1]=array($s2[1],array('w'=>'ы'));
+		}
+	}
+	//&&!isset($sb0mainword['thisisabbreviation'])
+	// $nounlikes[$sb0mainword['w']]['type']=='noun'
 	if(isset($simbl[0]['w'])){
+		/*
 		if(
 			isset($nounlikes[$simbl[0]['w']])&&$nounlikes[$simbl[0]['w']]['type']=='noun'&&!isset($simbl[0]['thisisabbreviation'])
 		){
@@ -590,6 +696,7 @@ function apply_fixes_after_1(&$simbl,&$s2){
 				$s2[1]=array($s2[1],array('w'=>'ы'));
 			}
 		}
+		*/
 	//}elseif(!isset($s2[0]['w'])){
 		//$trynin=get_main_word($s2[0]);
 		//if($trynin['w']=='ның'){
@@ -604,8 +711,8 @@ function apply_fixes_after_1(&$simbl,&$s2){
 		//$main=get_main_word($simbl[0]);
 		//if($main['w']=='of'){
 		if(
-			isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='of'
-			||isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='ing'
+			$simbl[0][1]['w']=='of'
+			//||isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='ing'
 		){
 			//$lastword=get_main_word($s2[0][0]);
 			//if(is_soft($lastword['w'])){
@@ -625,16 +732,24 @@ function apply_fixes_after_1(&$simbl,&$s2){
 				// $imorphem='ы';
 			// }
 			// $s2[1]=array($s2[1],array('w'=>' '.$imorphem));
+			/*
 			if(
 				isset($s2[1][0][1]['w'])
 				&&$s2[1][0][1]['w']==','
 			){
 				$s2[1][1]=array($s2[1][1],array('w'=>'ы'));
 				$s2[1][0][0]=array($s2[1][0][0],array('w'=>'ы'));
-			}elseif($lastword['w']=='s'||$nounlikes[$lastword['w']]['type']=='noun'){
+			}
+			else
+			if(
+				$lastword['w']=='s'
+				||
+				$nounlikes[$lastword['w']]['type']=='noun'
+			){
 			//}else{
 				$s2[1]=array($s2[1],array('w'=>'ы'));
 			}
+			*/
 			//this works 2 times - adds it 2 times, somehow
 			//simbl1 is 'a modern type' in 1st time and 's' in 2nd time
 			//i think i have understood it. first time it is regular translation, second time it is external level translation, the inner level is set to current level again. so i will check this by english word "of" - and it works.

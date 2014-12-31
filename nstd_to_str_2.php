@@ -119,6 +119,7 @@ function nstd_to_str_2($nstd){
 			$word=mb_strtoupper(mb_substr($word,0,1)).mb_substr($word,1);
 		}
 		//if($word=='ле'){echo'OK';exit;}
+		$main=get_tr_last_word($nstd[0]);
 		if(
 			$word!='.'&&$word!=','&&
 			$word!='не'&&$word!='ы'&&$word!='гыз'
@@ -130,7 +131,17 @@ function nstd_to_str_2($nstd){
 		){
 			//кушымчалардан башкаларын айырып язасы
 			$result.=' ';
-		}elseif($word=='п'||$word=='нче'){
+		}
+		elseif(
+			isset($main['thisisabbreviation'])
+			||$nstd[0][0][1]['w']=='()'
+			||$nstd[0][1][0][1]['w']=='()'
+			||preg_match('/\d/',mb_substr($main['w'],-1),$tmp)
+			||$nstd[0]['thisisheader']==true
+		){
+			$result.='-';
+		}
+		elseif($word=='п'||$word=='нче'){
 			$main=get_main_word($nstd[0]);
 			if(last_conson($main['w'])){
 				if(is_soft($main['w'])){
@@ -142,15 +153,12 @@ function nstd_to_str_2($nstd){
 		//}elseif($word=='кә'){
 		// }elseif($word==' ле'){
 			// $result.='***';
-		}else{
+		}elseif($word=='ы'){
 			$main=get_tr_last_word($nstd[0]);
-			if(
-				isset($main['thisisabbreviation'])
-				||$nstd[0][0][1]['w']=='()'
-				||preg_match('/\d/',mb_substr($main['w'],-1),$tmp)
-			){
-				$result.='-';
+			if(!last_conson($main['w'])){
+				$result.='с';
 			}
+		}else{
 		}
 		/*
 		if(isset($parentheses)){
@@ -226,6 +234,16 @@ function nstd_to_str_2($nstd){
 		elseif($word=='рәк'){
 			if(!is_soft($lastword['w'])){
 				$word='рак';
+			}
+		}
+		elseif($word=='ның'){
+			if(is_soft($lastword['w'])){
+				$word='нең';
+			}
+		}
+		elseif($word=='не'){
+			if(!is_soft($lastword['w'])){
+				$word='ны';
 			}
 		}
 		elseif($word=='intro'){

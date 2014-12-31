@@ -15,18 +15,20 @@ $mwdic=array();
 
 echo'<br/>';
 $engtext='From Wikipedia, the free encyclopedia';
-$engtext=explode(' ', $engtext);
+//$engtext=explode(' ', $engtext);
 //$dic['buy']['type']='verb';
 include 'function_explode_words_into_morphemes_2.php';
 //$firstletterofsentenceiscapital=true;
-$engtext2=explode_words_into_morphemes_2($engtext);
+//$engtext2=explode_words_into_morphemes_2($engtext);
 //i want to do something with commas and capital letters
-//print_r($engtext2);
+include 'function_explode_into_morphemes.php';
+$engtext2=explode_into_morphemes($engtext);
+print_r($engtext2);
 echo'<pre>';
 $dic['wikipedia']['type']='noun';
 include 'function_order_2.php';
 $engtext2=order_2($engtext2);
-//print_r($engtext2);
+print_r($engtext2);
 echo'</pre>';
 $words['wikipedia']='википедия';
 $words['free']='бушлай';
@@ -37,7 +39,7 @@ $words[',,']='булган';
 include 'function_tr_simple_block_2.php';
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
-//print_r($result);
+print_r($result);
 echo'</pre>';
 
 include 'nstd_to_str_2.php';
@@ -62,25 +64,30 @@ echo nstd_to_str_2($result);
 
 echo'<br/>';
 $engtext='This article is about DDR3 SDRAM.';
-$engtext=explode(' ', $engtext);
+//$engtext=explode(' ', $engtext);
 //$dic['buy']['type']='verb';
-$engtext2=explode_words_into_morphemes_2($engtext);
-//print_r($engtext2);
+//$engtext2=explode_words_into_morphemes_2($engtext);
+$engtext2=explode_into_morphemes($engtext);
+print_r($engtext2);
 echo'<pre>';
 $dic['be']['type']='verb';
 $engtext2=order_2($engtext2);
-//print_r($engtext2);
+print_r($engtext2);
 echo'</pre>';
 $words['this']='бу';
 $words['article']='мәкалә';
 $words['about']='турында';
-$words['DDR3']='DDR3';
+//$words['DDR3']='DDR3';
 $words['SDRAM']='SDRAM';
 //$words['be']='be';//this was бул , set upper. fixing... бул is not correct. "бул" is "become"... though sometimes "be" is translated as "бул"... comment this out, do not change
 $words['.']='.';
+//$nounlikes=array();
+//$nounlikes['DDR3']=array('tt'=>'3-нче DDR','type'=>'noun');
+$nounlikes['DDR3']=array('tt'=>'DDR3','type'=>'noun');
+//$nounlikes['SDRAM']=array('tt'=>'SDRAM','type'=>'noun');
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
-//print_r($result);
+print_r($result);
 echo'</pre>';
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
@@ -97,11 +104,11 @@ $engtext='For graphics DDR3, see GDDR3.';
 $engtext=explode(' ', $engtext);
 //$dic['buy']['type']='verb';
 $engtext2=explode_words_into_morphemes_2($engtext);
-//print_r($engtext2);
+print_r($engtext2);
 echo'<pre>';
 $dic['see']['type']='verb';
 $engtext2=order_2($engtext2);
-//print_r($engtext2);
+print_r($engtext2);
 echo'</pre>';
 $words['for']='өчен';
 $words['graphics']='графика';
@@ -111,7 +118,7 @@ $words['GDDR3']='GDDR3';
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
-//print_r($result);
+print_r($result);
 echo'</pre>';
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
@@ -132,13 +139,13 @@ $engtext=explode(' ', $engtext);
 //$dic['buy']['type']='verb';
 $engtext2=explode_words_into_morphemes_2($engtext);
 //i have here redundant "pr-si" after "see", and 'w'=>'revolution' is absent
-//print_r($engtext2);
+print_r($engtext2);
 echo'<pre>';
 $dic['dance']['type']='noun';
 $dic['revolution']['type']='noun';
 $multiwords=array(0=>array('random','access'));
 $engtext2=order_2($engtext2);
-//print_r($engtext2);
+print_r($engtext2);
 echo'</pre>';
 $words['video']='видео';
 $words['game']='уен';
@@ -152,7 +159,7 @@ $nounlikes['revolution']=array('tt'=>'революция','type'=>'noun');
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';
-//print_r($result);
+print_r($result);
 echo'</pre>';
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
@@ -176,7 +183,7 @@ echo nstd_to_str_2($result);
 echo'<br/>';
 $engtext='In computing, DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory, is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007.';
 $dic['compute']['type']='verb';
-include 'function_explode_into_morphemes.php';
+//include 'function_explode_into_morphemes.php';
 $engtext2=explode_into_morphemes($engtext);
 echo'<pre>';
 //print_r($engtext2);
@@ -194,7 +201,7 @@ $dic['DRAM']['type']='noun';
 $dic['high']['type']='noun';
 $dic['bandwidth']['type']='noun';
 $dic['interface']['type']='noun';
-$dic['DDR3']['type']='noun';
+//$dic['DDR3']['type']='noun';
 $dic['SDRAM']['type']='noun';
 $verbs=array();
 $verbs['have']=array('tt'=>'тот');
@@ -232,9 +239,7 @@ $words['()']='()';
 $mwdic[]=array('en'=>array('compute','ing'),'tt'=>array('компьютер',array('гыйлем','ы')));
 $mwdic[]=array('en'=>array('random','access'),'tt'=>array('теләсә-ничек','керү'));
 $mwdic[]=array('en'=>array('high','bandwidth'),'tt'=>array('югары','үткәрүчәнлек'));
-$nounlikes=array();
 $nounlikes['data']=array('tt'=>'мәгълүмат','type'=>'noun');
-$nounlikes['dance']=array('tt'=>'бию','type'=>'noun');
 $nounlikes['random']=array('tt'=>'теләсә-нинди','type'=>'adj');
 $nounlikes['high']=array('tt'=>'югары','type'=>'adj');
 $nounlikes['dynamic']=array('tt'=>'динамик','type'=>'adj');
@@ -245,6 +250,62 @@ $nounlikes['bandwidth']=array('tt'=>'үткәрүчәнлек','type'=>'noun');
 $nounlikes['access']=array('tt'=>'керү','type'=>'noun');
 $nounlikes['rate']=array('tt'=>'тизлек','type'=>'noun');
 $mwdic[]=array('en'=>array('<1>','since'),'tt'=>array(array(array('<1>','тан'),'ал'),'п'));
+/*
+$mwdic[]=
+	array(
+		'en'=>
+			array(
+				array(
+				// 'mainw'=>'access'
+					'<1>',
+					'access'
+				),
+				'memory'
+			)
+		,
+		'tt'=>
+			array(
+				array(
+					array(
+					// 'mainw'=>'керү'
+						'<1>',
+						'керү'
+					),
+					'ле'
+				),
+				'хәтер'
+			)
+		,
+	)
+;
+$mwdic[]=
+	array(
+		'en'=>
+			array(
+				array(
+					'mainw'=>'bandwidth'
+					// '<1>',
+					// 'bandwidth'
+				),
+				'interface'
+			)
+		,
+		'tt'=>
+			array(
+				array(
+					array(
+						'mainw'=>'үткәрүчәнлек'
+						// '<1>',
+						// 'үткәрүчәнлек'
+					),
+					'ле'
+				),
+				'интерфейс'
+			)
+		,
+	)
+;
+*/
 $nounlikes['type']=array('tt'=>'төр','type'=>'noun');
 //in wiktionary:
 //synchronous - adj
@@ -561,13 +622,18 @@ function assign_mw_tr(&$s2,$tr,$inner,&$simbl){
 //and i was going to use separate arrays for noun-likes and verbs... i think that is ok ... but will not i have problems while same word has noun and adverb and adjective variants? i do not know yet ...
 //nov25: now i have "DDR4 synchronous dynamic random access memory (SDRAM) chips" which is not working with that rule - it would be "DDR4SDRAM-ful chips" (by the rule), but it should be "DDR4SDRAM's chips" in tatar language.
 //may be there is no rule and all cases are by their semantic. in this case i can use dictionary item meaning memory chip is memory's chip.
+//dec31: i think in more cases noun after noun is noun's noun. and will try to change code that way.
 function get_main_word($simbl){
+	//echo'1<pre>';print_r($simbl);echo'</pre>';
+	//echo'<pre>';var_dump($simbl);echo'</pre>';
 	if(isset($simbl['w'])){
 		return $simbl;
 	}else
 	if(isset($simbl[1]['w'])){
 		return $simbl[1];
-	}else{
+	}
+	else{
+	//echo'2<pre>';print_r($simbl);echo'</pre>';
 		return get_main_word($simbl[1]);
 	}
 }
@@ -606,19 +672,23 @@ function &get_main_word_upper_ref(&$simbl){
 	// }else{
 		// return get_main_word_ref($simbl[1]);
 	// }
-	elseif(is_array($simbl[1][1])){
-	//else{
+	//elseif(is_array($simbl[1][1])){
+	//elseif(!isset($simbl[1][1]['w'])){
+	else{
 		//if($simbl[1]===NULL){echo'OK';exit;}
-		$tmp=&get_main_word_upper_ref($simbl[1][1]);
+		$tmp=&get_main_word_upper_ref($simbl[1]);
 		return $tmp;
-	}else{
+	}
+	/*
+	else{
 		//echo'<pre>';print_r($simbl);exit;
-		echo'<pre>';var_dump($simbl);exit;//null
+		echo'<pre>!upp!';var_dump($simbl);exit;//null
 		//return '***';
 		//return $simbl;
 		// $tmp='***';
 		// return $tmp;
 	}
+	*/
 }
 
 //after some fixes i have:
@@ -653,7 +723,7 @@ function is_breath($s){
 	return false;
 }
 function last_conson($s){
-	if(preg_match('/[бвгджҗзйклмнпрстфхцчшщ]$/ui',$s,$lastvowel)){
+	if(preg_match('/[бвгджҗзйклмнпрстфхцчшщbcdfghjklmnpqrstvwxyz12345890]$/ui',$s,$lastvowel)){
 		return true;
 	}
 	return false;
@@ -708,6 +778,7 @@ $nounlikes['it']=array('tt'=>'ул','type'=>'noun');
 $nounlikes['DDR2']=array('tt'=>'DDR2','type'=>'noun');
 $nounlikes['predecessor']=array('tt'=>'алдан килүче','type'=>'noun'); 
 $nounlikes['DDR']=array('tt'=>'DDR','type'=>'noun');
+/*
 $mwdic[]=
 	array(
 		'en'=>
@@ -724,6 +795,28 @@ $mwdic[]=
 		,
 	)
 ;
+*/
+/*
+$mwdic[]=
+	array(
+		'en'=>
+			array(
+				array('<1>','speed'),
+				'successor',
+			)
+		,
+		'tt'=>
+			array(
+				array(
+					array('<1>','тизлек'),
+					'ле'
+				),
+				'соңрак килүче',
+			)
+		,
+	)
+;
+*/
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
 echo'<pre>';

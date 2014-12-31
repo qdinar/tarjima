@@ -26,7 +26,6 @@ $engtext2=order_2($engtext2);
 print_r($engtext2);
 echo'</pre>';
 $recursionlevel=0;
-$nounlikes['DDR3']=array('tt'=>'DDR3','type'=>'noun');
 $nounlikes['backward']=array('tt'=>'артка таба','type'=>'noun');
 $nounlikes['forward']=array('tt'=>'алга таба','type'=>'noun');
 $result=tr_simple_block_2($engtext2);
@@ -152,6 +151,28 @@ echo nstd_to_str_2($result);
 //i am writing almost all comments in work time txt now
 
 
+
+echo'<br/>';
+$engtext='DDR3 is a DRAM interface specification.';
+$engtext2=explode_into_morphemes($engtext);
+echo'<pre>';
+print_r($engtext2);
+echo'</pre>';
+$nounlikes['specification']=array('tt'=>'спецификация','type'=>'noun');
+$multiwords[]=array('DRAM','interface');
+$recursionlevel=0;
+$engtext2=order_2($engtext2);
+echo'<pre>';
+print_r($engtext2);
+echo'</pre>';
+$nounlikes['DRAM']=array('tt'=>'DRAM','type'=>'noun');
+$recursionlevel=0;
+$result=tr_simple_block_2($engtext2);
+echo'<pre>';
+print_r($result);
+echo'</pre>';
+$nstd_to_str_2_firstwordisready=false;
+echo nstd_to_str_2($result);
 
 
 
