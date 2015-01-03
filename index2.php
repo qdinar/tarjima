@@ -4,6 +4,17 @@ mb_internal_encoding('UTF-8');
 header('Content-Type: text/html; charset=utf-8');
 ini_set('display_errors', '1');
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
+$show_trees=true;
+
+function show_trees($arr){
+	global $show_trees;
+	if($show_trees){
+		echo'<pre>';
+		print_r($arr);
+		echo'</pre>';
+	}
+}
+
 
 /*
 $words=array('good'=>'әйбәт','school'=>'мәктәп');
@@ -824,11 +835,9 @@ function order($inparr){
 
 
 //echo'<br/>';
-echo'<pre>';
 $dic=array('bug'=>array('type'=>'noun'),'read'=>array('type'=>'verb'));
 $engtext2=order($engtext2);
-print_r($engtext2);
-echo'</pre>';
+show_trees($engtext2);
 
 echo'<br/>';
 echo nstd_to_str($engtext2);
@@ -850,13 +859,11 @@ $engtext2=explode_words_into_morphemes($engtext);
 print_r($engtext2);
 
 //echo'<br/>';
-echo'<pre>';
 $engtext2=order($engtext2);
-print_r($engtext2);
+show_trees($engtext2);
 //just tried order and i see totally incorrect,
 //this, but with ed-pp-s etc: {the [(teacher whom we have met have read the bug that was mentioned) s]}
 //now i am going to edit the order()
-echo'</pre>';
 
 echo'<br/>';
 $words['whom']='кемне';
@@ -870,10 +877,8 @@ $words['be']='бул';
 $words['ed']='ды';
 $words['meet']='очрат';
 $result=tr_simple_block($engtext2);
-//echo'<pre>';
-//print_r($result);
+show_trees($result);
 //var_dump($result);
-//echo'</pre>';
 echo nstd_to_str($result);
 //it is now: тегекемнебезочратпкуйаукытучытегекайсыискәаллганбулдыбагныукыды
 //should be: (теге)без очраткан укытучы (теге)искә алынган багны укыды
@@ -896,14 +901,12 @@ $dic['go']['type']='verb';
 $engtext2=explode_words_into_morphemes($engtext);
 print_r($engtext2);
 
-echo'<pre>';
 $engtext2=order($engtext2);
-print_r($engtext2);
+show_trees($engtext2);
 //i see no ordering (is made). pr-si is used by order(), so i should add it in explode_words_into_morphemes()... for this situation... should only add in $dic
 //$dic['go']['type']='verb';//has not changed anything <-this was incorrect place
 //pr-si (is) added, but (there is) still no order
 //fixed, pr-si is ordered and "i" is ordered
-echo'</pre>';
 
 //i go to school is ordered, try to translate it
 $words['i']='мин';
@@ -912,10 +915,8 @@ $words['day']='көн';
 $words['to']='кә';
 $words['go']='бар';
 $result=tr_simple_block($engtext2);
-echo'<pre>';
-print_r($result);
+show_trees($result);
 //i see pr-si is disappeared
-echo'</pre>';
 //echo'<br/>';
 echo nstd_to_str($result);
 //минһәркөнмәктәпкәбара
@@ -973,17 +974,13 @@ $engtext='we go from park every morning';
 $engtext=explode(' ', $engtext);
 $engtext2=explode_words_into_morphemes($engtext);
 print_r($engtext2);
-echo'<pre>';
 $engtext2=order($engtext2);
-print_r($engtext2);
-echo'</pre>';
+show_trees($engtext2);
 $words['morning']='иртә';
 $words['from']='тан';
 $words['park']='парк';
 $result=tr_simple_block($engtext2);
-echo'<pre>';
-print_r($result);
-echo'</pre>';
+show_trees($result);
 echo nstd_to_str($result);
 //result:безһәриртәпарктанбарабыз
 //better might be: безһәриртәпарктан кайтабыз which means we return / go back / come back ... but it depends on meaning, context
@@ -1000,20 +997,16 @@ $engtext=explode(' ', $engtext);
 $dic['walk']['type']='verb';
 $engtext2=explode_words_into_morphemes($engtext);
 print_r($engtext2);
-echo'<pre>';
 $dic['build']['type']='verb';
 $engtext2=order($engtext2);
-print_r($engtext2);
-echo'</pre>';
+show_trees($engtext2);
 $words['build']='төзе';
 $words['they']='алар';
 $words['walk']='йөре';
 $words['through']='аша';
 $words['year']='ел';
 $result=tr_simple_block($engtext2);
-echo'<pre>';
-print_r($result);
-echo'</pre>';
+show_trees($result);
 echo nstd_to_str($result);
 //after some editions i have аларсоңгыелтөзелганпаркашабара
 //need to fix: соңгы->узган (last). done
@@ -1038,20 +1031,16 @@ $engtext=explode(' ', $engtext);
 $dic['buy']['type']='verb';
 $engtext2=explode_words_into_morphemes($engtext);
 print_r($engtext2);
-echo'<pre>';
 //$dic['build']['type']='verb';
 $engtext2=order($engtext2);
-print_r($engtext2);
-echo'</pre>';
+show_trees($engtext2);
 $words['buy']='сатыпал';
 $words['boy']='малай';
 $words['s']='а';
 $words['a']='бер';
 $words['bicycle']='велосипед';
 $result=tr_simple_block($engtext2);
-echo'<pre>';
-print_r($result);
-echo'</pre>';
+show_trees($result);
 echo nstd_to_str($result);
 //тегекайсыбервелосипедсатыпалдымалайпаркашайөрей
 //should be:
@@ -1444,16 +1433,12 @@ $engtext=explode(' ', $engtext);
 //$dic['buy']['type']='verb';
 $engtext2=explode_words_into_morphemes($engtext);
 print_r($engtext2);
-echo'<pre>';
 //$dic['build']['type']='verb';
 $engtext2=order($engtext2);
-print_r($engtext2);
-echo'</pre>';
+show_trees($engtext2);
 //$words['buy']='сатыпал';
 $result=tr_simple_block($engtext2);
-echo'<pre>';
-print_r($result);
-echo'</pre>';
+show_trees($result);
 echo nstd_to_str($result);
 //just works...
 
@@ -1465,16 +1450,12 @@ $engtext=explode(' ', $engtext);
 //$dic['buy']['type']='verb';
 $engtext2=explode_words_into_morphemes($engtext);
 print_r($engtext2);
-echo'<pre>';
 //$dic['build']['type']='verb';
 $engtext2=order($engtext2);
-print_r($engtext2);
-echo'</pre>';
+show_trees($engtext2);
 //$words['buy']='сатыпал';
 $result=tr_simple_block($engtext2);
-echo'<pre>';
-print_r($result);
-echo'</pre>';
+show_trees($result);
 echo nstd_to_str($result);
 //just works...
 
@@ -1486,16 +1467,12 @@ $engtext=explode(' ', $engtext);
 //$dic['buy']['type']='verb';
 $engtext2=explode_words_into_morphemes($engtext);
 print_r($engtext2);
-echo'<pre>';
 //$dic['build']['type']='verb';
 $engtext2=order($engtext2);
-print_r($engtext2);
-echo'</pre>';
+show_trees($engtext2);
 //$words['buy']='сатыпал';
 $result=tr_simple_block($engtext2);
-echo'<pre>';
-print_r($result);
-echo'</pre>';
+show_trees($result);
 echo nstd_to_str($result);
 //fixed some errors and it works
 

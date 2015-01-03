@@ -11,8 +11,7 @@ $nounlikes['voltage']=array('tt'=>'вольтаж','type'=>'noun');
 $nounlikes['timing']=array('tt'=>'вакытланыш','type'=>'noun');
 $nounlikes['factor']=array('tt'=>'фактор','type'=>'noun');
 $engtext2=explode_into_morphemes($engtext);
-echo'<pre>';
-print_r($engtext2);
+show_trees($engtext2);
 $recursionlevel=0;
 $nounlikes['any']=array('tt'=>'теләсә-кайсы','type'=>'attr');
 $nounlikes['RAM']=array('tt'=>'RAM','type'=>'noun');
@@ -23,15 +22,12 @@ $nounlikes['neither']=array('tt'=>'түгел','type'=>'attr');
 $nounlikes['compatible']=array('tt'=>'ярашучы','type'=>'attr');
 $nounlikes['due']=array('tt'=>'күрә','type'=>'noun');
 $engtext2=order_2($engtext2);
-print_r($engtext2);
-echo'</pre>';
+show_trees($engtext2);
 $recursionlevel=0;
 $nounlikes['backward']=array('tt'=>'артка таба','type'=>'noun');
 $nounlikes['forward']=array('tt'=>'алга таба','type'=>'noun');
 $result=tr_simple_block_2($engtext2);
-echo'<pre>';
-print_r($result);
-echo'</pre>';
+show_trees($result);
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
 //i have now:
@@ -155,28 +151,38 @@ echo nstd_to_str_2($result);
 echo'<br/>';
 $engtext='DDR3 is a DRAM interface specification.';
 $engtext2=explode_into_morphemes($engtext);
-echo'<pre>';
-print_r($engtext2);
-echo'</pre>';
+show_trees($engtext2);
 $nounlikes['specification']=array('tt'=>'спецификация','type'=>'noun');
 $multiwords[]=array('DRAM','interface');
 $recursionlevel=0;
 $engtext2=order_2($engtext2);
-echo'<pre>';
-print_r($engtext2);
-echo'</pre>';
+show_trees($engtext2);
 $nounlikes['DRAM']=array('tt'=>'DRAM','type'=>'noun');
 $recursionlevel=0;
 $result=tr_simple_block_2($engtext2);
-echo'<pre>';
-print_r($result);
-echo'</pre>';
+show_trees($result);
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
 
 
-
-
+//The actual DRAM arrays that store the data are similar to earlier types, with similar performance.
+echo'<br/>';
+$engtext='The actual DRAM arrays that store the data are similar to earlier types, with similar performance.';
+$nounlikes['array']=array('tt'=>'массив','type'=>'noun');
+$verbs['store']=array('tt'=>'сакла');
+$engtext2=explode_into_morphemes($engtext);
+show_trees($engtext2);
+$nounlikes['actual']=array('tt'=>'чын','type'=>'adj');
+$recursionlevel=0;
+$engtext2=order_2($engtext2);
+show_trees($engtext2);
+$nounlikes['similar']=array('tt'=>'охшаш','type'=>'adj');
+$nounlikes['performance']=array('tt'=>'җитештерүчәнлек','type'=>'noun');
+$recursionlevel=0;
+$result=tr_simple_block_2($engtext2);
+show_trees($result);
+$nstd_to_str_2_firstwordisready=false;
+echo nstd_to_str_2($result);
 
 
 

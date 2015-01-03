@@ -360,21 +360,7 @@ function separate_a_mw($inparr){
 
 
 
-
-
-
-
-
-
-//function order_2($inparr,$params){
-function order_2($inparr){
-	global $dic,$multiwords,$nounlikes,$verbs;
-	global $recursionlevel;
-	$recursionlevel++;
-	//echo'in level '.$recursionlevel.'<pre>';print_r($inparr);echo'</pre>';echo'*';
-	//if($recursionlevel==3){echo'in level '.$recursionlevel.'<pre>';print_r($inparr);echo'</pre>';}
-	$outparr=array();
-
+function try_last_plural(&$inparr,&$outparr){
 	if(
 		//isset($inparr[count($inparr)-1]['w'])&&
 		$inparr[count($inparr)-1]['w']=='s-pl'
@@ -386,12 +372,18 @@ function order_2($inparr){
 		// echo'<pre>';print_r($inparr);echo'</pre>*';
 		if(are_all_nouns($try)==true){
 			//echo'OK';exit;
+			//echo'ok:<pre>';print_r($try);echo'</pre>';
 			$try=order_all_nouns($try);
 			$outparr[]=$try;
 			$outparr[]=$tryarr[0];
-			goto return_outparr;//return $outparr;
+			//goto return_outparr;//return $outparr;
+			return true;
 		}
 	}
+	//return false;//default null
+}
+
+function try_last_dot(&$inparr,&$outparr){
 	if(
 		isset($inparr[count($inparr)-1]['w'])
 		&&$inparr[count($inparr)-1]['w']=='.'
@@ -403,22 +395,13 @@ function order_2($inparr){
 		$dot=$dot[0];
 		$outparr[]=$inparr;
 		$outparr[]=$dot;
-		goto return_outparr;//return $outparr;
+		//goto return_outparr;//return $outparr;
+		return true;
 	}
-	// foreach($inparr as $trynoun){
-		// if(
-			// isset($trynoun[1]['w'])
-			// &&$trynoun[1]['w']=='er-comp'
-		// ){
-			// echo'OK';
-		// }
-	// }
+}
 
-	//if($tryallarenouns){
-	if(are_all_nouns($inparr)){
-		return order_all_nouns($inparr);
-	}
-
+function try_introduction(&$inparr,&$outparr){
+	global $dic;
 	foreach($inparr as $key=>$word){
 		if(isset($word['w'])&&$word['w']==','){
 			if(
@@ -465,7 +448,7 @@ function order_2($inparr){
 				array_splice($inparr,0,1);
 				order_2_if_needed($inparr);
 				$outparr[]=$inparr;
-				goto return_outparr;
+				//goto return_outparr;
 				// if($test){
 					// echo 'OK2<pre>';
 					// echo $key;
@@ -474,31 +457,13 @@ function order_2($inparr){
 				// }
 				//break;
 				//after finding 1 introductory i assume there are none other one
+				return true;
 			}
 		}
 	}
-	/*
-	for($i=count($inparr)-1;$i>=0;$i--){
-		if(isset($inparr[$i]['w'])&&$inparr[$i]['w']==','){
-			if(isset($inparr[$i+1]['w'])&&$inparr[$i+1]['w']=='and'){				
-				// $andwhat=array_splice($inparr,$i+2);//...,and[...]
-				// $whatand=array_splice($inparr,0,$i);//[...],and
-				// order_2_if_needed($andwhat);
-				// order_2_if_needed($whatand);
-				// $outparr[]=array($andwhat,array('w'=>'and'));
-				// $outparr[]=$whatand;
-				// goto return_outparr;//return $outparr;
-				// 2014dec9: following was active, but i tried previous code for "an other factors" and i see the previous runs too early, and i ll comment out both
-				// following code was not very good because it left "and" block at end
-				// $andblock=array_splice($inparr,$i+2,count($inparr)-$i-2);
-				// order_2_if_needed($andblock);
-				// array_splice($inparr,count($inparr)-1);//remove last element because there are "," and "and"
-				// $inparr[count($inparr)-1]=array($andblock,array('w'=>'and'));
-				//$outparr
-			}
-		}
-	}
-	*/
+}
+
+function try_comma_the(&$inparr,&$outparr){
 	for($i=0;$i<count($inparr);$i++){
 		if(isset($inparr[$i]['w'])&&$inparr[$i]['w']==','){
 			if(isset($inparr[$i+1]['w'])&&($inparr[$i+1]['w']=='the'||$inparr[$i+1]['w']=='a'||$inparr[$i+1]['w']=='an')){
@@ -526,12 +491,17 @@ function order_2($inparr){
 			}
 		}
 	}
-	//echo'<pre>';
-	//print_r($inparr);
-	//echo'</pre>';
+}
 
+
+function try_order_that_block(&$inparr,&$outparr){
+	global $dic, $verbs;
 	foreach($inparr as $key=>$word){
-		if(isset($word['w'])&&($word['w']=='s'||$word['w']=='pr-si'||$word['w']=='ed')){
+		if(
+			$word['w']=='s'
+			||$word['w']=='pr-si'
+			||$word['w']=='ed'
+		){
 			for($i=0,$dependentcl=0,$whoes=0,$ises=0;$i<$key;$i++){
 				if(isset($inparr[$i]['w'])&&($inparr[$i]['w']=='whom'||$inparr[$i]['w']=='that')){
 					$dependentcl++;
@@ -601,7 +571,12 @@ function order_2($inparr){
 			//i will make it 1st way... i should make only 1 commit from these .. but i have made 2 already. i will left them, and will try to not hurry with commiting further...
 			//btw, i have made {[he ({[(the bug) read] ed-pp} have)] s},
 			//but should not it be {[({he [(the bug) read]} ed-pp) have]s} ? - i think no
-			if($inparr[$key-1]['w']=='have'||$inparr[$key-1]['w']=='be'||isset($dic[$inparr[$key-1]['w']])&&$dic[$inparr[$key-1]['w']]['type']=='verb'){
+			if(
+				$inparr[$key-1]['w']=='have'
+				||$inparr[$key-1]['w']=='be'
+				||$dic[$inparr[$key-1]['w']]['type']=='verb'
+				||isset($verbs[$inparr[$key-1]['w']])
+			){
 				//var_dump($inparr);
 				if(isset($inparr[0]['w'])&&($inparr[0]['w']=='whom'||$inparr[0]['w']=='that')){
 					$whoword=array_splice($inparr,0,1);
@@ -638,7 +613,8 @@ function order_2($inparr){
 						$outparr[]=$andblock;
 						$outparr[]=$inparr;
 					}
-					goto return_outparr;//return $outparr;
+					//goto return_outparr;//return $outparr;
+					return true;
 				}
 				array_splice($inparr,1,1);//remove s
 				//is a modern type of ..., and has been in use since ...
@@ -677,7 +653,8 @@ function order_2($inparr){
 					}
 				}
 				$outparr[]=$word;//outparr1//s or ed or pr-si
-				goto return_outparr;//return $outparr;
+				//goto return_outparr;//return $outparr;
+				return true;
 			}
 			//i have written this, but process goes into the 2nd "have"... i will just comment that out... for now... the s block of the have block... made, and the previous example have been broken... i see he is removed already... i will comment out the he block in have block also. done. previous example works, and i see "the" is already removed in new example. i think hard to fix, try to comment out the the block. done, the previous example is incorrect now. it has incorrect order {[the last known]bug}. then i have commented out block of last noun.
 			//if i just try to order with the, and stop it after checking its top/main word is "s", that will not work if i will check correctly ie not only for "s", but also for present and past simple. no, it will work, but incorrectly. the first "have" is going to be processed first, but it is not main, it is only of dependent clause. i will try to make correctly now, not after trying to order "the". done. ordering "the" is done.
@@ -716,99 +693,14 @@ function order_2($inparr){
 			}*/
 		}
 	}
-	foreach($inparr as $key=>$word){
-		//divide before and after ed past participle at 2nd position
-		if(
-			$key==1
-			&&isset($word['w'])
-			&&$word['w']=='ed-pp'
-			&&count($inparr)>2
-		){
-			//seems 'built last year' should come here but it does not.
-			//probably it goes to the "verb & key=0" in external recursion
-			//that is fixed
-			array_splice($inparr,1,1);//remove ed-pp
-			// if(count($inparr)>1){
-				// $inparr=order_2($inparr);
-			// }
-			order_2_if_needed($inparr);
-			$outparr[]=$inparr;
-			$outparr[1]['w']='ed-pp';
-			goto return_outparr;//return $outparr;
-		}
-	}
-	foreach($inparr as $key=>$word){
-		//separate after verb before noun
-		//read a book
-		//be a modern type ...
-		if(
-			$key==0
-			&&isset($word['w'])
-			&&isset($dic[$word['w']])
-			&&$dic[$word['w']]['type']=='verb'
-			&&(
-				$inparr[1]['w']=='the'
-				||$inparr[1]['w']=='a'
-				||isset($inparr[1]['thisisabbreviation'])
-				||isset($inparr[1]['firstiscapital'])
-			)
-		){
-			for($i=count($inparr)-1-1;$i>=0;$i--){
-				$word2=$inparr[$i];
-				$key2=$i;
-				//is ... and have ...
-				if(($word2['w']=='and')&&isset($verbs[$inparr[$i+1]['w']])){//=='have'
-					$andblock=array_splice($inparr,$key2);
-					$andsblock=array_splice($andblock,1);
-					order_2_if_needed($andsblock);
-					$andblock_new[0]=$andsblock;
-					$andblock_new[1]=$andblock[0];
-					//$and_is_just_ordered=true;
-					if($inparr[count($inparr)-1]['w']==','){
-						unset($inparr[count($inparr)-1]);
-					}
-					order_2_if_needed($inparr,array('and_is_just_ordered'=>true));
-					$outparr[]=$andblock_new;
-					$outparr[]=$inparr;
-					goto return_outparr;//return $outparr;
-				}
-			}
-			array_splice($inparr,0,1);//remove verb
-			//this will work incorrectly with "read the bug through tracker"
-			order_2_if_needed($inparr);
-			$outparr[]=$inparr;
-			$outparr[]=$word;
-			//$outparr[1]['test']='test';
-			goto return_outparr;//return $outparr;
-			//i should make dictionary with (several) properties (instead of word-per-word translations) (i need it now because i need check whether morphem is verb)
-		//}elseif(isset($word['w'])&&$word['w']==','){
-			//if(isset($inparr[$key+1]['w'])&&($inparr[$key+1]['w']=='the'||$inparr[$key+1]['w']=='a'||$inparr[$key+1]['w']=='an')){
-				/*
-				$noun=array_splice($inparr,0,$key);
-				array_splice($inparr,0,1);//remove comma
-				order_2_if_needed($inparr);
-				//$inparr['incommas']=true;
-				order_2_if_needed($noun);
-				$outparr[]=array($inparr,array('w'=>',,'));
-				$outparr[]=$noun;
-				goto return_outparr;//return $outparr;
-				*/
-				/*for($i=$key+1;$key<count($inparr);$i++){
-					if($inparr[$i]==','){
-						break;
-					}
-				}
-				$additionalinfo=array_splice($inparr,$key+1,$i-$key-1);
-				$noun=array_splice($inparr,0,$key);
-				*/
-			//}
-		}
-	}
-	//separate after be... before something ...
+}
+
+
+function try_be_prep(&$inparr,&$outparr){
+	global $dic, $verbs;
 	//be ...ed
 	//be .... from ...
 	//be ... that ...
-	//see also line 1157, 740
 	foreach($inparr as $key=>$word){
 		if(
 			$key==0
@@ -828,7 +720,8 @@ function order_2($inparr){
 					order_2_if_needed($inparr);
 					$outparr[]=$inparr;
 					$outparr[]=$word;
-					goto return_outparr;//return $outparr;
+					//goto return_outparr;//return $outparr;
+					return true;
 				// }else{//try to order "be never ..." ... it has run too early
 					// array_splice($inparr,0,1);//remove be
 					// order_2_if_needed($inparr);
@@ -855,14 +748,18 @@ function order_2($inparr){
 						isset($inparr[$i]['w'])
 						&&(
 							$inparr[$i]['w']=='every'
-							||($inparr[$i]['w']=='to'&&$inparr[$i-1]['w']!='due')
+							||$inparr[$i]['w']=='to'
+							&&$inparr[$i-1]['w']!='due'
+							&&$inparr[$i-1]['w']!='similar'
 							||$inparr[$i]['w']=='from'
 							||$inparr[$i]['w']=='through'
 							||$inparr[$i]['w']=='last'
 							||$inparr[$i]['w']=='about'
 							||$inparr[$i]['w']=='since'
 							||$inparr[$i]['w']=='in'
+							||$inparr[$i]['w']=='with'
 						)
+						&&$inparr[$i-1]['w']!=','
 					){//preposition or adverb
 					//adding ||$inparr[$i]['w']=='since' have not worked "correctly" - it has been separated too early
 					//with 'has been in use since 2007'
@@ -907,21 +804,50 @@ function order_2($inparr){
 						}
 						$outparr[]=$inparr;
 						$outparr[]=$verb;
-						goto return_outparr;//return $outparr;
-					}elseif(isset($inparr[$i]['w'])&&$inparr[$i]['w']=='to'&&$inparr[$i-1]['w']=='due'){
+						//goto return_outparr;//return $outparr;
+						return true;
+					}elseif(
+						$inparr[$i]['w']=='to'
+						&&(
+							$inparr[$i-1]['w']=='due'
+							||$inparr[$i-1]['w']=='similar'
+						)
+					){
 						$verb=array_splice($inparr,0,$i-1);
 						order_2_if_needed($verb);
 						$outparr=array();
+						/*
 						$outparr[]=array();
 						$outparr[]=$verb;
-						$outparr[0][]=array();
-						$outparr[0][]=$inparr[0];//due
+						$outparr[0][0]=array();
+						$outparr[0][1]=$inparr[0];//due
 						$outparr[0][0][1]=$inparr[1];//to
 						array_splice($inparr,0,2);
 						order_2_if_needed($inparr);
 						$outparr[0][0][0]=$inparr;
 						ksort($outparr[0][0]);
 						goto return_outparr;//return $outparr;
+						*/
+						order_2_if_needed($inparr);
+						$outparr[]=$inparr;
+						$outparr[]=$verb;
+						//goto return_outparr;
+						return true;
+					}elseif(
+						(
+							$inparr[$i]['w']=='every'
+							||$inparr[$i]['w']=='to'
+							||$inparr[$i]['w']=='from'
+							||$inparr[$i]['w']=='through'
+							||$inparr[$i]['w']=='last'
+							||$inparr[$i]['w']=='about'
+							||$inparr[$i]['w']=='since'
+							||$inparr[$i]['w']=='in'
+							||$inparr[$i]['w']=='with'
+						)
+						&&$inparr[$i-1]['w']==','
+					){
+						$there_is_comma_prep=true;
 					}
 				}
 				//try to order "be never ..." ... it has run too early
@@ -963,11 +889,17 @@ function order_2($inparr){
 				$outparr[]=$thatsblock;
 				$outparr[]=$inparr;
 				//return 0; // i see teacher whom ... has come here and have been broken. and it is (the 0) - it is not correct. i have added &&$inparr[1]['w']!='er' in condition and it does not come here and is fixed.
-				goto return_outparr;//return $outparr;
+				//goto return_outparr;//return $outparr;
+				return true;
 				//get: {[(that is ...)(through park)] walk} - not correct... but that is not fail of this code.
 			}
 		}
 	}
+}
+
+
+function try_first_prep(&$inparr,&$outparr){
+	//global $dic, $verbs;
 	//divide after preposition
 	//from ...
 	foreach($inparr as $key=>$word){
@@ -1012,12 +944,17 @@ function order_2($inparr){
 				$outparr[1]=$word;
 			}
 			//'they walk through ...' is ordered properly now... going to fix 'the teacher ...'. done
-			goto return_outparr;//return $outparr;
+			//goto return_outparr;//return $outparr;
+			return true;
 			//he had read the last known bug
 			//i see "last know ed bug", it can be {subject verb object}, but it is not "knowed", it is "known", for that i will replace ed to ed-pp (past participle). no. i replace it to en. no. en is used itself in texts, change back.
 		}
 	}
-	// ... that ...
+}
+
+function try_whom(&$inparr,&$outparr){
+	//global $dic, $verbs;
+	// ... / that ...
 	foreach($inparr as $key=>$word){
 		if(isset($word['w'])&&($word['w']=='whom'||$word['w']=='that')&&$key>0){
 			//this code separates : teacher | whom ...
@@ -1036,6 +973,7 @@ function order_2($inparr){
 			//is es and who es are counted inside {who and all after it}
 			if($depcl==-1){
 				//if there is one s without who pair, this is not just a who block
+				//example: +1who ha-1s read go+1es to home
 				//do not process, go out to next word
 				unset($inparrtry);
 				continue;
@@ -1046,20 +984,28 @@ function order_2($inparr){
 			//i have ordered (separated and set in hierarchy) dependent clauses of the example
 			//"if(count($inparrtry)>2){" - this was correct when it was "1"! because 2 words can be in incorrect order! will replace back!
 			//ini_set('memory_limit','512M');
-			if(count($inparrtry)>1){
-				$inparrtry=order_2($inparrtry);
-			}
-			if(count($main)>1){
-				$main=order_2($main);
-			}elseif(count($main)==1){
-				$main=$main[0];
-			}
+			// if(count($inparrtry)>1){
+				// $inparrtry=order_2($inparrtry);
+			// }
+			order_2_if_needed($inparrtry);
+			// if(count($main)>1){
+				// $main=order_2($main);
+			// }elseif(count($main)==1){
+				// $main=$main[0];
+			// }
+			order_2_if_needed($main);
 			//and i get "Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 65488 bytes) in C:\xampp\htdocs\tarjima\index2.php on line 413" after writing the 2 "if" blocks above. try to unset a copy of array. has not helped. will edit php.ini... actually i add ini_set... tried 256M and it says: "Allowed memory size of 268435456 bytes exhausted (tried to allocate 24 bytes)". tried 512M and i see: "Allowed memory size of 536870912 bytes exhausted (tried to allocate 65488 bytes)". i think it goes into infinit recursion... adding the "&&$key>0" in "elseif" above have fixed this.
 			$outparr[]=$inparrtry;
 			$outparr[]=$main;
-			goto return_outparr;//return $outparr;
+			//goto return_outparr;//return $outparr;
+			return true;
 		}
 	}
+}
+
+
+function try_ed_noun(&$inparr,&$outparr){
+	global $dic;
 	//...ed / bug
 	foreach($inparr as $key=>$word){
 		if(isset($word['w'])&&isset($dic[$word['w']])&&$dic[$word['w']]['type']=='noun'&&$key==count($inparr)-1&&isset($inparr[$key-1]['w'])&&$inparr[$key-1]['w']=='ed-pp'){
@@ -1069,21 +1015,32 @@ function order_2($inparr){
 			}
 			$outparr[]=$inparr;
 			$outparr[]=$word;
-			goto return_outparr;//return $outparr;
+			//goto return_outparr;//return $outparr;
 			//i see {last know ed-pp}. {(last know) n} or {last (know n)}? it is (usually) the 1st one, but how to select with program? if it is {last (know n)}, it would be {last (known bug)}...
+			return true;
 		}
 	}
+}
+
+
+function try_adv_verb_ed(&$inparr,&$outparr){
+	//global $dic, $verbs;
 	//last know / ed
 	foreach($inparr as $key=>$word){
 		if(isset($word['w'])&&$word['w']=='last'&&$key==0&&$inparr[1]['w']=='know'&&$inparr[2]['w']=='ed-pp'&&count($inparr)==3){
 			array_splice($inparr,2,1);//remove ed-pp
 			$outparr[]=$inparr;
 			$outparr[]='ed-pp';
-			goto return_outparr;//return $outparr;
+			//goto return_outparr;//return $outparr;
+			return true;
 		}
 	}
-	//see explode func line 159
+}
+
+function try_end_ordinal(&$inparr,&$outparr){
+	//global $dic, $verbs;
 	//... ... / 3 rd mix
+	//see explode func line 159
 	foreach($inparr as $key=>$word){
 		if(isset($word[0]['ordnum'])&&$key=count($inparr)-1){
 			for($i=0,$allwithcapital=true;$i<count($inparr)-1;$i++){
@@ -1094,47 +1051,22 @@ function order_2($inparr){
 			}
 			if($allwithcapital){
 				$edition=array_splice($inparr,-1);
-				if(count($inparr)>1){
-					$inparr=order_2($inparr);
-				}
+				// if(count($inparr)>1){
+					// $inparr=order_2($inparr);
+				// }
+				order_2_if_needed($inparr);
 				$outparr[]=$inparr;
 				$outparr[]=$edition[0];
 				$outparr['thisisheader']=true;
-				goto return_outparr;//return $outparr;
+				//goto return_outparr;//return $outparr;
+				return true;
 			}
 		}
 	}
-	$inparr=separate_a_mw($inparr);
-	if(count($inparr)==2){
-		$outparr=$inparr;
-		goto return_outparr;
-	}
-	if(func_num_args()==2){
-		$params=func_get_arg(1);
-	}
-	//... ... ... / [,] and / ...
-	if(!isset($params['and_is_just_ordered'])){
-		for($i=count($inparr)-1-1;$i>=0;$i--){
-			$word=$inparr[$i];
-			$key=$i;
-			if(isset($word['w'])&&($word['w']=='and'||$word['w']==','||($word['w']=='nor'&&$i==1&&count($inparr)==3))){
-				//echo'OK<pre>';print_r($inparr);exit;
-				$andblock=array_splice($inparr,$key);
-				$andsblock=array_splice($andblock,1);
-				order_2_if_needed($andsblock);
-				$andblock_new[0]=$andsblock;
-				$andblock_new[1]=$andblock[0];
-				//$and_is_just_ordered=true;
-				if($inparr[count($inparr)-1]['w']==','){
-					unset($inparr[count($inparr)-1]);
-				}
-				order_2_if_needed($inparr,array('and_is_just_ordered'=>true));
-				$outparr[]=$andblock_new;
-				$outparr[]=$inparr;
-				goto return_outparr;//return $outparr;
-			}
-		}
-	}
+}
+
+function try_prep_block(&$inparr,&$outparr){
+	//global $dic, $verbs;
 	//separate before preposition
 	//... ... / for ... ...
 	foreach($inparr as $key=>$word){
@@ -1145,6 +1077,7 @@ function order_2($inparr){
 				$word['w']=='for'
 				||$word['w']=='of'
 				||$word['w']=='with'
+				//&&$inparr[$key-1]['w']!=','
 				||($word['w']=='to'&&$inparr[$key-1]['w']!='due')
 				// ||(//has not worked here, too late
 					// $word['w']=='due'
@@ -1167,9 +1100,14 @@ function order_2($inparr){
 			order_2_if_needed($main);
 			$outparr[]=$inparr;
 			$outparr[]=$main;
-			goto return_outparr;//return $outparr;
+			//goto return_outparr;//return $outparr;
+			return true;
 		}
 	}
+}
+
+function try_first_be(&$inparr,&$outparr){
+	//global $dic, $verbs;
 	//separate after be
 	//be / ... ...
 	//see also line 790, 740
@@ -1180,26 +1118,13 @@ function order_2($inparr){
 		$outparr[]=$inparr;
 		$outparr[]=$word[0];
 		//$outparr[1]['test']='test';
-		goto return_outparr;//return $outparr;
+		//goto return_outparr;//return $outparr;
+		return true;
 	}
-	if(isset($params['and_is_just_ordered'])){
-		for($i=count($inparr)-1;$i>=0;$i--){
-			$word=$inparr[$i];
-			$key=$i;
-			if(isset($word['w'])&&($word['w']=='and')){
-				$andblock=array_splice($inparr,$key);
-				$andsblock=array_splice($andblock,1);
-				order_2_if_needed($andsblock);
-				$andblock_new[0]=$andsblock;
-				$andblock_new[1]=$andblock[0];
-				//$and_is_just_ordered=true;
-				order_2_if_needed($inparr,array('and_is_just_ordered'=>true));
-				$outparr[]=$andblock_new;
-				$outparr[]=$inparr;
-				goto return_outparr;//return $outparr;
-			}
-		}
-	}
+}
+
+function try_first_an(&$inparr,&$outparr){
+	//global $dic, $verbs;
 	foreach($inparr as $key=>$word){
 		if(isset($word['w'])&&($word['w']=='a'||$word['w']=='an')&&$key==0){
 		//an abbreviation
@@ -1222,12 +1147,166 @@ function order_2($inparr){
 				order_2_if_needed($inparr);
 				$outparr[]=$an;
 				$outparr[]=$inparr;
-				goto return_outparr;//return $outparr;
+				//goto return_outparr;//return $outparr;
+				return true;
 			}
 		}
 		//elseif(isset($word['w'])&&isset($inparr[$key+1])&&$word['w']=='type'&&$inparr[$key+1]=='three'){
 		//}
 	}
+}
+
+
+function try_last_attr(&$inparr,&$outparr){
+	global $nounlikes;
+	if(isset($nounlikes[ $inparr[count($inparr)-1]['w'] ] )&& $nounlikes[ $inparr[count($inparr)-1]['w'] ]['type']=='attr' ){
+		$last=array_splice($inparr,-1);
+		order_2_if_needed($inparr);
+		$outparr[]=$inparr;
+		$outparr[]=$last[0];
+		//goto return_outparr;
+		return true;
+	}
+}
+
+function try_first_attr(&$inparr,&$outparr){
+	global $nounlikes;
+	if(isset($nounlikes[$inparr[0]['w']])&&$nounlikes[$inparr[0]['w']]['type']=='attr'){
+		$try=$inparr;
+		array_splice($try,0,1);
+		order_2_if_needed($try);
+		if(count($try)==2){//temporary version of check of success
+			$outparr[]=$inparr[0];
+			$outparr[]=$try;
+			//goto return_outparr;
+			return true;
+		}
+	}
+}
+
+
+function try_and_block(&$inparr,&$outparr){
+	//global $nounlikes;
+	for($i=count($inparr)-1-1;$i>=0;$i--){
+		$word=$inparr[$i];
+		$key=$i;
+		if(isset($word['w'])&&($word['w']=='and'||$word['w']==','||($word['w']=='nor'&&$i==1&&count($inparr)==3))){
+			//echo'OK<pre>';print_r($inparr);exit;
+			$andblock=array_splice($inparr,$key);
+			$andsblock=array_splice($andblock,1);
+			order_2_if_needed($andsblock);
+			$andblock_new[0]=$andsblock;
+			$andblock_new[1]=$andblock[0];
+			//$and_is_just_ordered=true;
+			if($inparr[count($inparr)-1]['w']==','){
+				unset($inparr[count($inparr)-1]);
+			}
+			order_2_if_needed($inparr,array('and_is_just_ordered'=>true));
+			$outparr[]=$andblock_new;
+			$outparr[]=$inparr;
+			//goto return_outparr;//return $outparr;
+			return true;
+		}
+	}
+}
+
+
+
+//function order_2($inparr,$params){
+function order_2($inparr){
+	global $dic,$multiwords,$nounlikes,$verbs;
+	global $recursionlevel;
+	$recursionlevel++;
+	//echo'in level '.$recursionlevel.'<pre>';print_r($inparr);echo'</pre>';echo'*';
+	//if($recursionlevel==3){echo'in level '.$recursionlevel.'<pre>';print_r($inparr);echo'</pre>';}
+	$outparr=array();
+	if(try_last_plural($inparr,$outparr)){goto return_outparr;}
+	if(try_last_dot($inparr,$outparr)){goto return_outparr;}
+	// foreach($inparr as $trynoun){
+		// if(
+			// isset($trynoun[1]['w'])
+			// &&$trynoun[1]['w']=='er-comp'
+		// ){
+			// echo'OK';
+		// }
+	// }
+
+	//if($tryallarenouns){
+	if(are_all_nouns($inparr)){
+		return order_all_nouns($inparr);
+	}
+	if(try_introduction($inparr,$outparr)){goto return_outparr;}
+	/*
+	for($i=count($inparr)-1;$i>=0;$i--){
+		if(isset($inparr[$i]['w'])&&$inparr[$i]['w']==','){
+			if(isset($inparr[$i+1]['w'])&&$inparr[$i+1]['w']=='and'){
+				// $andwhat=array_splice($inparr,$i+2);//...,and[...]
+				// $whatand=array_splice($inparr,0,$i);//[...],and
+				// order_2_if_needed($andwhat);
+				// order_2_if_needed($whatand);
+				// $outparr[]=array($andwhat,array('w'=>'and'));
+				// $outparr[]=$whatand;
+				// goto return_outparr;//return $outparr;
+				// 2014dec9: following was active, but i tried previous code for "an other factors" and i see the previous runs too early, and i ll comment out both
+				// following code was not very good because it left "and" block at end
+				// $andblock=array_splice($inparr,$i+2,count($inparr)-$i-2);
+				// order_2_if_needed($andblock);
+				// array_splice($inparr,count($inparr)-1);//remove last element because there are "," and "and"
+				// $inparr[count($inparr)-1]=array($andblock,array('w'=>'and'));
+				//$outparr
+			}
+		}
+	}
+	*/
+	try_comma_the($inparr,$outparr);
+	//echo'<pre>';
+	//print_r($inparr);
+	//echo'</pre>';
+
+	if(try_order_that_block($inparr,$outparr)){goto return_outparr;}
+	if(try_be_prep($inparr,$outparr)){goto return_outparr;}
+	if(try_first_prep($inparr,$outparr)){goto return_outparr;}
+	if(try_whom($inparr,$outparr)){goto return_outparr;}
+	if(try_ed_noun($inparr,$outparr)){goto return_outparr;}
+	if(try_adv_verb_ed($inparr,$outparr)){goto return_outparr;}
+	if(try_adv_verb_ed($inparr,$outparr)){goto return_outparr;}
+	if(try_end_ordinal($inparr,$outparr)){goto return_outparr;}
+	$inparr=separate_a_mw($inparr);
+	if(count($inparr)==2){
+		$outparr=$inparr;
+		goto return_outparr;
+	}
+	if(func_num_args()==2){
+		$params=func_get_arg(1);
+	}
+	//... ... ... / [,] and / ...
+	if(!isset($params['and_is_just_ordered'])){
+		if(try_and_block($inparr,$outparr)){goto return_outparr;}
+	}
+	if(try_prep_block($inparr,$outparr)){goto return_outparr;}
+	if(try_first_be($inparr,$outparr)){goto return_outparr;}
+	if(isset($params['and_is_just_ordered'])){
+		if(try_and_block($inparr,$outparr)){goto return_outparr;}
+		/*
+		for($i=count($inparr)-1;$i>=0;$i--){
+			$word=$inparr[$i];
+			$key=$i;
+			if(isset($word['w'])&&($word['w']=='and')){
+				$andblock=array_splice($inparr,$key);
+				$andsblock=array_splice($andblock,1);
+				order_2_if_needed($andsblock);
+				$andblock_new[0]=$andsblock;
+				$andblock_new[1]=$andblock[0];
+				//$and_is_just_ordered=true;
+				order_2_if_needed($inparr,array('and_is_just_ordered'=>true));
+				$outparr[]=$andblock_new;
+				$outparr[]=$inparr;
+				goto return_outparr;//return $outparr;
+			}
+		}
+		*/
+	}
+	if(try_first_an($inparr,$outparr)){goto return_outparr;}
 	//foreach($inparr as $key=>$word){
 		// if($key==0&&isset($word[1]['w'])&&$word[1]['w']==','){
 			// $intro=$word;
@@ -1251,23 +1330,8 @@ function order_2($inparr){
 		}
 		*/
 	//}
-	if(isset($nounlikes[ $inparr[count($inparr)-1]['w'] ] )&& $nounlikes[ $inparr[count($inparr)-1]['w'] ]['type']=='attr' ){
-		$last=array_splice($inparr,-1);
-		order_2_if_needed($inparr);
-		$outparr[]=$inparr;
-		$outparr[]=$last[0];
-		goto return_outparr;
-	}
-	if(isset($nounlikes[$inparr[0]['w']])&&$nounlikes[$inparr[0]['w']]['type']=='attr'){
-		$try=$inparr;
-		array_splice($try,0,1);
-		order_2_if_needed($try);
-		if(count($try)==2){//temporary version of check of success
-			$outparr[]=$inparr[0];
-			$outparr[]=$try;
-			goto return_outparr;
-		}
-	}
+	if(try_last_attr($inparr,$outparr)){goto return_outparr;}
+	if(try_first_attr($inparr,$outparr)){goto return_outparr;}
 
 
 

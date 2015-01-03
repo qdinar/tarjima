@@ -190,9 +190,19 @@ function explode_into_morphemes($engtext){
 				}
 			}
 		}
-		elseif(isset($dic[$word])&&$dic[$word]['type']=='verb'){
+		elseif(
+			$dic[$word]['type']=='verb'
+			||isset($verbs[$word])
+		){
 			$engtext2[]=$word;
 			//$engtext2[]='pr-si';//present simple <-comment this out, i think it should be in order function
+			if( count($engtext2)>1 && $engtext2[count($engtext2)-1]!='"' ){
+				$engtext2[]='pr-si';
+			}
+		}
+		elseif($word=='are'){
+			$engtext2[]='be';
+			$engtext2[]='pr-si';
 		}
 		elseif($upperafterlower){
 			$separated=preg_split('/(?=[A-Z0-9])(?<=[a-z])/',$word);
