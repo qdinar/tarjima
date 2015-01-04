@@ -501,11 +501,130 @@ new example is started and done
 and previous examples are fixed
 and "noun noun" code is made more clear.
 my (programmer , dinar qurbanov's) work time for previous sentence is calculated.
--2210
+-2210-
+commit to master (open source) 8500849326bca6f69a10fa00c14f25fd2c48359a
+that example is done and new example is done
+and "noun noun" code is made more clear.
+my (programmer , dinar qurbanov's) work time for previous sentence is calculated.
+-2218
+
+2251-
+new example
+The actual DRAM arrays that store the data are similar to earlier types, with similar performance.
+nearly -2304
+2318-
+be similar to earlier types, with similar performance
+is ordered as
+{be similar} {to {{earlier types} {, with similar performance}}}
+but it should be
+{be {{similar to earlier types}{, with similar performance}}}
+-2328
 
 
+new year 2015
+
+jan1
+0140-0141
+
+jan2
+2144-
+-2154
+2156-
+ready: {be {{similar to earlier types}{, with similar performance}}}
+-2233-
+"that store the data" is not ordered.
+it should be:
+0{
+	0that
+	1{
+		0{
+			0the
+			1data
+		}
+		1store
+	}
+}
+1pr-si
+-2259-
+-2318
+
+jan3
+940-950
+1004-
+is it
+actual dram arrays
+that store the data
+or
+actual
+dram arrays that store the data
+?
+so, sometimes things have almost same priority
+-1056
+1123-
+i think it is the second
+-1142
+1405-
+move trying different orderings in separate functions
+-1454
+1709-
+separated all orderings
+made function to show tree
+-1807-
+commit into closed source
+510ad7fe40f732eeb43f18e3834c423ff4ae8138
+new example
+new example;
+make different orderings in separate functions;
+make function for showings of trees;
+-1814
+
+2204-
+-2224
 
 
+jan4
+1304-1327
+nearly 1450-
+-1454
+1546-
+i want to make order function "from scratch"
+but i should try to work with current function
+i am starting new function
+how to find top(root) verb?
+... ...s ...
+(... that ...s ...) ...s ...
+... ...s ... (... that ...s ...)
+(... that ...s ...) ...s ... (... that ...s ...)
+-1738
+1837-
+closed source commit
+daf047a6dac58bf3469df7cdb552b1cb044a5e98
+new order function
+and also new explode function
+-1839-
+actual dram array s
+it is
+actual (dram array s)
+and it is not
+(actual dram array) s
+how to find that?
+-1901-
+-1946
+1949-
+-1
+latest example is almost ordered
+all other examples are not made yet with new order function
+noun phrases are left inordered:
+the data (ready)
+actual dram array s
+similar performance (ready)
+early er type s
+i can translate these ones as they are without ordering because morphem order is same in tatar
+-2134-
+commit to closed source
+a0e7ce6b09c72c368584817aaa3be038c032f16b
+latest example is almost ready
+-2138
 
 
 
