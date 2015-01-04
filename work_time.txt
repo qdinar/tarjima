@@ -571,9 +571,74 @@ separated all orderings
 made function to show tree
 -1807-
 commit into closed source
+510ad7fe40f732eeb43f18e3834c423ff4ae8138
 new example
 new example;
 make different orderings in separate functions;
 make function for showings of trees;
+-1814
+
+2204-
+-2224
+
+
+jan4
+1304-1327
+nearly 1450-
+-1454
+1546-
+i want to make order function "from scratch"
+but i should try to work with current function
+i am starting new function
+how to find top(root) verb?
+... ...s ...
+(... that ...s ...) ...s ...
+... ...s ... (... that ...s ...)
+(... that ...s ...) ...s ... (... that ...s ...)
+-1738
+1837-
+closed source commit
+daf047a6dac58bf3469df7cdb552b1cb044a5e98
+new order function
+and also new explode function
+-1839-
+actual dram array s
+it is
+actual (dram array s)
+and it is not
+(actual dram array) s
+how to find that?
+-1901-
+-1946
+1949-
+-1
+latest example is almost ordered
+all other examples are not made yet with new order function
+noun phrases are left inordered:
+the data (ready)
+actual dram array s
+similar performance (ready)
+early er type s
+i can translate these ones as they are without ordering because morphem order is same in tatar
+-2134
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
