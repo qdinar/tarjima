@@ -498,15 +498,19 @@ function try_order_that_block(&$inparr,&$outparr){
 	global $dic, $verbs;
 	foreach($inparr as $key=>$word){
 		if(
-			$word['w']=='s'
-			||$word['w']=='pr-si'
-			||$word['w']=='ed'
+			// $word['w']=='s'
+			// ||$word['w']=='pr-si'
+			// ||$word['w']=='ed'
+			isset($verbs[$word['w']])
 		){
 			for($i=0,$dependentcl=0,$whoes=0,$ises=0;$i<$key;$i++){
-				if(isset($inparr[$i]['w'])&&($inparr[$i]['w']=='whom'||$inparr[$i]['w']=='that')){
+				if($inparr[$i]['w']=='whom'||$inparr[$i]['w']=='that'){
 					$dependentcl++;
 					$whoes++;
-				}elseif(isset($inparr[$i]['w'])&&($inparr[$i]['w']=='s'||$inparr[$i]['w']=='pr-si'||$inparr[$i]['w']=='ed')){
+				}elseif(
+					//$inparr[$i]['w']=='s'||$inparr[$i]['w']=='pr-si'||$inparr[$i]['w']=='ed'
+					isset($verbs[$word['w']])
+				){
 					$dependentcl--;
 					$ises++;
 				}
@@ -544,8 +548,11 @@ function try_order_that_block(&$inparr,&$outparr){
 					//this is dependent clause if no "who" is here further
 					$maybeadepcl=true;
 					for($i=$key+1;$i<count($inparr);$i++){
-						if($inparr[$i]['w']=='whom'||$inparr[$i]['w']=='that'
-						||$inparr[$i]['w']=='s'||$inparr[$i]['w']=='pr-si'||$inparr[$i]['w']=='ed'){
+						if(
+							$inparr[$i]['w']=='whom'||$inparr[$i]['w']=='that'
+							//||$inparr[$i]['w']=='s'||$inparr[$i]['w']=='pr-si'||$inparr[$i]['w']=='ed'
+							||isset($verbs[$word['w']])
+						){
 							//there is another dep. clause
 							$maybeadepcl=false;
 							break;
@@ -578,6 +585,7 @@ function try_order_that_block(&$inparr,&$outparr){
 				||isset($verbs[$inparr[$key-1]['w']])
 			){
 				//var_dump($inparr);
+				echo'OK';show_trees($inparr);
 				if(isset($inparr[0]['w'])&&($inparr[0]['w']=='whom'||$inparr[0]['w']=='that')){
 					$whoword=array_splice($inparr,0,1);
 					$whoword=$whoword[0];
@@ -704,8 +712,6 @@ function try_be_prep(&$inparr,&$outparr){
 	foreach($inparr as $key=>$word){
 		if(
 			$key==0
-			&&isset($word['w'])
-			&&isset($dic[$word['w']])
 			&&$dic[$word['w']]['type']=='verb'
 			&&$inparr[1]['w']!='ed-pp'
 			&&$inparr[1]['w']!='er'
@@ -1186,6 +1192,7 @@ function try_first_attr(&$inparr,&$outparr){
 
 
 function try_and_block(&$inparr,&$outparr){
+	//... ... ... / [,] and / ...
 	//global $nounlikes;
 	for($i=count($inparr)-1-1;$i>=0;$i--){
 		$word=$inparr[$i];
@@ -1222,53 +1229,17 @@ function order_2($inparr){
 	$outparr=array();
 	if(try_last_plural($inparr,$outparr)){goto return_outparr;}
 	if(try_last_dot($inparr,$outparr)){goto return_outparr;}
-	// foreach($inparr as $trynoun){
-		// if(
-			// isset($trynoun[1]['w'])
-			// &&$trynoun[1]['w']=='er-comp'
-		// ){
-			// echo'OK';
-		// }
-	// }
-
-	//if($tryallarenouns){
 	if(are_all_nouns($inparr)){
 		return order_all_nouns($inparr);
 	}
 	if(try_introduction($inparr,$outparr)){goto return_outparr;}
-	/*
-	for($i=count($inparr)-1;$i>=0;$i--){
-		if(isset($inparr[$i]['w'])&&$inparr[$i]['w']==','){
-			if(isset($inparr[$i+1]['w'])&&$inparr[$i+1]['w']=='and'){
-				// $andwhat=array_splice($inparr,$i+2);//...,and[...]
-				// $whatand=array_splice($inparr,0,$i);//[...],and
-				// order_2_if_needed($andwhat);
-				// order_2_if_needed($whatand);
-				// $outparr[]=array($andwhat,array('w'=>'and'));
-				// $outparr[]=$whatand;
-				// goto return_outparr;//return $outparr;
-				// 2014dec9: following was active, but i tried previous code for "an other factors" and i see the previous runs too early, and i ll comment out both
-				// following code was not very good because it left "and" block at end
-				// $andblock=array_splice($inparr,$i+2,count($inparr)-$i-2);
-				// order_2_if_needed($andblock);
-				// array_splice($inparr,count($inparr)-1);//remove last element because there are "," and "and"
-				// $inparr[count($inparr)-1]=array($andblock,array('w'=>'and'));
-				//$outparr
-			}
-		}
-	}
-	*/
 	try_comma_the($inparr,$outparr);
-	//echo'<pre>';
-	//print_r($inparr);
-	//echo'</pre>';
-
+	//show_trees($inparr);
 	if(try_order_that_block($inparr,$outparr)){goto return_outparr;}
 	if(try_be_prep($inparr,$outparr)){goto return_outparr;}
 	if(try_first_prep($inparr,$outparr)){goto return_outparr;}
 	if(try_whom($inparr,$outparr)){goto return_outparr;}
 	if(try_ed_noun($inparr,$outparr)){goto return_outparr;}
-	if(try_adv_verb_ed($inparr,$outparr)){goto return_outparr;}
 	if(try_adv_verb_ed($inparr,$outparr)){goto return_outparr;}
 	if(try_end_ordinal($inparr,$outparr)){goto return_outparr;}
 	$inparr=separate_a_mw($inparr);
@@ -1279,7 +1250,6 @@ function order_2($inparr){
 	if(func_num_args()==2){
 		$params=func_get_arg(1);
 	}
-	//... ... ... / [,] and / ...
 	if(!isset($params['and_is_just_ordered'])){
 		if(try_and_block($inparr,$outparr)){goto return_outparr;}
 	}
@@ -1287,54 +1257,10 @@ function order_2($inparr){
 	if(try_first_be($inparr,$outparr)){goto return_outparr;}
 	if(isset($params['and_is_just_ordered'])){
 		if(try_and_block($inparr,$outparr)){goto return_outparr;}
-		/*
-		for($i=count($inparr)-1;$i>=0;$i--){
-			$word=$inparr[$i];
-			$key=$i;
-			if(isset($word['w'])&&($word['w']=='and')){
-				$andblock=array_splice($inparr,$key);
-				$andsblock=array_splice($andblock,1);
-				order_2_if_needed($andsblock);
-				$andblock_new[0]=$andsblock;
-				$andblock_new[1]=$andblock[0];
-				//$and_is_just_ordered=true;
-				order_2_if_needed($inparr,array('and_is_just_ordered'=>true));
-				$outparr[]=$andblock_new;
-				$outparr[]=$inparr;
-				goto return_outparr;//return $outparr;
-			}
-		}
-		*/
 	}
 	if(try_first_an($inparr,$outparr)){goto return_outparr;}
-	//foreach($inparr as $key=>$word){
-		// if($key==0&&isset($word[1]['w'])&&$word[1]['w']==','){
-			// $intro=$word;
-			// array_splice($inparr,0,1);//remove it
-			// order_2_if_needed($inparr);
-			// $outparr[]=$intro;
-			// $outparr[]=$inparr;
-			// goto return_outparr;//return $outparr;
-		// }
-		/*
-		elseif(isset($word['w'])&&($word['w']=='and')){
-			$andblock=array_splice($inparr,$key);
-			$andsblock=array_splice($andblock,1);
-			order_2($andsblock);
-			$andblock_new[0]=$andsblock;
-			$andblock_new[1]=$andblock[0];
-			order_2_if_needed($inparr);
-			$outparr[]=$andblock_new;
-			$outparr[]=$inparr;
-			goto return_outparr;//return $outparr;
-		}
-		*/
-	//}
 	if(try_last_attr($inparr,$outparr)){goto return_outparr;}
 	if(try_first_attr($inparr,$outparr)){goto return_outparr;}
-
-
-
 	//echo'out level '.$recursionlevel.'<pre>';print_r($inparr);echo'</pre>';
 	$recursionlevel--;
 	return $inparr;
@@ -1346,6 +1272,48 @@ function order_2($inparr){
 		return $outparr;
 	}
 }
+
+
+
+
+
+
+
+/*
+for($i=count($inparr)-1;$i>=0;$i--){
+	$word=$inparr[$i];
+	$key=$i;
+	if(isset($word['w'])&&($word['w']=='and')){
+		$andblock=array_splice($inparr,$key);
+		$andsblock=array_splice($andblock,1);
+		order_2_if_needed($andsblock);
+		$andblock_new[0]=$andsblock;
+		$andblock_new[1]=$andblock[0];
+		//$and_is_just_ordered=true;
+		order_2_if_needed($inparr,array('and_is_just_ordered'=>true));
+		$outparr[]=$andblock_new;
+		$outparr[]=$inparr;
+		goto return_outparr;//return $outparr;
+	}
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ?>

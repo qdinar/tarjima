@@ -1,6 +1,7 @@
 <?php
+
 //explode string/sentence into grammatical morphemes
-function explode_into_morphemes($engtext){
+function explode_3($engtext){
 	$engtext=preg_split('/(?=[^a-zA-Z0-9])|(?<=[^a-zA-Z0-9])/',$engtext);
 	foreach($engtext as $key=>$word){
 		if(
@@ -80,7 +81,7 @@ function explode_into_morphemes($engtext){
 				$tryverb=$remaining;
 				if(isset($dic[$tryverb])&&$dic[$tryverb]['type']=='verb'){
 					$engtext2[]=$tryverb;
-					$engtext2[]='pr-si';
+					$engtext2[]='v-s';
 				}
 				elseif(isset($nounlikes[$tryverb])){
 					$engtext2[]=$tryverb;
@@ -199,13 +200,12 @@ function explode_into_morphemes($engtext){
 			$engtext2[]=$word;
 			//$engtext2[]='pr-si';//present simple <-comment this out, i think it should be in order function
 			if( count($engtext2)>1 && $engtext2[count($engtext2)-1]!='"' ){
-				$engtext2[]='pr-si';
+				$engtext2[]='v-0';
 			}
 		}
 		elseif($word=='are'){
 			$engtext2[]='be';
-			$engtext2[]='pr-si';//present simple
-			//$engtext2[]='pr-pl';//present simple plural
+			$engtext2[]='v-re';//present simple plural
 		}
 		elseif($upperafterlower){
 			$separated=preg_split('/(?=[A-Z0-9])(?<=[a-z])/',$word);
@@ -239,7 +239,7 @@ function explode_into_morphemes($engtext){
 			}
 		}
 		*/
-		$engtext2=set_w_keys($engtext2,$i);
+		$engtext2=set_w_keys_3($engtext2,$i);
 		if($firstiscapital){
 			$firstiscapital=false;
 			$engtext2[$i]['firstiscapital']=true;
@@ -256,7 +256,7 @@ function explode_into_morphemes($engtext){
 
 
 
-function set_w_keys($engtext2,$i){
+function set_w_keys_3($engtext2,$i){
 	for($j=$i;$j<count($engtext2);$j++){
 		if(!is_array($engtext2[$j])){
 			$engtext2[$j]=array('w'=>$engtext2[$j]);

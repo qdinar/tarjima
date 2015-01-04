@@ -185,6 +185,51 @@ $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
 
 
+include 'explode_3.php';
+$engtext2=explode_3($engtext);
+include 'order_3.php';
+$engtext2=order_a_sentence_3($engtext2);
+show_trees($engtext2);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
