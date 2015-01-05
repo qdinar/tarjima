@@ -595,6 +595,7 @@ how to find top(root) verb?
 (... that ...s ...) ...s ...
 ... ...s ... (... that ...s ...)
 (... that ...s ...) ...s ... (... that ...s ...)
+comment at jan5: new marks for present simple verb endings were introduced, v-0, v-s, v-re
 -1738
 1837-
 closed source commit
@@ -615,30 +616,67 @@ how to find that?
 latest example is almost ordered
 all other examples are not made yet with new order function
 noun phrases are left inordered:
-the data (ready)
-actual dram array s
-similar performance (ready)
-early er type s
-i can translate these ones as they are without ordering because morphem order is same in tatar
--2134
+"the data" (ready)
+"actual dram array s"
+"similar performance" (ready)
+"early er type s"
+i can translate these ones as they are, without ordering, because morphem order is same in tatar
+-2134-
+commit to closed source
+a0e7ce6b09c72c368584817aaa3be038c032f16b
+latest example is almost ready
+-2138-
+commit to master
+a5ddaf41c021693d452e5387379c751a0ad6bce4
+new example and new order function
+and all other examples are not made yet with new order function
+-2143-
+-2146
 
+2222-
+now i have
+Кайсы мәгълүмат сакла й чын DRAMмассивлар иртәрәктөрларкә охшаш, охшаш җитештерүчәнлек белән бул алар.
+for the latest example
+(The actual DRAM arrays that store the data are similar to earlier types, with similar performance.)
+-2310
 
+jan5
+1301-
+-1420
 
+1555-
+Мәгълүмат сакла учы чын DRAMмассивлар — иртәрәктөрләргә охшаш, охшаш җитештерүчәнлек белән.
+-1608
 
+1623-
+Мәгълүмат саклаучы асыл DRAM массивлар — иртәрәк төрләргә охшаш, охшаш җитештерүчәнлек белән.
+there ы should be used instead of the.
+-1626-
+-1636
+1643-
+Шул шул мәгълүматыны саклаучы асыл DRAM массивлар-ы — иртәрәк төрләргә охшаш, охшаш җитештерүчәнлек белән.
+there are 2 cases of 'the':
+"store the data"
+and
+"The actual DRAM arrays that ...".
+in tatar i would say
+"мәгълүматны сакла..."
+and
+"... асыл массивлары ..."
+. ie in 1st "the" is removed, "ы" is not added;
+in 2nd, "the" is removed, "ы" is added;
+and "ны" is added in case verb to which this word is object, is not "be" , that works correctly for both cases for now;
+-1700-
+Мәгълүматыны саклаучы асыл DRAM массивлар-ы — иртәрәк төрләргә охшаш, охшаш җитештерүчәнлек белән.
+it is ok with ы in both cases
+-1701-
+Мәгълүматыны саклаучы асыл DRAM массивлары — иртәрәк төрләргә охшаш, охшаш җитештерүчәнлек белән.
+it is ready
+-1713-
+-1715-
+commit
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+the latest example itself is ready
+-1718
 
 

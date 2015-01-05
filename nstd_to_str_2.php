@@ -1,5 +1,8 @@
 <?php
 function nstd_to_str_2($nstd){
+	global $prev_w;
+	//echo '*',$prev_w;
+	//show_tree_3($nstd);
 	$result='';
 	//global $firstletterofsentenceiscapital;
 	global $nstd_to_str_2_firstwordisready;
@@ -82,6 +85,7 @@ function nstd_to_str_2($nstd){
 			goto ret_res;
 		}
 	}
+	//echo '*',$prev_w;
 	if(!isset($nstd[0]['w'])){
 		$result.=nstd_to_str_2($nstd[0]);
 	}else{
@@ -93,6 +97,7 @@ function nstd_to_str_2($nstd){
 			$word='тизлег';
 		}
 		$result.=$word;
+		$prev_w=$word;
 		$nstd_to_str_2_firstwordisready=true;
 	}
 	/*
@@ -103,6 +108,7 @@ function nstd_to_str_2($nstd){
 		}
 	}
 	*/
+//==============================================================================2 of 2
 	if(!isset($nstd[1]['w'])){
 		if(!isset($nstd[1][0]['w'])||$nstd[1][0]['w']!=','){
 			$result.=' ';
@@ -114,12 +120,16 @@ function nstd_to_str_2($nstd){
 		*/
 		$result.=nstd_to_str_2($nstd[1]);
 	}else{
+		//echo '*',$prev_w;
 		$word=$nstd[1]['w'];
 		if(isset($nstd[1]['firstiscapital'])&&$nstd[1]['firstiscapital']==true||!$nstd_to_str_2_firstwordisready){
 			$word=mb_strtoupper(mb_substr($word,0,1)).mb_substr($word,1);
 		}
 		//if($word=='ле'){echo'OK';exit;}
 		$main=get_tr_last_word($nstd[0]);
+		// echo'***';
+		// show_tree_3($nstd[0]);
+		// show_tree_3($main);
 		if(
 			$word!='.'&&$word!=','&&
 			$word!='не'&&$word!='ы'&&$word!='гыз'
@@ -127,6 +137,7 @@ function nstd_to_str_2($nstd){
 			&&$word!='п'&&$word!='кә'&&$word!='у'
 			&&$word!='рәк'&&$word!='лар'&&$word!='а'
 			&&$word!='ның'&&$word!='дәге'&&$word!='ган'
+			&&$word!='учы'
 			&&$word!='intro'
 		){
 			//кушымчалардан башкаларын айырып язасы
@@ -142,9 +153,10 @@ function nstd_to_str_2($nstd){
 			$result.='-';
 		}
 		elseif($word=='п'||$word=='нче'){
-			$main=get_main_word($nstd[0]);
-			if(last_conson($main['w'])){
-				if(is_soft($main['w'])){
+			//$main=get_main_word($nstd[0]);
+			//$main=$prev_w;
+			if(last_conson($prev_w)){
+				if(is_soft($prev_w)){
 					$result.='е';
 				}else{
 					$result.='ы';
@@ -154,8 +166,9 @@ function nstd_to_str_2($nstd){
 		// }elseif($word==' ле'){
 			// $result.='***';
 		}elseif($word=='ы'){
-			$main=get_tr_last_word($nstd[0]);
-			if(!last_conson($main['w'])){
+			//$main=get_tr_last_word($nstd[0]);
+			//$main=$prev_w;
+			if(!last_conson($prev_w)){
 				$result.='с';
 			}
 		}else{
@@ -171,32 +184,34 @@ function nstd_to_str_2($nstd){
 				// $word='гә';
 			// }
 		// }
-		$lastword=get_tr_last_word($nstd[0]);
+		//$lastword=get_tr_last_word($nstd[0]);
+		//$lastword=$prev_w;
 		if($word=='ы'){
-			if(is_soft($lastword['w'])){
+			if(is_soft($prev_w)){
 				$word='е';
 			}
 		}
 		elseif($word=='ле'){
-			if($lastword['w']=='ы'){
+			if($prev_w=='ы'){
 				$word='нле';
 			}else{
-				if(!is_soft($lastword['w'])){
+				if(!is_soft($prev_w)){
 					$word='лы';
 				}
 			}
 		}
 		elseif($word=='у'){
-			if(is_soft($lastword['w'])){
+			if(is_soft($prev_w)){
 				$word='ү';
 			}
 		}
 		elseif($word=='кә'){
-			if($lastword['w']=='ы'){
+			//echo '*',$prev_w['w'];
+			if($prev_w=='ы'){
 				$word='на';
 			}else{
-				$isbreath=is_breath($lastword['w']);
-				if(!is_soft($lastword['w'])){
+				$isbreath=is_breath($prev_w);
+				if(!is_soft($prev_w)){
 					if($isbreath){
 						$word='ка';
 					}else{
@@ -212,11 +227,11 @@ function nstd_to_str_2($nstd){
 			}
 		}
 		elseif($word=='тан'){
-			if($lastword['w']=='ы'){
+			if($prev_w=='ы'){
 				$word='ннан';
 			}else{
-				$isbreath=is_breath($lastword['w']);
-				if(!is_soft($lastword['w'])){
+				$isbreath=is_breath($prev_w);
+				if(!is_soft($prev_w)){
 					if($isbreath){
 						$word='тан';
 					}else{
@@ -232,17 +247,17 @@ function nstd_to_str_2($nstd){
 			}
 		}
 		elseif($word=='рәк'){
-			if(!is_soft($lastword['w'])){
+			if(!is_soft($prev_w)){
 				$word='рак';
 			}
 		}
 		elseif($word=='ның'){
-			if(is_soft($lastword['w'])){
+			if(is_soft($prev_w)){
 				$word='нең';
 			}
 		}
 		elseif($word=='не'){
-			if(!is_soft($lastword['w'])){
+			if(!is_soft($prev_w)){
 				$word='ны';
 			}
 		}
@@ -250,8 +265,24 @@ function nstd_to_str_2($nstd){
 			$word=',';
 		}		
 		$result.=$word;
+		$prev_w=$word;
 		$nstd_to_str_2_firstwordisready=true;
 	}
+	//--------------------------------nstd i>1
+	for($i=2;$i<count($nstd);$i++){
+		$word=$nstd[$i]['w'];
+		//echo '*',$prev_w;
+		if($word=='лар'){
+			if(is_soft($prev_w)){
+				$word='ләр';
+			}
+		}else{
+			$result.=' ';
+		}
+		$result.=$word;
+		$prev_w=$word;
+	}
+	//--------------------------------
 	ret_res:
 	if(isset($nstd['thisisheader'])||isset($nstd['inquotes'])){
 		$result.='"';
@@ -262,5 +293,6 @@ function nstd_to_str_2($nstd){
 		unset($parentheses);
 	}
 	*/
+	//$prev_w=$word;
 	return $result;
 }

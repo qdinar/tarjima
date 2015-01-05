@@ -32,7 +32,8 @@ $words['wikipedia']='википедия';
 $words['free']='бушлай';
 $words['encyclopedia']='энциклопедия';
 $words[',']=',';
-$words['the']='теге';
+//$words['the']='теге';
+$words['the']='шул';
 $words[',,']='булган';
 include 'function_tr_simple_block_2.php';
 $result=tr_simple_block_2($engtext2);
@@ -604,16 +605,21 @@ function assign_mw_tr(&$s2,$tr,$inner,&$simbl){
 //may be there is no rule and all cases are by their semantic. in this case i can use dictionary item meaning memory chip is memory's chip.
 //dec31: i think in more cases noun after noun is noun's noun. and will try to change code that way.
 function get_main_word($simbl){
-	//echo'1<pre>';print_r($simbl);echo'</pre>';
-	//echo'<pre>';var_dump($simbl);echo'</pre>';
+	if($simbl===null){
+		return array('w'=>'null');
+	}
+	//echo'1<pre>';var_dump($simbl);echo'</pre>';
 	if(isset($simbl['w'])){
 		return $simbl;
-	}else
-	if(isset($simbl[1]['w'])){
+	}
+	elseif(count($simbl)>2){
+		return $simbl[count($simbl)-1];
+	}
+	elseif(isset($simbl[1]['w'])){
 		return $simbl[1];
 	}
 	else{
-	//echo'2<pre>';print_r($simbl);echo'</pre>';
+		//echo'2<pre>';var_dump($simbl);echo'</pre>';
 		return get_main_word($simbl[1]);
 	}
 }
@@ -627,6 +633,9 @@ function &get_main_word_ref(&$simbl){
 	// }else{
 		// return get_main_word_ref($simbl[1]);
 	// }
+	elseif(count($simbl)>2){
+		return $simbl[count($simbl)-1];
+	}
 	elseif(is_array($simbl[1])){
 	//else{
 		//if($simbl[1]===NULL){echo'OK';exit;}
@@ -643,7 +652,13 @@ function &get_main_word_ref(&$simbl){
 }
 
 function &get_main_word_upper_ref(&$simbl){
+	if($simbl===null){
+		return array(array('w'=>'null'),array('w'=>'null'));
+	}
 	//echo'mw<pre>';print_r($simbl);echo'</pre>';
+	if(count($simbl)>2){
+		return $simbl;
+	}
 	if(isset($simbl[1]['w'])){
 		return $simbl;
 	}
@@ -684,8 +699,11 @@ function &get_main_word_upper_ref(&$simbl){
 //add long "-" after ... DDR3 SDRAM (and before бер югары үткәрүчәнлек ...) - done
 //make лы->ле ы->е where needed - done
 function is_soft($s){
-	//интерфейс
-	if(preg_match('/^интер.*/ui',$s,$lastvowel)){
+	//интерфейс, массив
+	if(
+		preg_match('/^интер.*/ui',$s,$lastvowel)
+		||preg_match('/^.асси./ui',$s,$lastvowel)
+	){
 		return false;
 	}
 	if(preg_match('/([әеиөү])[бвгджҗзйклмнпрстфхцчшщ]*$/ui',$s,$lastvowel)){
@@ -985,7 +1003,10 @@ function get_tr_last_word($tr_bl){
 	if(isset($tr_bl['w'])){
 		return $tr_bl;
 	}
-	elseif(isset($tr_bl[0][1]['w'])&&$tr_bl[0][1]['w']=='һәм'){
+	elseif(count($tr_bl)>2){
+		return $tr_bl[count($tr_bl)-1];
+	}
+	elseif($tr_bl[0][1]['w']=='һәм'){
 		return get_main_word($tr_bl[0][0]);
 	}else{
 		return get_main_word($tr_bl[1]);

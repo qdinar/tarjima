@@ -172,7 +172,7 @@ $nounlikes['array']=array('tt'=>'массив','type'=>'noun');
 $verbs['store']=array('tt'=>'сакла');
 $engtext2=explode_into_morphemes($engtext);
 show_trees($engtext2);
-$nounlikes['actual']=array('tt'=>'чын','type'=>'adj');
+$nounlikes['actual']=array('tt'=>'асыл','type'=>'adj');
 $recursionlevel=0;
 $engtext2=order_2($engtext2);
 show_trees($engtext2);
@@ -184,12 +184,18 @@ show_trees($result);
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
 
+//=== new order function ===
 
 include 'explode_3.php';
 $engtext2=explode_3($engtext);
 include 'order_3.php';
 $engtext2=order_a_sentence_3($engtext2);
-show_trees($engtext2);
+echo '<br>',$engtext;
+show_tree_3($engtext2);
+$result=tr_simple_block_2($engtext2);
+show_tree_3($result);
+$nstd_to_str_2_firstwordisready=false;
+echo nstd_to_str_2($result);
 
 
 

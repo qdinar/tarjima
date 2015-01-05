@@ -4,11 +4,20 @@ mb_internal_encoding('UTF-8');
 header('Content-Type: text/html; charset=utf-8');
 ini_set('display_errors', '1');
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
-$show_trees=true;
+//$show_trees=true;
+$show_trees_3=true;
 
 function show_trees($arr){
 	global $show_trees;
 	if($show_trees){
+		echo'<pre>';
+		print_r($arr);
+		echo'</pre>';
+	}
+}
+function show_tree_3($arr){
+	global $show_trees_3;
+	if($show_trees_3){
 		echo'<pre>';
 		print_r($arr);
 		echo'</pre>';
