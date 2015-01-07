@@ -665,7 +665,8 @@ and
 "... асыл массивлары ..."
 . ie in 1st "the" is removed, "ы" is not added;
 in 2nd, "the" is removed, "ы" is added;
-and "ны" is added in case verb to which this word is object, is not "be" , that works correctly for both cases for now;
+jan7: in 2nd, ны is already added for dram's array, not because of "the", so i should remove it from "the".
+and "ны" is added in case the verb, to which this word is object, is not "be" , that works correctly for both cases for now;
 -1700-
 Мәгълүматыны саклаучы асыл DRAM массивлар-ы — иртәрәк төрләргә охшаш, охшаш җитештерүчәнлек белән.
 it is ok with ы in both cases
@@ -675,8 +676,71 @@ it is ready
 -1713-
 -1715-
 commit
-
+5bfc8031c498343233f7ca10a567c3497a1db765
 the latest example itself is ready
--1718
+-1719-
+commit to master
+eb3b37b4ce9f0e27a7516c0f4dffdde8b057bc24
+the latest example itself is ready
+The actual DRAM arrays that store the data are similar to earlier types, with similar performance.
+->
+Мәгълүматыны саклаучы асыл DRAM массивлары — иртәрәк төрләргә охшаш, охшаш җитештерүчәнлек белән.
+-1723-
+-1726
+
+jan7
+0956-
+the last example is not ok.
+it should be Мәгълүматын , phonetically;
+and it should not have ы suffix, so it should be Мәгълүматны, as i said.
+-1008
+1015-
+Мәгълүматын is fixed
+-1023
+
+nearly 1037-
+see line 668
+ы is removed from "the" translation
+-1043-
+i need to add it to "dram array" translation. old code does not work because this part is not ordered.
+probably ordering of them will be required.
+-1046
+1054-
+i try to make a code to add ы without ordering
+done
+Мәгълүматны саклаучы асыл DRAM массивлары — иртәрәк төрләргә охшаш, охшаш җитештерүчәнлек белән.
+-1109-
+commit to closed source
+
+fix latest example
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

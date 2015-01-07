@@ -128,20 +128,28 @@ function &tr_simple_block_2(&$simbl){
 	//translate following words , with index>1
 	for($i=2;$i<count($simbl);$i++){
 		if(isset($simbl[$i]['w'])){
-			$s2[$i]=$simbl[$i];
+			$s2[]=$simbl[$i];
+			$latest_i=count($s2)-1;
 			if(isset($simbl[$i]['tr'])){
-				$s2[$i]['w']=$simbl[$i]['tr'];
+				$s2[$latest_i]['w']=$simbl[$i]['tr'];
 			}
 			else
 			if(isset($words[$simbl[$i]['w']])){
-				$s2[$i]['w']=$words[$simbl[$i]['w']];
+				$s2[$latest_i]['w']=$words[$simbl[$i]['w']];
 			}elseif(isset($nounlikes[$simbl[$i]['w']])){
-				$s2[$i]['w']=$nounlikes[$simbl[$i]['w']]['tt'];
+				$s2[$latest_i]['w']=$nounlikes[$simbl[$i]['w']]['tt'];
 			}elseif(isset($verbs[$simbl[$i]['w']])){
-				$s2[$i]['w']=$verbs[$simbl[$i]['w']]['tt'];
-			}else
-			if($simbl[$i]['w']=='s-pl'){
-				$s2[$i]['w']='лар';
+				$s2[$latest_i]['w']=$verbs[$simbl[$i]['w']]['tt'];
+			}elseif($simbl[$i]['w']=='s-pl'){
+				if($s2[$latest_i-1]['w']!='ы'){
+					$s2[$latest_i]['w']='лар';
+				}else{
+					$s2[$latest_i-1]['w']='лар';
+					$s2[$latest_i]['w']='ы';
+				}
+			}
+			if($simbl[$i]['w']=='array'&&$simbl[$i-1]['w']=='DRAM'){
+				$s2[]=array('w'=>'ы');
 			}
 		}
 	}
@@ -208,14 +216,14 @@ function apply_fixes_after_0(&$simbl,&$s2){
 		//now i will just add 'ны' and then i am going to make new functions... - i have made a function but have deleted it. problem is solved
 		// $s2[0]=array($s2[0],array('w'=>$suffiksno));
 		//echo'OK';
-		//$s2[0]=array($s2[0],array('w'=>'не'));
 		if(
 			$simbl[1][1]['w']=='be'
 			||$simbl[1]['w']=='be'
 		){
-			$s2[0]=array($s2[0],array('w'=>'ы'));
+			//$s2[0]=array($s2[0],array('w'=>'ы'));
 		}else{
-			$s2[0]=array(array($s2[0],array('w'=>'ы')),array('w'=>'не'));
+			//$s2[0]=array(array($s2[0],array('w'=>'ы')),array('w'=>'не'));
+			$s2[0]=array($s2[0],array('w'=>'не'));
 		}
 	}
 	//

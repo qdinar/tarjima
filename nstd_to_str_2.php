@@ -1,6 +1,6 @@
 <?php
 function nstd_to_str_2($nstd){
-	global $prev_w;
+	global $prev_w, $prev_w_sc;
 	//echo '*',$prev_w;
 	//show_tree_3($nstd);
 	$result='';
@@ -98,6 +98,7 @@ function nstd_to_str_2($nstd){
 		}
 		$result.=$word;
 		$prev_w=$word;
+		$prev_w_sc=$nstd[0]['w'];
 		$nstd_to_str_2_firstwordisready=true;
 	}
 	/*
@@ -192,7 +193,7 @@ function nstd_to_str_2($nstd){
 			}
 		}
 		elseif($word=='ле'){
-			if($prev_w=='ы'){
+			if($prev_w_sc=='ы'){
 				$word='нле';
 			}else{
 				if(!is_soft($prev_w)){
@@ -207,7 +208,7 @@ function nstd_to_str_2($nstd){
 		}
 		elseif($word=='кә'){
 			//echo '*',$prev_w['w'];
-			if($prev_w=='ы'){
+			if($prev_w_sc=='ы'){
 				$word='на';
 			}else{
 				$isbreath=is_breath($prev_w);
@@ -227,7 +228,7 @@ function nstd_to_str_2($nstd){
 			}
 		}
 		elseif($word=='тан'){
-			if($prev_w=='ы'){
+			if($prev_w_sc=='ы'){
 				$word='ннан';
 			}else{
 				$isbreath=is_breath($prev_w);
@@ -257,7 +258,10 @@ function nstd_to_str_2($nstd){
 			}
 		}
 		elseif($word=='не'){
-			if(!is_soft($prev_w)){
+			if($prev_w_sc=='ы'){
+				$word='н';
+			}
+			elseif(!is_soft($prev_w)){
 				$word='ны';
 			}
 		}
@@ -266,6 +270,7 @@ function nstd_to_str_2($nstd){
 		}		
 		$result.=$word;
 		$prev_w=$word;
+		$prev_w_sc=$nstd[1]['w'];
 		$nstd_to_str_2_firstwordisready=true;
 	}
 	//--------------------------------nstd i>1
@@ -276,11 +281,16 @@ function nstd_to_str_2($nstd){
 			if(is_soft($prev_w)){
 				$word='ләр';
 			}
+		}elseif($word=='ы'){
+			if(is_soft($prev_w)){
+				$word='е';
+			}
 		}else{
 			$result.=' ';
 		}
 		$result.=$word;
 		$prev_w=$word;
+		$prev_w_sc=$nstd[$i]['w'];
 	}
 	//--------------------------------
 	ret_res:
