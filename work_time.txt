@@ -929,8 +929,263 @@ i used to make it first way
 today i was thinking to use second way (ie "actual ((dram array)s)")
 but the frequency method selects the first way
 
--2143
+-2143-
+commit to closed-source
+1ef764d699632df0420cf2a80d2b29c15037b2c9
+2 more examples; going to order noun blocks
+-2159
+
+2226-
+
+actual DRAM 648 000
+DRAM array 642 000
+
+"actual DRAM" 5 390
+"DRAM array" 54 300
+
+so only search without quotes has worked by the theory, here
+
+bing:
+
+actual DRAM 479 000
+DRAM array 234 000
+
+"actual DRAM" 4 350
+"DRAM array" 13 900
+
+again only the search without quotes has worked
+
+that is because "actual DRAM" is more specific, rare, because the word "actual" is rare
+
+another idea is to look at frequency of every single word first
+and to start to join from most rare;
+
+another idea is to look at "actual DRAM" + "array" and then "actual" + "DRAM array", i think less should be better
+
+bing:
+
+"actual DRAM" 4 350
+"array" 11 200 000
+
+"actual" 19 800 000
+"DRAM array" 13 900
+
+no, it is not so. neither multiplications;
+but contrawise, more big is better
+
+"DRAM interface" 59 200
+"specification" 271 mln
+
+"DRAM" 79.6 mln
+"interface specification" 448 000
+
+again so
+
+but with multip.:
+59200*271000000=
+16043200000000
+79600000*448000=
+35660800000000
+larger is not better
+
+idea: to check every single word and to start from the one with largest frequency
+
+different signal ing voltage s
+
+"different"
+"signal"
+"ing"
+"voltage"
+"s"
+suffix frequencies are not available in google and bing
+
+i will check
+random access memory
+DRAM interface specification
+
+"random" 1 020 mln
+"access" 3 040 mln
+"memory" 1 060 mln
+
+"DRAM" 79.6 mln
+"interface" 578 mln
+"specification" 271 mln
+
+start from less:
+>random< access memory
+>random access< memory
+>DRAM< interface specification
+>DRAM interface< specification
+
+start from larger:
+random )access( memory
+DRAM )interface( specification
+oes not work, i need to look the most left an most right first
+random access )memory
+random )access )memory
+DRAM )interface )specification
+works
 
 
+"actual" 1 020 mln
+"DRAM" 79.6 mln
+"array" 345 mln
 
+start from less:
+actual >DRAM< array
+actual >DRAM array<
+ok
+
+start from larger:
+actual( DRAM array
+actual( DRAM )array)
+ok
+
+synchronous dynamic random access memory
+correct is (synchronous (dynamic ((random access) memory)))
+
+synchronous 31.7 mln
+dynamic 561 mln
+random 1 020 mln
+access 3 040 mln
+memory 1 060 mln
+
+start from smallest
+>synchronous< dynamic random access memory
+does not work
+
+start from largest
+synchronous dynamic random )access( memory
+does not work
+from ends:
+(synchronous dynamic random access )memory
+((synchronous dynamic random) access )memory
+does not work
+
+the way from line 974:
+
+(all with quotes)
+
+synchronous 31.7 mln
+dynamic random access memory 0.458 mln
+
+synchronous dynamic random access 0.314 mln
+memory 1 060 mln
+
+does not work... bigger is not better in this case...
+
+so these simple ways do not work
+
+how many combinations?
+
+(synchronous dynamic random access) memory:
+	((synchronous dynamic random) access) memory:
+		(((synchronous dynamic) random) access) memory
+		((synchronous (dynamic random)) access) memory
+	(synchronous (dynamic random access)) memory:
+		(synchronous ((dynamic random) access)) memory
+		(synchronous (dynamic (random access))) memory
+synchronous (dynamic random access memory):
+	synchronous ((dynamic random access) memory):
+		synchronous (((dynamic random) access) memory)
+		synchronous ((dynamic (random access)) memory)
+	synchronous (dynamic (random access memory)):
+		synchronous (dynamic ((random access) memory))
+		synchronous (dynamic (random (access memory)))
+
+8 combinations
+2^(4-1)
+
+used pairs of main words:
+
+(((synchronous dynamic) random) access) memory:
+	synchronous dynamic 360 000
+	dynamic random 508 000
+	random access 14 600 000
+	access memory 9 180 000
+	360+508+14600+9180=24648
+((synchronous (dynamic random)) access) memory:
+	dynamic random 508 000
+	synchronous random 18 200
+	random access 14 600 000
+	access memory 9 180 000
+	508+18.2+14600+9180=24470
+(synchronous ((dynamic random) access)) memory:
+	dynamic random 508 000
+	random access 14 600 000
+	synchronous access 24 200
+	access memory 9 180 000
+	508+14600+24.2+9180=24530
+(synchronous (dynamic (random access))) memory:
+	random access 14 600 000
+	dynamic access 248 000
+	synchronous access 24 200
+	access memory 9 180 000
+	14600+248+24.2+9180=24270
+synchronous (((dynamic random) access) memory):
+	dynamic random 508 000
+	random access 14 600 000
+	access memory 9 180 000
+	synchronous memory 68 900
+	508+14600+9180+68.9=24977
+synchronous ((dynamic (random access)) memory):
+	random access 14 600 000
+	dynamic access 248 000
+	access memory 9 180 000
+	synchronous memory 68 900
+	14600+248+9180+68.9=24717
+synchronous (dynamic ((random access) memory)):
+	random access 14 600 000
+	access memory 9 180 000
+	dynamic memory 547 000
+	synchronous memory 68 900
+	14600+9180+547+68.9=25016
+synchronous (dynamic (random (access memory))):
+	access memory 9 180 000
+	random memory 163 000
+	dynamic memory 547 000
+	synchronous memory 68 900
+	9180+163+547+68.9=10579
+
+maximum is at correct version! 1 of 8!
+how much word pairs are needed to calculate this? seems all possible pairs.
+synchronousdynamic
+dynamicrandom
+randomaccess
+accessmemory
+synchronousrandom
+synchronousaccess
+dynamicaccess
+synchronousmemory
+dynamicmemory
+randommemory
+10
+from 4 words
+synchronous dynamic random access memory
+synchronousdynamic
+synchronousrandom
+synchronousaccess
+synchronousmemory
+4
+dynamicrandom
+dynamicaccess
+dynamicmemory
+3
+randomaccess
+randommemory
+2
+accessmemory
+1
+1+2+3+4=10
+n -> n*(n+1)/2
+4 -> 4*5/2=10
+10 -> 10*11/2=55
+
+i do not know, how the 2 statistical parsers work, which i mentioned in comments
+i want to know it...
+
+-0018-
+commit
+
+found a way to order if i would have frequencies
 
