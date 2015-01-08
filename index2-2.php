@@ -641,6 +641,9 @@ function &get_main_word_ref(&$simbl){
 		//if($simbl[1]===NULL){echo'OK';exit;}
 		$tmp=&get_main_word_ref($simbl[1]);
 		return $tmp;
+	//}elseif(!isset($simbl[1])){
+		//return array('w'=>'null');
+		//return $simbl[0];
 	}else{
 		//echo'<pre>';print_r($simbl);exit;
 		echo'<pre>';var_dump($simbl);exit;//null
@@ -705,6 +708,12 @@ function is_soft($s){
 		||preg_match('/^.асси./ui',$s,$lastvowel)
 	){
 		return false;
+	}
+	//спецификация
+	if(
+		preg_match('/ция$/ui',$s,$lastvowel)
+	){
+		return true;
 	}
 	if(preg_match('/([әеиөү])[бвгджҗзйклмнпрстфхцчшщ]*$/ui',$s,$lastvowel)){
 		return true;

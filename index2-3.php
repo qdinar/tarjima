@@ -6,26 +6,26 @@
 echo'<br/>';
 $engtext='DDR3 SDRAM is neither forward nor backward compatible with any earlier type of random access memory (RAM) due to different signaling voltages, timings, and other factors.';
 $verbs['signal']=array('tt'=>'ишарәлә');
-$nounlikes['early']=array('tt'=>'иртә','type'=>'attr');
+$nounlikes['early']=array('tt'=>'иртә','type'=>'adj');
 $nounlikes['voltage']=array('tt'=>'вольтаж','type'=>'noun');
 $nounlikes['timing']=array('tt'=>'вакытланыш','type'=>'noun');
 $nounlikes['factor']=array('tt'=>'фактор','type'=>'noun');
 $engtext2=explode_into_morphemes($engtext);
 show_trees($engtext2);
 $recursionlevel=0;
-$nounlikes['any']=array('tt'=>'теләсә-кайсы','type'=>'attr');
+$nounlikes['any']=array('tt'=>'теләсә-кайсы','type'=>'adj');
 $nounlikes['RAM']=array('tt'=>'RAM','type'=>'noun');
-$nounlikes['other']=array('tt'=>'башка','type'=>'attr');
-$nounlikes['different']=array('tt'=>'төрле','type'=>'attr');//башка төрле
+$nounlikes['other']=array('tt'=>'башка','type'=>'adj');
+$nounlikes['different']=array('tt'=>'төрле','type'=>'adj');//башка төрле
 $multiwords[]=array('signal','ing');
-$nounlikes['neither']=array('tt'=>'түгел','type'=>'attr');
-$nounlikes['compatible']=array('tt'=>'ярашучы','type'=>'attr');
+$nounlikes['neither']=array('tt'=>'түгел','type'=>'adj');
+$nounlikes['compatible']=array('tt'=>'ярашучы','type'=>'adj');
 $nounlikes['due']=array('tt'=>'күрә','type'=>'noun');
 $engtext2=order_2($engtext2);
 show_trees($engtext2);
 $recursionlevel=0;
-$nounlikes['backward']=array('tt'=>'артка таба','type'=>'noun');
-$nounlikes['forward']=array('tt'=>'алга таба','type'=>'noun');
+$nounlikes['backward']=array('tt'=>'артка таба','type'=>'adv');
+$nounlikes['forward']=array('tt'=>'алга таба','type'=>'adv');
 $result=tr_simple_block_2($engtext2);
 show_trees($result);
 $nstd_to_str_2_firstwordisready=false;
@@ -185,6 +185,9 @@ $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
 
 //=== new order function ===
+$show_trees_3=true;
+//$show_trees_3_tr=true;
+
 
 include 'explode_3.php';
 $engtext2=explode_3($engtext);
@@ -193,11 +196,30 @@ $engtext2=order_a_sentence_3($engtext2);
 echo '<br>',$engtext;
 show_tree_3($engtext2);
 $result=tr_simple_block_2($engtext2);
-show_tree_3($result);
+show_tree_3_tr($result);
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
 
+//prev. ex. with new order function
+$engtext='DDR3 is a DRAM interface specification.';
+$engtext2=explode_3($engtext);
+$engtext2=order_a_sentence_3($engtext2);
+echo '<br><br>',$engtext;
+show_tree_3($engtext2);
+$result=tr_simple_block_2($engtext2);
+show_tree_3_tr($result);
+$nstd_to_str_2_firstwordisready=false;
+echo nstd_to_str_2($result);
 
+$engtext='DDR3 SDRAM is neither forward nor backward compatible with any earlier type of random access memory (RAM) due to different signaling voltages, timings, and other factors.';
+$engtext2=explode_3($engtext);
+$engtext2=order_a_sentence_3($engtext2);
+echo '<br><br>',$engtext;
+show_tree_3($engtext2);
+$result=tr_simple_block_2($engtext2);
+show_tree_3_tr($result);
+$nstd_to_str_2_firstwordisready=false;
+echo nstd_to_str_2($result);
 
 
 

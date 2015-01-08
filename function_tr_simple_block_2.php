@@ -148,7 +148,30 @@ function &tr_simple_block_2(&$simbl){
 					$s2[$latest_i]['w']='ы';
 				}
 			}
-			if($simbl[$i]['w']=='array'&&$simbl[$i-1]['w']=='DRAM'){
+			if(
+				$simbl[$i-1]['w']=='of'
+				||
+				$simbl[$i-1]['w']=='DRAM'
+				&&$simbl[$i]['w']=='array'
+				||
+				$simbl[$i-1]['w']=='memory'
+				&&$simbl[$i]['w']=='chip'
+				||
+				$simbl[$i-1]['w']=='DRAM'
+				&&$simbl[$i]['w']=='interface'
+				||
+				$simbl[$i-1]['w']=='interface'
+				&&$simbl[$i]['w']=='specification'
+				||
+				$simbl[$i-2]['w']=='ing'
+				&&$simbl[$i]['w']=='s-pl'
+				||
+				$simbl[$i-1]['w']=='DDR3'
+				&&$simbl[$i]['w']=='SDRAM'
+				||
+				$simbl[$i-1]['w']=='data'
+				&&$simbl[$i]['w']=='rate'
+			){
 				$s2[]=array('w'=>'ы');
 			}
 		}

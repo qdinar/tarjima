@@ -69,13 +69,13 @@ function explode_3($engtext){
 			$remaining=mb_substr($word,0,mb_strlen($word)-1);
 			if($remaining=='ha'){
 				$engtext2[]='have';
-				$engtext2[]='pr-si';
+				$engtext2[]='v-s';
 			}elseif($remaining=='wa'){
 				$engtext2[]='be';
 				$engtext2[]='ed';
 			}elseif($remaining=='i'){
 				$engtext2[]='be';
-				$engtext2[]='pr-si';
+				$engtext2[]='v-s';
 			}else{
 				//$tryverb=mb_substr($word,0,mb_strlen($word)-1);
 				$tryverb=$remaining;

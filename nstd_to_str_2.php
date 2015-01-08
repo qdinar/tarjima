@@ -86,7 +86,7 @@ function nstd_to_str_2($nstd){
 		}
 	}
 	//echo '*',$prev_w;
-	if(!isset($nstd[0]['w'])){
+	if(!isset($nstd[0]['w'])&&$nstd[0]!=''){
 		$result.=nstd_to_str_2($nstd[0]);
 	}else{
 		$word=$nstd[0]['w'];
@@ -282,10 +282,21 @@ function nstd_to_str_2($nstd){
 				$word='ләр';
 			}
 		}elseif($word=='ы'){
+			if(!last_conson($prev_w)){
+				$result.='с';
+			}
 			if(is_soft($prev_w)){
 				$word='е';
 			}
-		}else{
+		}elseif($word=='у'){
+			if(is_soft($prev_w)){
+				$word='ү';
+			}
+		}elseif($word=='рәк'){
+			if(!is_soft($prev_w)){
+				$word='рак';
+			}
+		}elseif($i<count($nstd)-1){
 			$result.=' ';
 		}
 		$result.=$word;

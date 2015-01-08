@@ -28,12 +28,11 @@ function order_a_sent_without_last_dot($inparr){
 }
 
 function order_a_complex_noun_3($inparr){
-	if(isset($inparr['w'])){
-		//this is simple noun
+	if(is_simple_3($inparr)){
 		return $inparr;
 	}
 	if(is_first_article_3($inparr)){
-		$outparr=sep_first_article_3($inparr);
+		$outparr=sep_first_word_3($inparr);
 		$outparr[1]=order_comp_n_without_article_3($outparr[1]);
 	}else{
 		$outparr=order_comp_n_without_article_3($inparr);
@@ -41,8 +40,15 @@ function order_a_complex_noun_3($inparr){
 	return $outparr;
 }
 
+function is_simple_3($inparr){
+	return (
+		isset($inparr['w'])
+		||count($inparr)==2&&isset($inparr[0]['w'])&&isset($inparr[1]['w'])
+	);
+}
+
 function order_comp_n_without_article_3($inparr){
-	if(isset($inparr['w'])){
+	if(is_simple_3($inparr)){
 		//this is simple noun
 		return $inparr;
 	}
@@ -52,9 +58,121 @@ function order_comp_n_without_article_3($inparr){
 		$outparr[0]=order_dep_cl_3($outparr[0]);
 	}else{
 		//no conjunction
+		$outparr=o_c_n_noart_nodepcl_3($inparr);
+		//$outparr=$inparr;
+	}
+	return $outparr;
+}
+
+function o_c_n_noart_nodepcl_3($inparr){
+	$pos=c_n_1st_prep_3($inparr);
+	if($pos!==null){
+		$outparr=sep_n_prep_bl_3($inparr,$pos);
+		$outparr[0]=o_c_prep_bl_3($outparr[0]);
+		$outparr[0][0]=o_c_n_noart_nodepcl_3($outparr[0][0]);
+		$outparr[1]=o_c_n_no_ar_dc_pr_3($outparr[1]);
+		//$outparr[1]=
+	}else{
+		//return $inparr;
+		//no preposition
+		//$outparr=$inparr;
+		$outparr=o_c_n_no_ar_dc_pr_3($inparr);
+	}
+	return $outparr;
+}
+
+function o_c_n_no_ar_dc_pr_3($inparr){
+	//order complex noun without article nor dependent clause nor prepositions
+	//but there may be logical words, commas
+	/*
+	$pos=last_logical_pos_3($inparr);
+	if($pos!==null){
+		$outparr=sep_logical_bl_3($inparr,$pos);
+		$outparr[0]=order_logical_bl_3($outparr[0]);
+	}else{
+		//no logical element
+		//example: neither a book
+		//leave it for now
 		$outparr=$inparr;
 	}
-	return($outparr);
+	*/
+	if(is_there_a_neither_nor_bl($inparr)){
+		find_neither_bl_first_last($inparr,$first,$last);
+		$outparr=join_neither_bl_3($inparr,$first,$last);
+	}else{
+		$outparr=$inparr;
+	}
+	return $outparr;
+}
+
+function find_neither_bl_first_last($inparr,&$first,&$last){
+	foreach($inparr as $pos=>$elem){
+		if($elem['w']=='neither'){
+			$first=$pos;
+			break;
+		}
+	}
+	foreach($inparr as $pos=>$elem){
+		if($elem['w']=='backward'){
+			$last=$pos;
+			break;
+		}
+	}
+}
+
+function is_there_a_neither_nor_bl($inparr){
+	foreach($inparr as $pos=>$elem){
+		if($elem['w']=='neither'){$i++;}
+		if($elem['w']=='nor'){$i++;}
+	}
+	if($i==2){
+		return true;
+	}
+}
+
+function join_neither_bl_3($inparr,$first,$last){
+	$neither_bl=array_slice($inparr,$first,$last-$first+1);
+	$neither_bl=sep_first_word_3($neither_bl);
+	$nor_pos=last_logical_pos_3($neither_bl[1]);
+	//nor_post should not be null
+	$neither_bl[1]=sep_logical_bl_3($neither_bl[1],$nor_pos);
+	$neither_bl[1][0]=order_logical_bl_3($neither_bl[1][0]);
+	array_splice($inparr,$first,$last-$first+1,array($neither_bl));
+	return $inparr;
+}
+
+function order_logical_bl_3($inparr){
+	//first element should be comma or logical
+	$outparr[]=array_slice($inparr,1);
+	if(count($outparr[0])==1){
+		$outparr[0]=$outparr[0][0];
+	}
+	$outparr[]=$inparr[0];
+	return $outparr;
+}
+
+function sep_logical_bl_3($inparr,$pos){
+	return sep_dep_clause_3($inparr,$pos);
+}
+
+function last_logical_pos_3($inparr){
+	for($i=count($inparr)-1;$i>=0;$i--){
+		if(is_comma_or_logical_3($inparr[$i])){
+			return $i;
+		}
+	}
+}
+
+function sep_n_prep_bl_3($inparr,$pos){
+	return sep_dep_clause_3($inparr,$pos);
+}
+
+function c_n_1st_prep_3($inparr){
+	foreach($inparr as $pos=>$elem){
+		if(is_prep_3($elem)){
+			return $pos;
+		}
+	}
 }
 
 function order_dep_cl_3($inparr){
@@ -102,6 +220,9 @@ function sep_dep_clause_3($inparr,$pos){
 	$dep_cl=array_splice($inparr,$pos);
 	$outparr[]=$dep_cl;
 	$outparr[]=$inparr;
+	if(count($outparr[1])==1){
+		$outparr[1]=$outparr[1][0];
+	}
 	return $outparr;
 }
 
@@ -117,26 +238,28 @@ function is_article_3($elem){
 	}
 }
 
-function sep_first_article_3($inparr){
-	$article=array_splice($inparr,0,1);
-	$outparr[]=$article[0];
-	$outparr[]=$inparr;
+function sep_first_word_3($inparr){
+	$outparr[]=$inparr[0];
+	$outparr[]=array_slice($inparr,1);
 	return $outparr;
 }
 
 function order_a_complex_verb_3($inparr){
-	if(isset($inparr['w'])){
+	if(is_simple_3($inparr)){
 		//this is simple verb
 		return $inparr;
 	}
-	$pos=last_prep_pos_3($inparr);
+	//2 verbs should be separated here
+	$pos=verb_last_c_adv_or_prep_pos_3($inparr);
 	if($pos!==null){
-		$outparr=sep_last_prep_bl_3($inparr,$pos);
+		$outparr=sep_last_c_adv_or_prep_bl_3($inparr,$pos);
 		//0 prep bl 1 verb
 		if(!is_comma_or_logical_3($inparr[$pos-1])){
 			//normal prepositional block
-			//$outparr[0]=
-			//$outparr[1]=
+			// outp0 is last prep block
+			$outparr[0]=o_c_prep_bl_3($outparr[0]);
+			// outp1 is complex verb
+			$outparr[1]=order_a_complex_verb_3($outparr[1]);
 		}else{
 			//comma before preposition and several prepositional blocks can be set into a block
 			$comma_or_logical=array_splice($outparr[1],-1);
@@ -144,9 +267,9 @@ function order_a_complex_verb_3($inparr){
 			$outparr[0]=array($outparr[0],$comma_or_logical);
 			//0 ( 0 prep bl 1 , ) 1 verb
 			//find second prep block from end
-			$pos2=last_prep_pos_3($outparr[1]);
+			$pos2=verb_last_c_adv_or_prep_pos_3($outparr[1]);
 			if($pos2!==null){
-				$outparr[1]=sep_last_prep_bl_3($outparr[1],$pos2);
+				$outparr[1]=sep_last_c_adv_or_prep_bl_3($outparr[1],$pos2);
 				//0 ( 0 prep bl 1 , ) 1 (0 2nd prep bl 1 verb)
 				$outparr[0]=array($outparr[0],$outparr[1][0]);
 				//0 ( 0( 0 prep bl 1 , ) 1 2nd prep bl) 1 (0 2nd prep bl 1 verb)
@@ -160,8 +283,10 @@ function order_a_complex_verb_3($inparr){
 			}
 		}
 	}else{
-		//no preposition block
-		//find adverb
+		//no preposition nor adverb block
+		$outparr=o_c_verb_without_prep_and_adv_3($inparr);
+		/*
+		//find simple adverb
 		$pos=first_adv_pos_3($inparr);
 		if($pos!==null){
 			//adverb is found
@@ -169,12 +294,13 @@ function order_a_complex_verb_3($inparr){
 			$outparr=sep_an_adv_3($inparr,$pos);
 			//no adverb here:
 			//example: take a book
-			$outparr[1]=o_c_verb_without_prep_and_adv($outparr[1]);
+			$outparr[1]=o_c_verb_without_prep_and_adv_3($outparr[1]);
 		}else{
 			//no adverb
 			//example: take a book
-			$outparr=o_c_verb_without_prep_and_adv($inparr);
+			$outparr=o_c_verb_without_prep_and_adv_3($inparr);
 		}
+		*/
 	}
 	return $outparr;
 }
@@ -199,14 +325,20 @@ function o_c_prep_bl_3($inparr){
 	return $outparr;
 }
 
-function o_c_verb_without_prep_and_adv($inparr){
+function o_c_verb_without_prep_and_adv_3($inparr){
 	//order complex verb without prepostion blocks and without adverbs but with object and may be something else strange
 	//find object
 	//example: take a book
-	$pos=first_noun_pos_3($inparr);
+	$pos=first_c_nounlike_pos_3($inparr);
 	if($pos!==null){
 		$outparr=sep_object_3($inparr,$pos);
+		$outparr[0]=order_a_complex_noun_3($outparr[0]);
+		//$outparr[1]=
 	}else{
+		//may be this is "be", adjective may be object
+		// if(==be){
+		// }
+		//else
 		//no noun
 		//this is strange
 		//example: go beautiful
@@ -243,12 +375,19 @@ function first_adv_pos_3($inparr){
 	}
 }
 
-function first_noun_pos_3($inparr){
+function first_c_nounlike_pos_3($inparr){
 	foreach($inparr as $pos=>$elem){
-		if(is_noun_3($elem)||is_article_3($elem)){
+		if(is_nounlike_3($elem)||is_article_3($elem)){
 			return $pos;
 		}
 	}
+}
+
+function is_nounlike_3($elem){
+	global $nounlikes;
+	if(isset($nounlikes[$elem['w']])){
+		return true;
+	}	
 }
 
 function is_adv_3($elem){
@@ -265,7 +404,7 @@ function is_noun_3($elem){
 	}
 }
 
-function sep_last_prep_bl_3($inparr,$pos){
+function sep_last_c_adv_or_prep_bl_3($inparr,$pos){
 	$prep_bl=array_splice($inparr,$pos);
 	if(count($prep_bl)==1){
 		$prep_bl=$prep_bl[0];
@@ -283,19 +422,25 @@ function is_comma_or_logical_3($elem){
 		$elem['w']==','
 		||$elem['w']=='and'
 		||$elem['w']=='or'
+		||$elem['w']=='nor'
 	){
 		return true;
 	}
 }
 
-function last_prep_pos_3($inparr){
+function verb_last_c_adv_or_prep_pos_3($inparr){
 	for($i=count($inparr)-1;$i>=0;$i--){
-		if(is_prep_3($inparr[$i])){
+		if(is_prep_3($inparr[$i])&&$inparr[$i]['w']!='of'){
 			if(
 				$inparr[$i-1]['w']=='due'
 				||$inparr[$i-1]['w']=='similar'
+				||$inparr[$i-1]['w']=='compatible'
 			){
-				return $i-1;
+				if(!is_adv_3($inparr[$i-2])){
+					return $i-1;
+				}else{
+					//... backward compatible with ...
+				}
 			}else{
 				return $i;
 			}
@@ -308,6 +453,7 @@ function is_prep_3($elem){
 		$elem['w']=='with'
 		||$elem['w']=='to'
 		||$elem['w']=='from'
+		||$elem['w']=='of'
 	){
 		return true;
 	}
