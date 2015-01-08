@@ -665,7 +665,8 @@ and
 "... асыл массивлары ..."
 . ie in 1st "the" is removed, "ы" is not added;
 in 2nd, "the" is removed, "ы" is added;
-and "ны" is added in case verb to which this word is object, is not "be" , that works correctly for both cases for now;
+jan7: in 2nd, ны is already added for dram's array, not because of "the", so i should remove it from "the".
+and "ны" is added in case the verb, to which this word is object, is not "be" , that works correctly for both cases for now;
 -1700-
 Мәгълүматыны саклаучы асыл DRAM массивлар-ы — иртәрәк төрләргә охшаш, охшаш җитештерүчәнлек белән.
 it is ok with ы in both cases
@@ -679,8 +680,512 @@ commit
 the latest example itself is ready
 -1719-
 commit to master
-
+eb3b37b4ce9f0e27a7516c0f4dffdde8b057bc24
 the latest example itself is ready
 The actual DRAM arrays that store the data are similar to earlier types, with similar performance.
 ->
 Мәгълүматыны саклаучы асыл DRAM массивлары — иртәрәк төрләргә охшаш, охшаш җитештерүчәнлек белән.
+-1723-
+-1726
+
+jan7
+
+0956-
+the last example is not ok.
+it should be Мәгълүматын , phonetically;
+and it should not have ы suffix, so it should be Мәгълүматны, as i said.
+-1008
+
+1015-
+Мәгълүматын is fixed
+-1023
+
+nearly 1037-
+see line 668
+ы is removed from "the" translation
+-1043-
+i need to add it to "dram array" translation. old code does not work because this part is not ordered.
+probably ordering of them will be required.
+-1046
+
+1054-
+i try to make a code to add ы without ordering
+done
+Мәгълүматны саклаучы асыл DRAM массивлары — иртәрәк төрләргә охшаш, охшаш җитештерүчәнлек белән.
+-1109-
+commit to closed source
+8fa03ecd0c0eaf0616cf581d36da3184e540968e
+fix latest example
+-1113
+
+1116-
+start previous example with new order function
+-1122
+
+read helps to diff files between commits, find
+git diff <revision_1>:<file_1> <revision_2>:<file_2>
+( google "git diff between files", http://stackoverflow.com/a/3343506/2765408 )
+(i have not tried it)
+but i find out i do not need that, just 2 files in 1 commit
+
+1128-
+compare explode_3.php with function_explode_into_morphemes.php
+they are almost same. i decide to left it so , because old order function is not modified for new 'v-0' etc marks
+-1135-
+i am  going to add new v-0 marks to old order function and then remove explode_3.php
+there are only 3 places to add them with || in order 2
+no, do not lose any other several minutes
+-1147-
+some v-s marks are fixed in new explode
+i should have copied explode function with git. is it possible? - no
+added comments at line 726
+-1159
+
+1221-
+DDR3 — бер DRAM интерфейсы спецификациясе .
+need to remove space before dot
+-1231
+
+1247-
+the dot is removed
+-1252-
+next example, going backward
+DDR3 SDRAM is neither forward nor backward compatible with any earlier type of random access memory (RAM) due to different signaling voltages, timings, and other factors.
+order_2 was not giving good results after changes for latest example, may be i should fix it, revert, no, i will not lose time, its old state is not lost anyway.
+may be i will try kickstarter or boomstarter or other site
+i do not know, make it proprietary or open source...
+probably open source and free to reuse then...
+and kickstarter is ok because most of work here is for order function which is for english language
+and results of it are usable for translations to other languages
+renamed function last_prep_pos_3 (in order_3.php) to last_c_prep_pos_3 because there may be complex prepositon blocks
+example: neither forward nor backward compatible with ... , really it is object of "be", but i decided to take it as preposition. jan8: i am going to make that as object
+-1333
+
+1406-
+renamed last_c_prep_pos_3 to verb_last_c_prep_pos_3 because preposition "of" is not used with verb and i can use that fact
+example:
+is neither ... with ... type of ...
+renamed verb_last_c_prep_pos_3 to verb_last_c_adv_or_prep_pos_3
+renamed sep_last_c_prep_bl_3 to sep_last_c_adv_or_prep_bl_3
+-1
+-1457
+
+jan08
+
+1024-
+rename first_noun_pos_3 to first_c_nounlike_pos_3
+-1032
+
+1042-
+-3
+-1106
+
+1128-
+-1217
+
+1253-
+almost ready:
+DDR3 SDRAM-ы төрле ишарәлә у вольтажлар , вакытланышлар , һәм башка факторларга күрә — теләсә-ничек керүнең теләсә-кайсы иртә рәктөре белән түгел алга таба nor артка табаярашучы.
+-1350
+
+1426-
+
+old order made:
+0 {
+	0 neither
+	1 {
+		0 {
+			0 backward
+			1 nor
+		}
+		1 forward
+	}
+}
+1 compatible
+
+new order is going to make:
+0 {
+	0 {
+		0 backward
+		1 nor
+	}
+	1 {
+		0 neither
+		1 forward
+	}
+}
+1 compatible
+
+which is correct?
+
+maybe i will replace it to:
+0 {
+	0 not
+	1 {
+		0 {
+			0 backward
+			1 or
+		}
+		1 forward
+	}
+}
+1 compatible
+
+so i think old version was more correct
+
+but i need now first to separate "neither" block from "compatible"
+
+-1
+
+-1452
+
+1701-
+i have lost much time here trying to join "neither" block, my code did not work and i deleted it and started from scratch
+-1849
+
+1955-
+-5
+neither block is ordered the old way and its translation is ready
+DDR3 SDRAM-ы төрле ишарәлә у вольтажлар , вакытланышлар , һәм башка факторларга күрә — теләсә-ничек керүнең теләсә-кайсы иртә рәктөре белән артка таба да алга таба да ярашучы түгел.
+i have found a case where i see i need to order noun blocks:
+signaling voltages, timings
+->
+ишарәләү вольтажлар, вакытланышлар
+i need to add ы to 2 words:
+ишарәләү вольтажлары, вакытланышлары
+it is hard to do that without ordering
+
+now i am going to "order" several noun blocks:
+
+any early er type
+random access memory ( RAM )
+different signal ing voltage s , timing s , and other factor s
+DRAM interface specification
+early er type s
+actual DRAM array s
+
+- 6 blocks
+
+how to do that?
+which is deepest?
+
+(any early) er type
+any (early er) type
+any early (er type)
+
+then:
+
+(anyEarly er) type
+anyEarly (er type)
+
+(any earlyer) type
+any (earlyer type)
+
+(any early) ErType
+any (early ErType)
+
+i see more main morphem is more at right
+i see that if to start from top i have 2 variants:
+
+(any early er) type
+any (early er type)
+
+---
+
+(DRAM interface) specification
+DRAM (interface specification)
+?
+
+i will try to look at google result counts
+
+any earlier 676 mln
+earlier type 652 mln
+
+"any earlier" 522 000
+"earlier type" 126 000
+
+-2121
+
+2124-
+DRAM interface 0.986 mln
+interface specification 137 mln
+
+"DRAM interface" 59 200
+"interface specification" 448 000
+
+both experiments show that true deeper level has less google results
+
+(actual DRAM array) s
+actual (DRAM array s)
+
+actual DRAM array 587 000
+DRAM arrays 678 000
+
+"actual DRAM array" 3
+"DRAM arrays" 19800
+
+this is because "s" adds almost no specificity (to "dram array", and "actual" adds much of it)
+i used to make it first way
+today i was thinking to use second way (ie "actual ((dram array)s)")
+but the frequency method selects the first way
+
+-2143-
+commit to closed-source
+1ef764d699632df0420cf2a80d2b29c15037b2c9
+2 more examples; going to order noun blocks
+-2159
+
+2226-
+
+actual DRAM 648 000
+DRAM array 642 000
+
+"actual DRAM" 5 390
+"DRAM array" 54 300
+
+so only search without quotes has worked by the theory, here
+
+bing:
+
+actual DRAM 479 000
+DRAM array 234 000
+
+"actual DRAM" 4 350
+"DRAM array" 13 900
+
+again only the search without quotes has worked
+
+that is because "actual DRAM" is more specific, rare, because the word "actual" is rare
+
+another idea is to look at frequency of every single word first
+and to start to join from most rare;
+
+another idea is to look at "actual DRAM" + "array" and then "actual" + "DRAM array", i think less should be better
+
+bing:
+
+"actual DRAM" 4 350
+"array" 11 200 000
+
+"actual" 19 800 000
+"DRAM array" 13 900
+
+no, it is not so. neither multiplications;
+but contrawise, more big is better
+
+"DRAM interface" 59 200
+"specification" 271 mln
+
+"DRAM" 79.6 mln
+"interface specification" 448 000
+
+again so
+
+but with multip.:
+59200*271000000=
+16043200000000
+79600000*448000=
+35660800000000
+larger is not better
+
+idea: to check every single word and to start from the one with largest frequency
+
+different signal ing voltage s
+
+"different"
+"signal"
+"ing"
+"voltage"
+"s"
+suffix frequencies are not available in google and bing
+
+i will check
+random access memory
+DRAM interface specification
+
+"random" 1 020 mln
+"access" 3 040 mln
+"memory" 1 060 mln
+
+"DRAM" 79.6 mln
+"interface" 578 mln
+"specification" 271 mln
+
+start from less:
+>random< access memory
+>random access< memory
+>DRAM< interface specification
+>DRAM interface< specification
+
+start from larger:
+random )access( memory
+DRAM )interface( specification
+oes not work, i need to look the most left an most right first
+random access )memory
+random )access )memory
+DRAM )interface )specification
+works
+
+
+"actual" 1 020 mln
+"DRAM" 79.6 mln
+"array" 345 mln
+
+start from less:
+actual >DRAM< array
+actual >DRAM array<
+ok
+
+start from larger:
+actual( DRAM array
+actual( DRAM )array)
+ok
+
+synchronous dynamic random access memory
+correct is (synchronous (dynamic ((random access) memory)))
+
+synchronous 31.7 mln
+dynamic 561 mln
+random 1 020 mln
+access 3 040 mln
+memory 1 060 mln
+
+start from smallest
+>synchronous< dynamic random access memory
+does not work
+
+start from largest
+synchronous dynamic random )access( memory
+does not work
+from ends:
+(synchronous dynamic random access )memory
+((synchronous dynamic random) access )memory
+does not work
+
+the way from line 974:
+
+(all with quotes)
+
+synchronous 31.7 mln
+dynamic random access memory 0.458 mln
+
+synchronous dynamic random access 0.314 mln
+memory 1 060 mln
+
+does not work... bigger is not better in this case...
+
+so these simple ways do not work
+
+how many combinations?
+
+(synchronous dynamic random access) memory:
+	((synchronous dynamic random) access) memory:
+		(((synchronous dynamic) random) access) memory
+		((synchronous (dynamic random)) access) memory
+	(synchronous (dynamic random access)) memory:
+		(synchronous ((dynamic random) access)) memory
+		(synchronous (dynamic (random access))) memory
+synchronous (dynamic random access memory):
+	synchronous ((dynamic random access) memory):
+		synchronous (((dynamic random) access) memory)
+		synchronous ((dynamic (random access)) memory)
+	synchronous (dynamic (random access memory)):
+		synchronous (dynamic ((random access) memory))
+		synchronous (dynamic (random (access memory)))
+
+8 combinations
+2^(4-1)
+
+used pairs of main words:
+
+(((synchronous dynamic) random) access) memory:
+	synchronous dynamic 360 000
+	dynamic random 508 000
+	random access 14 600 000
+	access memory 9 180 000
+	360+508+14600+9180=24648
+((synchronous (dynamic random)) access) memory:
+	dynamic random 508 000
+	synchronous random 18 200
+	random access 14 600 000
+	access memory 9 180 000
+	508+18.2+14600+9180=24470
+(synchronous ((dynamic random) access)) memory:
+	dynamic random 508 000
+	random access 14 600 000
+	synchronous access 24 200
+	access memory 9 180 000
+	508+14600+24.2+9180=24530
+(synchronous (dynamic (random access))) memory:
+	random access 14 600 000
+	dynamic access 248 000
+	synchronous access 24 200
+	access memory 9 180 000
+	14600+248+24.2+9180=24270
+synchronous (((dynamic random) access) memory):
+	dynamic random 508 000
+	random access 14 600 000
+	access memory 9 180 000
+	synchronous memory 68 900
+	508+14600+9180+68.9=24977
+synchronous ((dynamic (random access)) memory):
+	random access 14 600 000
+	dynamic access 248 000
+	access memory 9 180 000
+	synchronous memory 68 900
+	14600+248+9180+68.9=24717
+synchronous (dynamic ((random access) memory)):
+	random access 14 600 000
+	access memory 9 180 000
+	dynamic memory 547 000
+	synchronous memory 68 900
+	14600+9180+547+68.9=25016
+synchronous (dynamic (random (access memory))):
+	access memory 9 180 000
+	random memory 163 000
+	dynamic memory 547 000
+	synchronous memory 68 900
+	9180+163+547+68.9=10579
+
+maximum is at correct version! 1 of 8!
+how much word pairs are needed to calculate this? seems all possible pairs.
+synchronousdynamic
+dynamicrandom
+randomaccess
+accessmemory
+synchronousrandom
+synchronousaccess
+dynamicaccess
+synchronousmemory
+dynamicmemory
+randommemory
+10
+from 4 words
+synchronous dynamic random access memory
+synchronousdynamic
+synchronousrandom
+synchronousaccess
+synchronousmemory
+4
+dynamicrandom
+dynamicaccess
+dynamicmemory
+3
+randomaccess
+randommemory
+2
+accessmemory
+1
+1+2+3+4=10
+n -> n*(n+1)/2
+4 -> 4*5/2=10
+10 -> 10*11/2=55
+
+i do not know, how the 2 statistical parsers work, which i mentioned in comments
+i want to know it...
+
+-0018-
+commit
+
+found a way to order if i would have frequencies
+
