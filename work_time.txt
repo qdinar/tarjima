@@ -1109,45 +1109,47 @@ used pairs of main words:
 	synchronous random 18 200
 	random access 14 600 000
 	access memory 9 180 000
-	508+18.2+14600+9180=24470
+	508+18,2+14600+9180=24306,2
 (synchronous ((dynamic random) access)) memory:
 	dynamic random 508 000
 	random access 14 600 000
 	synchronous access 24 200
 	access memory 9 180 000
-	508+14600+24.2+9180=24530
+	508+14600+24,2+9180=24312,2
 (synchronous (dynamic (random access))) memory:
 	random access 14 600 000
 	dynamic access 248 000
 	synchronous access 24 200
 	access memory 9 180 000
-	14600+248+24.2+9180=24270
+	14600+248+24,2+9180=24052,2
 synchronous (((dynamic random) access) memory):
 	dynamic random 508 000
 	random access 14 600 000
 	access memory 9 180 000
 	synchronous memory 68 900
-	508+14600+9180+68.9=24977
+	508+14600+9180+68,9=24356,9
 synchronous ((dynamic (random access)) memory):
 	random access 14 600 000
 	dynamic access 248 000
 	access memory 9 180 000
 	synchronous memory 68 900
-	14600+248+9180+68.9=24717
+	14600+248+9180+68,9=24096,9
 synchronous (dynamic ((random access) memory)):
 	random access 14 600 000
 	access memory 9 180 000
 	dynamic memory 547 000
 	synchronous memory 68 900
-	14600+9180+547+68.9=25016
+	14600+9180+547+68,9=24395,9
 synchronous (dynamic (random (access memory))):
 	access memory 9 180 000
 	random memory 163 000
 	dynamic memory 547 000
 	synchronous memory 68 900
-	9180+163+547+68.9=10579
+	9180+163+547+68,9=9958,9
 
-maximum is at correct version! 1 of 8!
+maximum is at correct version! 1 of 8! - this was error
+i made mistake with separator, after correcting, i see this does not work
+
 how much word pairs are needed to calculate this? seems all possible pairs.
 synchronousdynamic
 dynamicrandom
@@ -1186,6 +1188,77 @@ i want to know it...
 
 -0018-
 commit
-
+b7f7def4a30ce491f85d49c1e94d8621f7ffa52d
 found a way to order if i would have frequencies
+
+commit to master
+fd197afac24eb9cec9c12d16a6e9dae64fd65c5f
+going to order noun blocks
+-0025
+
+
+jan9
+1007-
+i have like forgotten some combinations...
+
+(synchronous dynamic random access) memory:
+	((synchronous dynamic) (random access)) memory
+synchronous (dynamic random access memory):
+	synchronous ((dynamic random) (access memory))
+
+(synchronous dynamic random) (access memory):
+	((synchronous dynamic) random) (access memory)
+	(synchronous (dynamic random)) (access memory)
+(synchronous dynamic) (random access memory):
+	(synchronous dynamic) ((random access) memory)
+	(synchronous dynamic) (random (access memory))
++6
+8+6=12
+((synchronous dynamic) (random access)) memory:
+	synchronous dynamic 360 000
+	random access 14 600 000
+	dynamic access 248 000
+	access memory 9 180 000
+	360+14600+248+9180=
+synchronous ((dynamic random) (access memory)):
+	dynamic random 508 000
+	access memory 9 180 000
+	random memory 14 600 000
+	synchronous memory 68 900
+	508+9180+14600+68.9=
+((synchronous dynamic) random) (access memory):
+	synchronous dynamic 360 000
+	dynamic random 508 000
+	access memory 9 180 000
+	random memory 163 000
+(synchronous (dynamic random)) (access memory):
+	dynamic random 508 000
+	synchronous random 18 200
+	access memory 9 180 000
+	random memory 163 000
+(synchronous dynamic) ((random access) memory):
+	synchronous dynamic 360 000
+	random access 14 600 000
+	access memory 9 180 000
+	dynamic memory 547 000
+(synchronous dynamic) (random (access memory)):
+	synchronous dynamic 360 000
+	access memory 9 180 000
+	random memory 163 000
+	dynamic memory 547 000
+
+-1020
+
+1305-
+i have found an error in calculations, the latest method also does not work
+-1321
+
+
+
+
+
+
+
+
+
 
