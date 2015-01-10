@@ -220,7 +220,7 @@ $result=tr_simple_block_2($engtext2);
 show_tree_3_tr($result);
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
-
+//show_tree_3(order_a_sentence_3(explode_3('different signaling voltages, timings, and other factors')));
 
 
 

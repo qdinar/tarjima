@@ -31,13 +31,82 @@ function order_a_complex_noun_3($inparr){
 	if(is_simple_3($inparr)){
 		return $inparr;
 	}
-	if(is_first_article_3($inparr)){
-		$outparr=sep_first_word_3($inparr);
-		$outparr[1]=order_comp_n_without_article_3($outparr[1]);
+	//- separate at ", and" first
+	//example: different signal ing voltage s , timing s , and other factor s
+	$pos=last_logical_with_comma_pos_3($inparr);
+	if($pos!==null){
+		//separate comma part out
+		$outparr=sep_comma_or_logical_bl_3($inparr,$pos);
+		//get comma out
+		$outparr[0]=order_logical_bl_3($outparr[0]);
+		//get logical out
+		$outparr[0][0]=order_logical_bl_3($outparr[0][0]);
+		//return $outparr;
+		$outparr[0][0][0]=order_a_complex_noun_3($outparr[0][0][0]);
 	}else{
-		$outparr=order_comp_n_without_article_3($inparr);
+		//no ", and"
+		//wrong place for last parentheses: example:
+		//neither forward nor backward compatible with any earlier type of random access memory (RAM)
+		if(is_first_article_3($inparr)){
+			$outparr=sep_first_word_3($inparr);
+			$outparr[1]=order_comp_n_without_article_3($outparr[1]);
+		}else{
+			$outparr=order_comp_n_without_article_3($inparr);
+		}
 	}
 	return $outparr;
+}
+
+function o_parenth_bl_3($inparr){
+	//1st and last elements should be ( and )
+	$outparr[]=array_slice($inparr,1,count($inparr)-2);
+	if(count($outparr[0])==1){
+		$outparr[0]=$outparr[0][0];
+	}
+	$outparr[]=array('w'=>'()');
+	return $outparr;
+}
+
+function sep_last_parenth_bl_3($inparr,$pos){
+	return sep_dep_clause_3($inparr,$pos);
+}
+
+function op_parenth_for_3($inparr,$cl_p_pos){
+	$deep=1;
+	for($i=$cl_p_pos-1;$i>=0;$i--){
+		if($inparr[$i]['w']==')'){
+			$deep++;
+		}elseif($inparr[$i]['w']=='('){
+			$deep--;
+		}
+		if($deep==0){
+			return $i;
+		}
+	}
+}
+
+function last_parenth_3($inparr){
+	if($inparr[count($inparr)-1]['w']==')'){
+		return true;
+	}
+}
+
+function last_logical_with_comma_pos_3($inparr){
+	for($i=count($inparr)-1;$i>=1;$i--){
+		if(is_logical_3($inparr[$i])&&$inparr[$i-1]['w']==','){
+			return $i-1;
+		}
+	}
+}
+
+function is_logical_3($elem){
+	if(
+		$elem['w']=='and'
+		||$elem['w']=='or'
+		||$elem['w']=='nor'
+	){
+		return true;
+	}
 }
 
 function is_simple_3($inparr){
@@ -87,7 +156,7 @@ function o_c_n_no_ar_dc_pr_3($inparr){
 	/*
 	$pos=last_logical_pos_3($inparr);
 	if($pos!==null){
-		$outparr=sep_logical_bl_3($inparr,$pos);
+		$outparr=sep_comma_or_logical_bl_3($inparr,$pos);
 		$outparr[0]=order_logical_bl_3($outparr[0]);
 	}else{
 		//no logical element
@@ -96,12 +165,25 @@ function o_c_n_no_ar_dc_pr_3($inparr){
 		$outparr=$inparr;
 	}
 	*/
-	if(is_there_a_neither_nor_bl($inparr)){
-		find_neither_bl_first_last($inparr,$first,$last);
-		$outparr=join_neither_bl_3($inparr,$first,$last);
+	
+	if(last_parenth_3($inparr)){
+		$pos=op_parenth_for_3($inparr,count($inparr)-1);
+		if($pos!==null){
+			$outparr=sep_last_parenth_bl_3($inparr,$pos);
+			$outparr[0]=o_parenth_bl_3($outparr[0]);
+		}else{
+			//opening parentheses is not found
+		}
 	}else{
-		$outparr=$inparr;
+		//no ) at end
+		if(is_there_a_neither_nor_bl($inparr)){
+			find_neither_bl_first_last($inparr,$first,$last);
+			$outparr=join_neither_bl_3($inparr,$first,$last);
+		}else{
+			$outparr=$inparr;
+		}
 	}
+	
 	return $outparr;
 }
 
@@ -135,7 +217,7 @@ function join_neither_bl_3($inparr,$first,$last){
 	$neither_bl=sep_first_word_3($neither_bl);
 	$nor_pos=last_logical_pos_3($neither_bl[1]);
 	//nor_post should not be null
-	$neither_bl[1]=sep_logical_bl_3($neither_bl[1],$nor_pos);
+	$neither_bl[1]=sep_comma_or_logical_bl_3($neither_bl[1],$nor_pos);
 	$neither_bl[1][0]=order_logical_bl_3($neither_bl[1][0]);
 	array_splice($inparr,$first,$last-$first+1,array($neither_bl));
 	return $inparr;
@@ -151,7 +233,7 @@ function order_logical_bl_3($inparr){
 	return $outparr;
 }
 
-function sep_logical_bl_3($inparr,$pos){
+function sep_comma_or_logical_bl_3($inparr,$pos){
 	return sep_dep_clause_3($inparr,$pos);
 }
 
@@ -256,9 +338,9 @@ function order_a_complex_verb_3($inparr){
 		//0 prep bl 1 verb
 		if(!is_comma_or_logical_3($inparr[$pos-1])){
 			//normal prepositional block
-			// outp0 is last prep block
+			// outparr[0] is last prep block
 			$outparr[0]=o_c_prep_bl_3($outparr[0]);
-			// outp1 is complex verb
+			// outparr[1] is complex verb
 			$outparr[1]=order_a_complex_verb_3($outparr[1]);
 		}else{
 			//comma before preposition and several prepositional blocks can be set into a block
@@ -308,19 +390,24 @@ function order_a_complex_verb_3($inparr){
 function o_c_prep_bl_3($inparr){
 	if(is_prep_3($inparr[0])){
 		//example: with ...
-		$prep=$inparr[0];
-		array_splice($inparr,0,1);
-		$outparr[]=$inparr;
-		$outparr[]=$prep;
+		// $prep=$inparr[0];
+		// array_splice($inparr,0,1);
+		// $outparr[]=$inparr;
+		// $outparr[]=$prep;
+		//$outparr[]=array_slice($inparr,1);
+		$outparr[]=order_a_complex_noun_3(array_slice($inparr,1));
+		$outparr[]=$inparr[0];
 	}elseif(
 		$inparr[0]['w']=='due'
 		||$inparr[0]['w']=='similar'
 	){
 		//example: similar to ...
-		$prep=$inparr[0];
-		array_splice($inparr,0,1);
-		$outparr[]=o_c_prep_bl_3($inparr);
-		$outparr[]=$prep;
+		// $prep=$inparr[0];
+		// array_splice($inparr,0,1);
+		// $outparr[]=o_c_prep_bl_3($inparr);
+		// $outparr[]=$prep;
+		$outparr[]=o_c_prep_bl_3(array_slice($inparr,1));
+		$outparr[]=$inparr[0];
 	}
 	return $outparr;
 }
@@ -420,9 +507,7 @@ function sep_last_c_adv_or_prep_bl_3($inparr,$pos){
 function is_comma_or_logical_3($elem){
 	if(
 		$elem['w']==','
-		||$elem['w']=='and'
-		||$elem['w']=='or'
-		||$elem['w']=='nor'
+		||is_logical_3($elem)
 	){
 		return true;
 	}
