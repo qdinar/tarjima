@@ -1253,7 +1253,107 @@ synchronous ((dynamic random) (access memory)):
 i have found an error in calculations, the latest method also does not work
 -1321-
 commit
+329ceaf12f6aa03239102b72cb783e458c673fc8
 mistakes are found, method was not found
+commit
+mistakes are found, method was not found
+-1324
+
+jan11
+0020-
+i am going to make ordering of nouns as it was in previous version
+rename sep_logical_bl_3 -> sep_comma_or_logical_bl_3
+last_comma_logical_pos_3 -> last_logical_with_comma_pos_3
+-0142-
+need to order:
+
+actual dram array s
+early er type s
+dram interface specification
+other factor s
+different signal ing voltage s , timing s
+random access memory
+any early er type
+
+i need to separate last s now but except in the 5th case
+i am going to order it as
+different (signaling (voltages , timings))
+and previously it was so
+i think before "s" i need to check the comma
+-0152-
+commit
+3920afc9ad2a4facfdd3dbe958fa4d9c7f0c52af
+last " ( ) " and " , and "
+-0157-
+last_logical_pos_3->last_comm_or_logic_pos_3
+-0219
+
+2002-
+i made this previously as
+different (signaling ((voltage , timing)s))
+but i was going to separate "s" first
+if so it should be
+(different (signaling (voltage , timing)))s
+is this right?
+in one hand this example shows that i was right when i wanted to start to make "actual ((dram array)s)" see line 929
+i think it is right in english though in tatar may be setting "lar" at more top level is probably more correct
+-2035
+
+2038-
+2142: the 3 examples are almost ordered, need to fix "random access"
+2203: the 3 examples are ordered
+commit
+05d8d5aee47c3b6496910482c3c12bd9f7c46614
+the 3 examples are ordered
+-2206-
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
