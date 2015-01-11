@@ -43,6 +43,8 @@ function order_a_complex_noun_3($inparr){
 		$outparr[0][0]=order_logical_bl_3($outparr[0][0]);
 		//return $outparr;
 		$outparr[0][0][0]=order_a_complex_noun_3($outparr[0][0][0]);
+		//main part
+		$outparr[1]=order_a_complex_noun_3($outparr[1]);
 	}else{
 		//no ", and"
 		//wrong place for last parentheses: example:
@@ -125,6 +127,7 @@ function order_comp_n_without_article_3($inparr){
 	if($pos!==null){
 		$outparr=sep_dep_clause_3($inparr,$pos);
 		$outparr[0]=order_dep_cl_3($outparr[0]);
+		$outparr[1]=order_a_complex_noun_3($outparr[1]);
 	}else{
 		//no conjunction
 		$outparr=o_c_n_noart_nodepcl_3($inparr);
@@ -154,7 +157,7 @@ function o_c_n_no_ar_dc_pr_3($inparr){
 	//order complex noun without article nor dependent clause nor prepositions
 	//but there may be logical words, commas
 	/*
-	$pos=last_logical_pos_3($inparr);
+	$pos=last_comm_or_logic_pos_3($inparr);
 	if($pos!==null){
 		$outparr=sep_comma_or_logical_bl_3($inparr,$pos);
 		$outparr[0]=order_logical_bl_3($outparr[0]);
@@ -177,17 +180,123 @@ function o_c_n_no_ar_dc_pr_3($inparr){
 	}else{
 		//no ) at end
 		if(is_there_a_neither_nor_bl($inparr)){
-			find_neither_bl_first_last($inparr,$first,$last);
+			find_neither_bl_first_last_3($inparr,$first,$last);
 			$outparr=join_neither_bl_3($inparr,$first,$last);
 		}else{
-			$outparr=$inparr;
+			//$outparr=$inparr;
+			$pos=last_comm_or_logic_pos_3($inparr);
+			if($pos!==null){
+				//need to check to separate or not
+				//example:
+				//different signal ing voltage s , timing s
+				if($inparr[count($inparr)-1]['w']!=$inparr[$pos-1]['w']){
+					$outparr=sep_comma_or_logical_bl_3($inparr,$pos);
+					//get comma or logical out
+					$outparr[0]=order_logical_bl_3($outparr[0]);
+					//main part
+					$outparr[1]=order_a_complex_noun_3($outparr[1]);
+				}else{
+					//$outparr=$inparr;
+					//i will try to join "voltage s , timing s" into one element in its place
+					//check for "voltage s , timing s" or "different signal ing voltage s , timing s"
+					if($pos>2){
+						//"different signal ing voltage s , timing s"
+						$outparr=join_last_comma_or_logic_block_3($inparr,$pos);
+						$outparr[count($outparr)-1]=o_c_n_no_ar_dc_pr_3($outparr[count($outparr)-1]);
+						$outparr=o_n_bl_no_ar_dc_pr_comm_log_3($outparr);
+					}elseif($pos==2){
+						//"voltage s , timing s"
+						$outparr=sep_comma_or_logical_bl_3($inparr,$pos);
+						//get comma or logical out
+						$outparr[0]=order_logical_bl_3($outparr[0]);
+						//main part
+						$outparr[1]=order_a_complex_noun_3($outparr[1]);
+					}else{
+						//it is strange:
+						//"s , timing s"
+					}
+					//$outparr=o_n_bl_no_ar_dc_pr_comm_log_3($inparr);
+				}
+			}else{
+				//no ","
+				//$outparr=$inparr;
+				$outparr=o_n_bl_no_ar_dc_pr_comm_log_3($inparr);
+			}
 		}
 	}
 	
 	return $outparr;
 }
 
-function find_neither_bl_first_last($inparr,&$first,&$last){
+function join_last_comma_or_logic_block_3($inparr,$pos){
+	//different signal ing voltage s , timing s
+	$joined=array_splice($inparr,$pos-2);
+	$inparr[]=$joined;
+	return $inparr;
+}
+
+function o_n_bl_no_ar_dc_pr_comm_log_3($inparr){
+	if(is_simple_3($inparr)){
+		return $inparr;
+	}
+	if(
+		//early er type s
+		$inparr[1]['w']=='er-comp'
+		//signal ing voltage s , timing s
+		||$inparr[1]['w']=='ing'
+	){
+		//need to join 1st 2 elements
+		$outparr=sep_first_two_3($inparr);
+		$outparr[1]=o_n_bl_no_ar_dc_pr_comm_log_3($outparr[1]);
+	}
+	//voltage s , timing s
+	elseif($inparr[1]['w']=='s-pl'){
+		//need to check for comma
+		//i think i will join "voltage s , timing s" into one element before it comes here
+		$outparr=$inparr;
+	}else{
+		//need to check for multiwords
+		//example: random access memory
+		//example: DRAM interface specification
+		//assume there are only 2 word multiwords
+		if(first_mw_3($inparr)){
+			$outparr=sep_first_two_3($inparr);
+			$outparr[1]=o_n_bl_no_ar_dc_pr_comm_log_3($outparr[1]);
+		}else{
+			//first 2 words are not of a multiword
+			//just separate first word
+			$outparr=sep_first_word_3($inparr);
+			$outparr[1]=o_n_bl_no_ar_dc_pr_comm_log_3($outparr[1]);
+		}
+		//do not order
+		//$outparr=$inparr;
+	}
+	return $outparr;
+}
+
+function first_mw_3($inparr){
+	global $multiwords;
+	foreach($multiwords as $dic_item){
+		if(
+			$inparr[0]['w']==$dic_item[0]
+			&&$inparr[1]['w']==$dic_item[1]
+		){
+			return true;
+		}
+	}
+}
+
+function sep_first_two_3($inparr){
+	$outparr[]=array_splice($inparr,0,2);
+	$outparr[]=$inparr;
+	if(count($outparr[1])==1){
+		$outparr[1]=$outparr[1][0];
+	}
+	return $outparr;
+}
+
+
+function find_neither_bl_first_last_3($inparr,&$first,&$last){
 	foreach($inparr as $pos=>$elem){
 		if($elem['w']=='neither'){
 			$first=$pos;
@@ -215,7 +324,7 @@ function is_there_a_neither_nor_bl($inparr){
 function join_neither_bl_3($inparr,$first,$last){
 	$neither_bl=array_slice($inparr,$first,$last-$first+1);
 	$neither_bl=sep_first_word_3($neither_bl);
-	$nor_pos=last_logical_pos_3($neither_bl[1]);
+	$nor_pos=last_comm_or_logic_pos_3($neither_bl[1]);
 	//nor_post should not be null
 	$neither_bl[1]=sep_comma_or_logical_bl_3($neither_bl[1],$nor_pos);
 	$neither_bl[1][0]=order_logical_bl_3($neither_bl[1][0]);
@@ -237,7 +346,7 @@ function sep_comma_or_logical_bl_3($inparr,$pos){
 	return sep_dep_clause_3($inparr,$pos);
 }
 
-function last_logical_pos_3($inparr){
+function last_comm_or_logic_pos_3($inparr){
 	for($i=count($inparr)-1;$i>=0;$i--){
 		if(is_comma_or_logical_3($inparr[$i])){
 			return $i;
@@ -323,6 +432,9 @@ function is_article_3($elem){
 function sep_first_word_3($inparr){
 	$outparr[]=$inparr[0];
 	$outparr[]=array_slice($inparr,1);
+	if(count($outparr[1])==1){
+		$outparr[1]=$outparr[1][0];
+	}
 	return $outparr;
 }
 

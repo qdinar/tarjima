@@ -1280,7 +1280,37 @@ i am going to order it as
 different (signaling (voltages , timings))
 and previously it was so
 i think before "s" i need to check the comma
--0152
+-0152-
+commit
+3920afc9ad2a4facfdd3dbe958fa4d9c7f0c52af
+last " ( ) " and " , and "
+-0157-
+last_logical_pos_3->last_comm_or_logic_pos_3
+-0219
+
+2002-
+i made this previously as
+different (signaling ((voltage , timing)s))
+but i was going to separate "s" first
+if so it should be
+(different (signaling (voltage , timing)))s
+is this right?
+in one hand this example shows that i was right when i wanted to start to make "actual ((dram array)s)" see line 929
+i think it is right in english though in tatar may be setting "lar" at more top level is probably more correct
+-2035
+
+2038-
+2142: the 3 examples are almost ordered, need to fix "random access"
+2203: the 3 examples are ordered
+
+
+
+
+
+
+
+
+
 
 
 
