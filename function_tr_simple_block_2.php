@@ -7,6 +7,9 @@ function &tr_simple_block_2(&$simbl){
 	$recursionlevel++;
 	//echo'in level '.$recursionlevel.'<pre>';print_r($simbl);echo'</pre>';echo'*';
 	//if($recursionlevel==11){echo'in level '.$recursionlevel.'<pre>';print_r($simbl);echo'</pre>';echo'*';}
+	//if(isset($simbl['hyphen'])){echo'ok';show_tree_3($simbl);}
+	//if(isset($simbl['hyphen'])){echo'ok';var_dump($simbl);}
+	//if($simbl[1]['w']=='successor'){echo'ok';show_tree_3($simbl);}
 	$s2=array();
 	foreach($mwdic as $mw){
 		if(is_mw_eq($simbl,$mw['en'],$getinner)){
@@ -66,12 +69,35 @@ function &tr_simple_block_2(&$simbl){
 	// }
 	//echo'send to mw from <pre>';var_dump($simbl);echo'</pre>';
 	//if($simbl[0]===null)echo'!!!';
+	//if($simbl[1]['w']=='successor'){echo'ok';show_tree_3($simbl);}
 	$mainw=&get_main_word_ref($simbl[0]);
+	//if($simbl[1]['w']=='successor'){echo'ok';show_tree_3($simbl);}
 	if($mainw['w']=='high'){
 		$mainw['tr']='югары';//echo 'OK';exit;
 	}
+	/*
+	if(func_num_args()==2){
+		$params=func_get_arg(1);
+		if(!$params['plural_found_in_upper_level']){
+			$mainw=get_main_word($simbl);
+			if($mainw['w']=='s-pl'){
+				$params_for_inner['plural_found_in_upper_level']=true;
+				$this_is_plural=true;
+			}
+		}else{
+			$params_for_inner=$params;
+		}
+	}
+	*/
+	// if($simbl[1][1]['w']=='s-pl'){
+		// $spl=$simbl[1][1];
+		// $simbl[1]=$simbl[1][0];
+		// $simbl=array($simbl,$spl);
+	// }
+	//if($simbl[1]['w']=='successor'){echo'ok';show_tree_3($simbl);}
 	//---------------------------------------------------------------------translate 1 of 2
 	if(!isset($simbl[0]['w'])){
+		//if($simbl[1]['w']=='successor'){echo'ok';show_tree_3($simbl);}
 		$s2[0]=&tr_simple_block_2($simbl[0]);
 	}else{
 		//translate_single_modifier_part($simbl,$s2);
@@ -99,10 +125,25 @@ function &tr_simple_block_2(&$simbl){
 	//
 	//---------------------------------------------------------------------translate 2 of 2
 	if(!isset($simbl[1]['w'])){
-		$s2[1]=&tr_simple_block_2($simbl[1]);
+		$s2[1]=&tr_simple_block_2($simbl[1]);//,$params_for_inner
 	}else{
 		translate_single_main_part($simbl,$s2);
 	}
+	/*
+	if(!$params['plural_found_in_upper_level']&&$this_is_plural){
+		//$params_for_inner['plural_found_in_upper_level']=true;
+		$mainw2=get_main_word($s2);
+		if($mainw2['w']=='лар'){
+			$mainw_up=&get_main_word_upper_ref($s2);
+			//$lar=$mainw_up[1];
+			$mainw_up=$mainw_up[0];
+			$s2=array($s2,array('w'=>'x'));
+		// }else{
+			//echo'*';
+			//show_tree_3($simbl);
+		}
+	}
+	*/
 	apply_fixes_after_1($simbl,$s2);
 	/*
 	//these work incorrectly when order is changed
@@ -738,7 +779,12 @@ function apply_fixes_after_1(&$simbl,&$s2){
 	}
 	//if($simbl[1]===null)echo'!!!';
 	$sb0mainword=get_main_word($simbl[0]);
-	$sb1mainword=get_main_word($simbl[1]);
+	if($simbl[1][1]['w']=='s-pl'){
+		$sb1mainword=get_main_word($simbl[1][0]);
+	}else{
+		$sb1mainword=get_main_word($simbl[1]);
+	}
+	//if($simbl[1]['w']=='successor'){echo'ok';show_tree_3($simbl);var_dump($sb0mainword);echo':1:';show_tree_3($sb1mainword);}
 	if(
 		(
 			$sb0mainword['w']=='access'
@@ -775,8 +821,14 @@ function apply_fixes_after_1(&$simbl,&$s2){
 		$sb0mainword['w']=='ing'
 		&&$sb1mainword['w']=='s-pl'
 		||
-		$sb0mainword['w']=='DDR3'
-		&&$sb1mainword['w']=='SDRAM'
+		(
+			$sb0mainword['w']=='DDR3'
+			||$sb0mainword['w']=='DDR4'
+		)
+		&&(
+			$sb1mainword['w']=='SDRAM'
+			||$simbl[1]['mainw']=='SDRAM'
+		)
 		||
 		$sb0mainword['w']=='data'
 		&&$sb1mainword['w']=='rate'

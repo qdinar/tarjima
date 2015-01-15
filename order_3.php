@@ -13,6 +13,37 @@ function order_a_sentence_3($inparr){
 }
 
 function order_a_sent_without_last_dot($inparr){
+	//need to check for introduction
+	if(is_prep_3($inparr[0])){
+		$pos=first_comma_pos_3($inparr);
+		if($pos!==null){
+			$outparr=sep_first_several_3($inparr,$pos+1);
+			$outparr[1]=o_s_no_lastdot_intro_3($outparr[1]);
+			$outparr[0]=o_intro_3($outparr[0]);
+			$outparr[0][0]=o_c_prep_bl_3($outparr[0][0]);
+		}else{
+			//example
+			//in a book.
+			$outparr=o_c_prep_bl_3($inparr);
+		}
+	}else{
+		$outparr=o_s_no_lastdot_intro_3($inparr);
+	}
+	return $outparr;
+}
+
+function o_intro_3($inparr){
+	//last should be comma
+	$comma=array_splice($inparr,-1);
+	$outparr[]=$inparr;
+	if(count($outparr[0])==1){
+		$outparr[0]=$outparr[0][0];
+	}
+	$outparr[]=$comma[0];
+	return $outparr;
+}
+
+function o_s_no_lastdot_intro_3($inparr){
 	$tmp=top_verb_suf_pos_3($inparr);
 	if($tmp!==null){
 		$outparr=sep_top_verb_suf_3($inparr,$tmp);
@@ -27,8 +58,16 @@ function order_a_sent_without_last_dot($inparr){
 	return $outparr;
 }
 
+function first_comma_pos_3($inparr){
+	foreach($inparr as $pos=>$elem){
+		if($elem['w']==','){
+			return $pos;
+		}
+	}
+}
+
 function order_a_complex_noun_3($inparr){
-	if(is_simple_3($inparr)){
+	if(is_simple_or_ordered_3($inparr)){
 		return $inparr;
 	}
 	//- separate at ", and" first
@@ -38,9 +77,9 @@ function order_a_complex_noun_3($inparr){
 		//separate comma part out
 		$outparr=sep_comma_or_logical_bl_3($inparr,$pos);
 		//get comma out
-		$outparr[0]=order_logical_bl_3($outparr[0]);
+		$outparr[0]=o_logic_bl_norecurs_3($outparr[0]);
 		//get logical out
-		$outparr[0][0]=order_logical_bl_3($outparr[0][0]);
+		$outparr[0][0]=o_logic_bl_norecurs_3($outparr[0][0]);
 		//return $outparr;
 		$outparr[0][0][0]=order_a_complex_noun_3($outparr[0][0][0]);
 		//main part
@@ -111,15 +150,20 @@ function is_logical_3($elem){
 	}
 }
 
-function is_simple_3($inparr){
+function is_simple_or_ordered_3($inparr){
 	return (
 		isset($inparr['w'])
-		||count($inparr)==2&&isset($inparr[0]['w'])&&isset($inparr[1]['w'])
+		//||count($inparr)==2&&isset($inparr[0]['w'])&&isset($inparr[1]['w'])
+		||
+		isset($inparr[0])
+		&&isset($inparr[1])
+		&&!isset($inparr[2])
+		||count($inparr)==0
 	);
 }
 
 function order_comp_n_without_article_3($inparr){
-	if(is_simple_3($inparr)){
+	if(is_simple_or_ordered_3($inparr)){
 		//this is simple noun
 		return $inparr;
 	}
@@ -137,38 +181,250 @@ function order_comp_n_without_article_3($inparr){
 }
 
 function o_c_n_noart_nodepcl_3($inparr){
-	$pos=c_n_1st_prep_3($inparr);
+	if(is_simple_or_ordered_3($inparr)){
+		return $inparr;
+	}
+	//need to check for logicals and commas
+	//example:
+	//higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips
+	$pos=last_comm_or_logic_pos_3($inparr);
 	if($pos!==null){
-		$outparr=sep_n_prep_bl_3($inparr,$pos);
-		$outparr[0]=o_c_prep_bl_3($outparr[0]);
-		$outparr[0][0]=o_c_n_noart_nodepcl_3($outparr[0][0]);
-		$outparr[1]=o_c_n_no_ar_dc_pr_3($outparr[1]);
-		//$outparr[1]=
+		//need to check to separate or not
+		//example:
+		//different signal ing voltage s , timing s
+		//example:
+		//neither forward nor backward compatible with any ...
+		//example:
+		//higher-speed successor to DDR and DDR2
+		//need to check for explanation block with 2 commas around
+		//example:
+		//DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory,
+		if($pos==count($inparr)-1 && $inparr[$pos]['w']==','){
+			$inparr=del_last_el_3($inparr);
+			$begin_comma_pos=last_comm_pos_3($inparr);
+			$outparr=sep_comma_or_logical_bl_3($inparr,$begin_comma_pos+1);
+			$outparr[1]=del_last_el_3($outparr[1]);
+			$outparr[0]=array($outparr[0],array('w'=>',,'));
+			$outparr[0][0]=order_a_complex_noun_3($outparr[0][0]);
+		}elseif($inparr[count($inparr)-1]['w']==$inparr[$pos-1]['w']){
+			//$outparr=$inparr;
+			//i will try to join "voltage s , timing s" into one element in its place
+			//check for "voltage s , timing s" or "different signal ing voltage s , timing s"
+			if($pos>2){
+				//"different signal ing voltage s , timing s"
+				$outparr=join_last_block_3($inparr,$pos-2);
+				$outparr[count($outparr)-1]=o_c_n_noart_nodepcl_3($outparr[count($outparr)-1]);
+				//$outparr=o_n_no_ar_dc_pr_comlog_parenth_3($outparr);
+				$outparr=o_c_n_noart_nodepcl_3($outparr);
+			}elseif($pos==2){
+				//"voltage s , timing s"
+				$outparr=sep_comma_or_logical_bl_3($inparr,$pos);
+				//get comma or logical out
+				$outparr[0]=o_logic_bl_norecurs_3($outparr[0]);
+				//main part
+				$outparr[1]=order_a_complex_noun_3($outparr[1]);
+				//inner part
+				$outparr[0][0]=order_a_complex_noun_3($outparr[0][0]);
+			}else{
+				//it is strange:
+				//"s , timing s"
+			}
+			//$outparr=o_n_no_ar_dc_pr_comlog_parenth_3($inparr);
+		}elseif($inparr[$pos]['w']=='nor'&&$inparr[$pos-2]['w']=='neither'){
+			$outparr=o_n_bl_no_ar_dc_comm_log_3($inparr);
+		}elseif(
+			$inparr[$pos+1]['w']=='DDR2'
+			&&$inparr[$pos-1]['w']=='DDR'
+			&&count($inparr)>3
+		){
+			$outparr=join_last_block_3($inparr,$pos-1);
+			$outparr[count($outparr)-1]=o_c_n_noart_nodepcl_3($outparr[count($outparr)-1]);
+			$outparr=o_c_n_noart_nodepcl_3($outparr);
+		}else{
+			$outparr=sep_comma_or_logical_bl_3($inparr,$pos);
+			//get comma or logical out
+			$outparr[0]=o_logic_bl_norecurs_3($outparr[0]);
+			//main part
+			$outparr[1]=order_a_complex_noun_3($outparr[1]);
+			//inner part
+			$outparr[0][0]=order_a_complex_noun_3($outparr[0][0]);
+		}
 	}else{
-		//return $inparr;
-		//no preposition
+		//no ","
 		//$outparr=$inparr;
-		$outparr=o_c_n_no_ar_dc_pr_3($inparr);
+		//$outparr=o_n_no_ar_dc_pr_comlog_parenth_3($inparr);
+		$outparr=o_n_bl_no_ar_dc_comm_log_3($inparr);
 	}
 	return $outparr;
 }
 
+function del_last_el_3($inparr){
+	unset($inparr[count($inparr)-1]);
+	return $inparr;
+}
+
+function last_comm_pos_3($inparr){
+	for($i=count($inparr)-1;$i>=0;$i--){
+		if($inparr[$i]['w']==','){
+			return $i;
+		}
+	}
+}
+
+function o_n_bl_no_ar_dc_comm_log_3($inparr){
+	$pos=c_n_1st_prep_3($inparr);
+	if($pos!==null){
+		$outparr=sep_n_prep_bl_3($inparr,$pos);
+		$outparr[0]=o_c_prep_bl_3($outparr[0]);
+		$outparr[1]=o_c_n_no_ar_dc_comlog_pr_3($outparr[1]);
+	}else{
+		//no preposition
+		$outparr=o_c_n_no_ar_dc_comlog_pr_3($inparr);
+	}
+	return $outparr;
+}
+
+function o_c_n_no_ar_dc_comlog_pr_3($inparr){
+	//need to check for parentheses block
+	//example:
+	//DDR4 synchronous dynamic random access memory (SDRAM) chips
+	//DDR4 { synchronous dynamic random access memory (SDRAM) } chips
+	if(true==find_first_parenth_3($inparr,$opening,$closing)){
+		//echo'OK';
+		if($closing-$opening>1){
+			$inner=array_slice($inparr,$opening+1,$closing-$opening-1);
+			if(count($inner)==1){
+				$inner=$inner[0];
+				if($inner['thisisabbreviation']){
+					//echo'OK';
+					//echo $opening;
+					//echo $inner['w'];
+					//show_tree_3($inparr);
+					//try to check for first letters
+					//and find beginning of parentheses block
+					$letters=str_split($inner['w'],1);
+					//assume all are capital letters
+					if($opening>count($letters)){
+						//echo'OK';
+						//the hello world (HW) ...
+						//hello world program (HW) ...
+						//try count of words before ( as letters in abbrevation
+						$try_equal=true;
+						for($i=$opening-count($letters),$j=0;$i<$opening;$i++,$j++){
+							if(substr($inparr[$i]['w'],0,1)!=strtolower($letters[$j])){
+								$try_equal=false;
+								break;
+							}
+						}
+						if($try_equal){
+							//echo'OK';
+							//example:
+							//the hello world (HW) ...
+							$outparr=join_parenth_bl_and_o_from_to_3($inparr,$opening-count($letters),$closing);
+							//$outparr[$opening-count($letters)]=o_parenthesed_3($outparr[$opening-count($letters)]);
+							$outparr[$opening-count($letters)]['mainw']=$inner['w'];
+						}else{
+							//examples:
+							//hello world program (HW) ...
+							//assume all words before ( belong to explaned
+							$outparr=join_parenth_bl_and_o_from_to_3($inparr,0,$closing);
+							//$outparr[0]=o_parenthesed_3($outparr[0]);
+						}
+					}else{
+						//example:
+						//hello world (HWP) ...
+						//assume all words before ( belong to explaned
+						$outparr=join_parenth_bl_and_o_from_to_3($inparr,0,$closing);
+						//$outparr[0]=o_parenthesed_3($outparr[0]);
+					}
+				}else{
+					//1 word in (), not abbr
+					//hello world program (test) ...
+					$outparr=join_parenth_bl_and_o_from_to_3($inparr,0,$closing);
+					//$outparr[0]=o_parenthesed_3($outparr[0]);
+				}
+			}else{
+				//many words in ()
+				//hello world program (test program) ...
+				$outparr=join_parenth_bl_and_o_from_to_3($inparr,0,$closing);
+				//$outparr[0]=o_parenthesed_3($outparr[0]);
+			}
+		}else{
+			//strange: ... () ...
+		}
+	}else{
+		//parentheses block not found
+		$outparr=$inparr;
+	}
+	/*
+	if(last_parenth_3($inparr)){
+		// / *
+		$pos=op_parenth_for_3($inparr,count($inparr)-1);
+		if($pos!==null){
+			$outparr=sep_last_parenth_bl_3($inparr,$pos);
+			$outparr[0]=o_parenth_bl_3($outparr[0]);
+			$outparr[1]=o_n_no_ar_dc_pr_comlog_parenth_3($outparr[1]);
+		}else{
+			//opening parentheses is not found
+		}
+		// * /
+		$outparr=o_parenthesed_3($inparr);
+	}else{
+		//no ) at end
+		if(is_there_a_neither_nor_bl($inparr)){
+			find_neither_bl_first_last_3($inparr,$first,$last);
+			$outparr=join_neither_bl_3($inparr,$first,$last);
+		}else{
+			//$outparr=$inparr;
+			$outparr=o_n_no_ar_dc_pr_comlog_parenth_3($inparr);
+		}
+	}
+	*/
+	$outparr=o_n_no_ar_dc_pr_comlog_parenth_3($outparr);
+	return $outparr;
+}
+
+function o_parenthesed_3($inparr){
+	$pos=op_parenth_for_3($inparr,count($inparr)-1);
+	if($pos!==null){
+		$outparr=sep_last_parenth_bl_3($inparr,$pos);
+		$outparr[0]=o_parenth_bl_3($outparr[0]);
+		$outparr[1]=o_n_no_ar_dc_pr_comlog_parenth_3($outparr[1]);
+	}else{
+		//opening parentheses is not found
+	}
+	return $outparr;
+}
+
+function join_parenth_bl_and_o_from_to_3($inparr,$begin,$end){
+	if($begin==0&&$end==count($inparr)-1){
+		return o_parenthesed_3($inparr);
+	}
+	$joined=array_splice($inparr,$begin,$end-$begin+1,'');
+	$inparr[$begin]=o_parenthesed_3($joined);
+	return $inparr;
+}
+
+function find_first_parenth_3($inparr,&$opening,&$closing){
+	foreach($inparr as $pos=>$elem){
+		if($elem['w']=='('){
+			$opening=$pos;
+			$deep++;
+		}
+		if( $elem['w']==')' && $deep>0 ){
+			$deep--;
+			if($deep==0){
+				$closing=$pos;
+				return true;
+			}
+		}
+	}
+}
+
+/*
 function o_c_n_no_ar_dc_pr_3($inparr){
 	//order complex noun without article nor dependent clause nor prepositions
 	//but there may be logical words, commas
-	/*
-	$pos=last_comm_or_logic_pos_3($inparr);
-	if($pos!==null){
-		$outparr=sep_comma_or_logical_bl_3($inparr,$pos);
-		$outparr[0]=order_logical_bl_3($outparr[0]);
-	}else{
-		//no logical element
-		//example: neither a book
-		//leave it for now
-		$outparr=$inparr;
-	}
-	*/
-	
 	if(last_parenth_3($inparr)){
 		$pos=op_parenth_for_3($inparr,count($inparr)-1);
 		if($pos!==null){
@@ -192,7 +448,7 @@ function o_c_n_no_ar_dc_pr_3($inparr){
 				if($inparr[count($inparr)-1]['w']!=$inparr[$pos-1]['w']){
 					$outparr=sep_comma_or_logical_bl_3($inparr,$pos);
 					//get comma or logical out
-					$outparr[0]=order_logical_bl_3($outparr[0]);
+					$outparr[0]=o_logic_bl_norecurs_3($outparr[0]);
 					//main part
 					$outparr[1]=order_a_complex_noun_3($outparr[1]);
 				}else{
@@ -201,72 +457,102 @@ function o_c_n_no_ar_dc_pr_3($inparr){
 					//check for "voltage s , timing s" or "different signal ing voltage s , timing s"
 					if($pos>2){
 						//"different signal ing voltage s , timing s"
-						$outparr=join_last_comma_or_logic_block_3($inparr,$pos);
+						$outparr=join_last_block_3($inparr,$pos-2);
 						$outparr[count($outparr)-1]=o_c_n_no_ar_dc_pr_3($outparr[count($outparr)-1]);
-						$outparr=o_n_bl_no_ar_dc_pr_comm_log_3($outparr);
+						$outparr=o_n_no_ar_dc_pr_comlog_parenth_3($outparr);
 					}elseif($pos==2){
 						//"voltage s , timing s"
 						$outparr=sep_comma_or_logical_bl_3($inparr,$pos);
 						//get comma or logical out
-						$outparr[0]=order_logical_bl_3($outparr[0]);
+						$outparr[0]=o_logic_bl_norecurs_3($outparr[0]);
 						//main part
 						$outparr[1]=order_a_complex_noun_3($outparr[1]);
 					}else{
 						//it is strange:
 						//"s , timing s"
 					}
-					//$outparr=o_n_bl_no_ar_dc_pr_comm_log_3($inparr);
+					//$outparr=o_n_no_ar_dc_pr_comlog_parenth_3($inparr);
 				}
 			}else{
 				//no ","
 				//$outparr=$inparr;
-				$outparr=o_n_bl_no_ar_dc_pr_comm_log_3($inparr);
+				$outparr=o_n_no_ar_dc_pr_comlog_parenth_3($inparr);
 			}
 		}
 	}
-	
 	return $outparr;
 }
+*/
 
-function join_last_comma_or_logic_block_3($inparr,$pos){
+function join_last_block_3($inparr,$pos){
 	//different signal ing voltage s , timing s
-	$joined=array_splice($inparr,$pos-2);
+	$joined=array_splice($inparr,$pos);
 	$inparr[]=$joined;
 	return $inparr;
 }
 
-function o_n_bl_no_ar_dc_pr_comm_log_3($inparr){
-	if(is_simple_3($inparr)){
+function o_n_no_ar_dc_pr_comlog_parenth_3($inparr){
+	if(is_simple_or_ordered_3($inparr)){
 		return $inparr;
 	}
+	//need to check for:
+	//double data rate type three synchronous dynamic random access memory
+	//double (data rate) (type three) synchronous dynamic (random access) memory
 	if(
 		//early er type s
 		$inparr[1]['w']=='er-comp'
 		//signal ing voltage s , timing s
 		||$inparr[1]['w']=='ing'
+		// ||(
+			// $inparr[0]['w']=='type'
+			// &&$inparr[1]['w']=='three'
+		// )
 	){
-		//need to join 1st 2 elements
-		$outparr=sep_first_two_3($inparr);
-		$outparr[1]=o_n_bl_no_ar_dc_pr_comm_log_3($outparr[1]);
+		//need to check:
+		// high er - speed successor
+		if($inparr[2]['w']=='-'){
+			$outparr=sep_first_several_3($inparr,4);
+			array_splice($outparr[0],2,1);
+			$outparr[0]=o_n_no_ar_dc_pr_comlog_parenth_3($outparr[0]);
+			$outparr[0]['hyphen']=true;
+		}else{
+			//need to join 1st 2 elements
+			$outparr=sep_first_several_3($inparr,2);
+			$outparr[1]=o_n_no_ar_dc_pr_comlog_parenth_3($outparr[1]);
+		}
 	}
 	//voltage s , timing s
 	elseif($inparr[1]['w']=='s-pl'){
 		//need to check for comma
 		//i think i will join "voltage s , timing s" into one element before it comes here
 		$outparr=$inparr;
+	}elseif(is_there_a_neither_nor_bl($inparr)){
+		find_neither_bl_first_last_3($inparr,$first,$last);
+		$outparr=join_neither_bl_3($inparr,$first,$last);
+	}elseif(
+		is_there_a_type_num_bl($inparr,$type_pos,$end_pos)
+		&&$end_pos!=count($inparr)-1
+	){
+		$outparr=sep_first_several_3($inparr,$end_pos+1);
+		$outparr[0]=sep_dep_clause_3($outparr[0],$type_pos);
+		//$outparr[0]: 0 type three 1 d d r
+		$outparr[0][0]=o_logic_bl_norecurs_3($outparr[0][0]);
+		//$outparr[0][0]: 0 three 1 type
+		$outparr[0][1]=o_n_no_ar_dc_pr_comlog_parenth_3($outparr[0][1]);
+		$outparr[1]=o_n_no_ar_dc_pr_comlog_parenth_3($outparr[1]);
 	}else{
 		//need to check for multiwords
 		//example: random access memory
 		//example: DRAM interface specification
 		//assume there are only 2 word multiwords
 		if(first_mw_3($inparr)){
-			$outparr=sep_first_two_3($inparr);
-			$outparr[1]=o_n_bl_no_ar_dc_pr_comm_log_3($outparr[1]);
+			$outparr=sep_first_several_3($inparr,2);
+			$outparr[1]=o_n_no_ar_dc_pr_comlog_parenth_3($outparr[1]);
 		}else{
 			//first 2 words are not of a multiword
 			//just separate first word
 			$outparr=sep_first_word_3($inparr);
-			$outparr[1]=o_n_bl_no_ar_dc_pr_comm_log_3($outparr[1]);
+			$outparr[1]=o_n_no_ar_dc_pr_comlog_parenth_3($outparr[1]);
 		}
 		//do not order
 		//$outparr=$inparr;
@@ -274,20 +560,50 @@ function o_n_bl_no_ar_dc_pr_comm_log_3($inparr){
 	return $outparr;
 }
 
+function is_there_a_type_num_bl($inparr,&$type_pos,&$end_pos){
+	foreach($inparr as $pos=>$elem){
+		if(
+			$elem['w']=='type'
+			&&is_num_3($inparr[$pos+1])
+		){
+			$type_pos=$pos;
+			$end_pos=$pos+1;
+			return true;
+		}
+	}
+}
+
+function is_num_3($elem){
+	if(
+		$elem['w']=='three'
+	){
+		return true;
+	}
+}
+
 function first_mw_3($inparr){
 	global $multiwords;
 	foreach($multiwords as $dic_item){
 		if(
-			$inparr[0]['w']==$dic_item[0]
-			&&$inparr[1]['w']==$dic_item[1]
+			(
+				$inparr[0]['w']==$dic_item[0]
+				||$inparr[0]['mainw']==$dic_item[0]
+			)
+			&&(
+				$inparr[1]['w']==$dic_item[1]
+				||$inparr[1]['mainw']==$dic_item[1]
+			)
 		){
 			return true;
 		}
 	}
 }
 
-function sep_first_two_3($inparr){
-	$outparr[]=array_splice($inparr,0,2);
+function sep_first_several_3($inparr,$quantity){
+	$outparr[]=array_splice($inparr,0,$quantity);
+	if(count($outparr[0])==1){
+		$outparr[0]=$outparr[0][0];
+	}
 	$outparr[]=$inparr;
 	if(count($outparr[1])==1){
 		$outparr[1]=$outparr[1][0];
@@ -327,12 +643,12 @@ function join_neither_bl_3($inparr,$first,$last){
 	$nor_pos=last_comm_or_logic_pos_3($neither_bl[1]);
 	//nor_post should not be null
 	$neither_bl[1]=sep_comma_or_logical_bl_3($neither_bl[1],$nor_pos);
-	$neither_bl[1][0]=order_logical_bl_3($neither_bl[1][0]);
+	$neither_bl[1][0]=o_logic_bl_norecurs_3($neither_bl[1][0]);
 	array_splice($inparr,$first,$last-$first+1,array($neither_bl));
 	return $inparr;
 }
 
-function order_logical_bl_3($inparr){
+function o_logic_bl_norecurs_3($inparr){
 	//first element should be comma or logical
 	$outparr[]=array_slice($inparr,1);
 	if(count($outparr[0])==1){
@@ -361,6 +677,9 @@ function sep_n_prep_bl_3($inparr,$pos){
 function c_n_1st_prep_3($inparr){
 	foreach($inparr as $pos=>$elem){
 		if(is_prep_3($elem)){
+			//need to check
+			//example:
+			//higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips
 			return $pos;
 		}
 	}
@@ -439,7 +758,7 @@ function sep_first_word_3($inparr){
 }
 
 function order_a_complex_verb_3($inparr){
-	if(is_simple_3($inparr)){
+	if(is_simple_or_ordered_3($inparr)){
 		//this is simple verb
 		return $inparr;
 	}
@@ -500,6 +819,11 @@ function order_a_complex_verb_3($inparr){
 }
 
 function o_c_prep_bl_3($inparr){
+	if(is_simple_or_ordered_3($inparr)){
+		if(is_prep_3($inparr[1])){
+			return $inparr;
+		}
+	}
 	if(is_prep_3($inparr[0])){
 		//example: with ...
 		// $prep=$inparr[0];
@@ -507,7 +831,9 @@ function o_c_prep_bl_3($inparr){
 		// $outparr[]=$inparr;
 		// $outparr[]=$prep;
 		//$outparr[]=array_slice($inparr,1);
-		$outparr[]=order_a_complex_noun_3(array_slice($inparr,1));
+		$inner=array_slice($inparr,1);
+		if(count($inner)==1){$inner=$inner[0];}
+		$outparr[]=order_a_complex_noun_3($inner);
 		$outparr[]=$inparr[0];
 	}elseif(
 		$inparr[0]['w']=='due'
@@ -639,7 +965,20 @@ function verb_last_c_adv_or_prep_pos_3($inparr){
 					//... backward compatible with ...
 				}
 			}else{
-				return $i;
+				//need to check
+				//example:
+				//It is the higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips.
+				if(
+					$inparr[$i]['w']=='to'
+					&&(
+						$inparr[$i-1]['w']=='predecessor'
+						||$inparr[$i-1]['w']=='successor'
+					)
+				){
+					//default return false
+				}else{
+					return $i;
+				}
 			}
 		}
 	}
@@ -651,6 +990,8 @@ function is_prep_3($elem){
 		||$elem['w']=='to'
 		||$elem['w']=='from'
 		||$elem['w']=='of'
+		||$elem['w']=='in'
+		||$elem['w']=='for'
 	){
 		return true;
 	}

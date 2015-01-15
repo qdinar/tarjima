@@ -606,16 +606,23 @@ function assign_mw_tr(&$s2,$tr,$inner,&$simbl){
 //dec31: i think in more cases noun after noun is noun's noun. and will try to change code that way.
 function get_main_word($simbl){
 	if($simbl===null){
-		return array('w'=>'null');
+		return array('w'=>'0null0');
 	}
 	//echo'1<pre>';var_dump($simbl);echo'</pre>';
 	if(isset($simbl['w'])){
 		return $simbl;
 	}
-	elseif(count($simbl)>2){
-		return $simbl[count($simbl)-1];
+	if(count($simbl)>2){
+		for($i=count($simbl)-1;$i>2;$i--){
+			if(isset($simbl[$i])){
+				return $simbl[$i];
+			}
+		}
 	}
-	elseif(isset($simbl[1]['w'])){
+	// elseif(count($simbl)>2){
+		// return $simbl[count($simbl)-1];
+	// }
+	if(isset($simbl[1]['w'])){
 		return $simbl[1];
 	}
 	else{
@@ -633,10 +640,14 @@ function &get_main_word_ref(&$simbl){
 	// }else{
 		// return get_main_word_ref($simbl[1]);
 	// }
-	elseif(count($simbl)>2){
-		return $simbl[count($simbl)-1];
+	if(count($simbl)>2){
+		for($i=count($simbl)-1;$i>2;$i--){
+			if(isset($simbl[$i])){
+				return $simbl[$i];
+			}
+		}
 	}
-	elseif(is_array($simbl[1])){
+	if(is_array($simbl[1])){
 	//else{
 		//if($simbl[1]===NULL){echo'OK';exit;}
 		$tmp=&get_main_word_ref($simbl[1]);
@@ -645,6 +656,10 @@ function &get_main_word_ref(&$simbl){
 		//return array('w'=>'null');
 		//return $simbl[0];
 	}else{
+		if(count($simbl)==0){
+			$simbl['w']='null';
+			return $simbl;
+		}
 		//echo'<pre>';print_r($simbl);exit;
 		echo'<pre>';var_dump($simbl);exit;//null
 		//return '***';

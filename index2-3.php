@@ -222,9 +222,37 @@ $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
 //show_tree_3(order_a_sentence_3(explode_3('different signaling voltages, timings, and other factors')));
 
+$multiwords[]=array('DDR4','SDRAM');
+$engtext='It is the higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips.';
+$engtext2=explode_3($engtext);
+$engtext2=order_a_sentence_3($engtext2);
+echo '<br><br>',$engtext;
+show_tree_3($engtext2);
+$result=tr_simple_block_2($engtext2);
+show_tree_3_tr($result);
+$nstd_to_str_2_firstwordisready=false;
+echo nstd_to_str_2($result);
 
 
 
+//$multiwords[]=array('double','data','rate');
+$engtext='In computing, DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory, is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007.';
+//$engtext='DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory, is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007.';
+//$engtext='DDR3 SDRAM is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007.';
+echo '<br><br>',$engtext;
+$engtext2=explode_3($engtext);
+//show_tree_3($engtext2);
+//try{
+$engtext2=order_a_sentence_3($engtext2);
+// }catch(Exception $e){
+// show_tree_3($engtext2);
+// was just " Fatal error: Allowed memory size of 134217728 bytes exhausted ...". and not printed also here in the catch
+// }
+show_tree_3($engtext2);
+$result=tr_simple_block_2($engtext2);
+show_tree_3_tr($result);
+$nstd_to_str_2_firstwordisready=false;
+echo nstd_to_str_2($result);
 
 
 

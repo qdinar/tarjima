@@ -1,0 +1,124 @@
+
+2015 january 11
+
+22:25 : new work_time_2015-01-11-.txt is started
+
+-2228
+
+
+jan12
+
+1412-
+1422: translations of the 3 examples are fixed
+-1424
+
+1427-
+-1432
+
+1438-
+-1509
+
+
+
+1914-
+-1938
+
+
+1948-
+-1
+-2124
+
+
+jan13
+
+1038-
+-1
+-1148
+
+1248-
+-1252
+
+1300-
+-1
+-1354
+
+1836-
+1844: new example is ordered
+-1900
+
+1932-
+-1
+-2016
+
+0029-
+tried to move lar suffix from inner level to most possible outer level, but could not
+i would like to make some big changes to make that easy
+-0154
+
+158-
+-201
+
+jan14
+1416-
+it was not completely correctly ordered
+it is "ddr4 (sdram chips)"
+but should be "(ddr4 sdram) chips"
+-1420
+
+1651-
+1700: the latest example ordering is fixed
+now the problem with lar , see line 54, has disappeared, it should be easy now
+and i should not use the way i tried at night, it probably would not work correctly, i think, because translation and english trees would be inconsistent. now i have edited english tree inside translate function.
+and now even if i moved lar upper , it then "automatically" moved back by later code:
+(... микросхема) лар
+->
+... ((микросхема лар) ы)
+this fact of tatar language shows that it is also technically is not "(... микросхема) лар" as i did it ... but "... (микросхема лар)" as i have started to do in english. i will try same way in tatar.
+1730 : done , the latest example translation is fixed.
+1732 : other examples are ok
+-1746
+
+1852-
+-1938
+
+2308-
+same way as i moved plural s suffix into inner level, i am not sure about article position now in "an abbreviation for double data rate type three synchronous dynamic random access memory":
+it is now and was:
+an (abbreviation for double data rate type three synchronous dynamic random access memory)
+but maybe  i should make it
+(an abbreviation) (for double data rate type three synchronous dynamic random access memory)
+i left it for now as it was
+-0051
+
+
+jan15
+
+1615-
+commit
+
+1 more example is done, 5th started with order_3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

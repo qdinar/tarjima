@@ -1,9 +1,10 @@
 <?php
 function nstd_to_str_2($nstd){
 	global $prev_w, $prev_w_sc;
-	//echo '*',$prev_w;
-	//show_tree_3($nstd);
-	$result='';
+	//if($prev_w=='керү'){echo'***';show_tree_3($nstd);}
+	// echo '*',$prev_w;
+	// show_tree_3($nstd);
+	// $result='';
 	//global $firstletterofsentenceiscapital;
 	global $nstd_to_str_2_firstwordisready;
 	if(isset($nstd['dash'])){
@@ -14,6 +15,8 @@ function nstd_to_str_2($nstd){
 	}
 	if(isset($nstd['w'])){
 		$result.=$nstd['w'];
+		$prev_w=$nstd['w'];
+		$prev_w_sc=$nstd['w'];
 		goto ret_res;
 	}
 	if(isset($nstd[0][1]['w'])){
@@ -68,17 +71,29 @@ function nstd_to_str_2($nstd){
 			||$nstd[0][1]['w']=='()'
 		){
 			$result.=nstd_to_str_2($nstd[1]);
+			$prev_w=$nstd[1]['w'];
+			$prev_w_sc=$nstd[1]['w'];
 			if($nstd[0][1]['w']=='()'){
 				$result.=' (';
 			}elseif($nstd[0][1]['w']==','){
 				$result.=', ';
 			}else{
 				$result.=' '.$nstd[0][1]['w'];
+				$prev_w=$nstd[0][1]['w'];
+				$prev_w_sc=$nstd[0][1]['w'];
 			}
 			if($nstd[0][1]['w']!='()'){
 				$result.=' ';
 			}
-			$result.=nstd_to_str_2($nstd[0][0]);
+			if($nstd[0][0][1]['w']=='һәм'){
+				// , һәм
+				$result.=nstd_to_str_2($nstd[0][0][1]);
+				$result.=' ';
+				$result.=nstd_to_str_2($nstd[0][0][0]);
+			}else{
+				// һәм
+				$result.=nstd_to_str_2($nstd[0][0]);
+			}
 			if($nstd[0][1]['w']=='()'){
 				$result.=') ';
 			}
@@ -207,7 +222,7 @@ function nstd_to_str_2($nstd){
 			}
 		}
 		elseif($word=='кә'){
-			//echo '*',$prev_w['w'];
+			//echo '*',$prev_w;
 			if($prev_w_sc=='ы'){
 				$word='на';
 			}else{
@@ -268,6 +283,11 @@ function nstd_to_str_2($nstd){
 		elseif($word=='intro'){
 			$word=',';
 		}		
+		elseif($word=='лар'){
+			if(is_soft($prev_w)){
+				$word='ләр';
+			}
+		}
 		$result.=$word;
 		$prev_w=$word;
 		$prev_w_sc=$nstd[1]['w'];
@@ -275,33 +295,35 @@ function nstd_to_str_2($nstd){
 	}
 	//--------------------------------nstd i>1
 	for($i=2;$i<count($nstd);$i++){
-		$word=$nstd[$i]['w'];
-		//echo '*',$prev_w;
-		if($word=='лар'){
-			if(is_soft($prev_w)){
-				$word='ләр';
+		if(isset($nstd[$i])){
+			$word=$nstd[$i]['w'];
+			//echo '*',$prev_w;
+			if($word=='лар'){
+				if(is_soft($prev_w)){
+					$word='ләр';
+				}
+			}elseif($word=='ы'){
+				if(!last_conson($prev_w)){
+					$result.='с';
+				}
+				if(is_soft($prev_w)){
+					$word='е';
+				}
+			}elseif($word=='у'){
+				if(is_soft($prev_w)){
+					$word='ү';
+				}
+			}elseif($word=='рәк'){
+				if(!is_soft($prev_w)){
+					$word='рак';
+				}
+			}elseif($i<count($nstd)-1){
+				$result.=' ';
 			}
-		}elseif($word=='ы'){
-			if(!last_conson($prev_w)){
-				$result.='с';
-			}
-			if(is_soft($prev_w)){
-				$word='е';
-			}
-		}elseif($word=='у'){
-			if(is_soft($prev_w)){
-				$word='ү';
-			}
-		}elseif($word=='рәк'){
-			if(!is_soft($prev_w)){
-				$word='рак';
-			}
-		}elseif($i<count($nstd)-1){
-			$result.=' ';
+			$result.=$word;
+			$prev_w=$word;
+			$prev_w_sc=$nstd[$i]['w'];
 		}
-		$result.=$word;
-		$prev_w=$word;
-		$prev_w_sc=$nstd[$i]['w'];
 	}
 	//--------------------------------
 	ret_res:
