@@ -466,6 +466,13 @@ function translate_single_main_part(&$simbl,&$s2){
 		$simbl[1]['w']=='s'||$simbl[1]['w']=='ed'||$simbl[1]['w']=='pr-si'
 		||$simbl[1]['w']=='v-0'||$simbl[1]['w']=='v-s'||$simbl[1]['w']=='v-re'
 	){
+		if($simbl[1]['w']=='v-re'){
+			$s2[1]['w']='элар';//әләр/алар/йлар/йләр
+		}elseif($simbl[1]['w']=='v-0'){
+			$s2[1]['w']='э';//ә/а/й
+		}elseif($simbl[1]['w']=='v-s'){
+			$s2[1]['w']='э';//ә/а/й
+		}
 		//if($simbl[0][0]['w']=='whom'){
 		//	echo'*';
 		//}
@@ -655,13 +662,18 @@ function translate_single_main_part(&$simbl,&$s2){
 			// if($simbl[0]){
 			// }
 			//echo'***';show_tree_3($simbl[0]);
+			/*
 			$lastwupper=&get_main_word_upper_ref($s2[0]);
 			//echo'OK:';show_tree_3($lastwupper);
 			if($lastwupper[1]['w']=='бул'){
 				$lastwupper=$lastwupper[0];
 				$lastwupper['dash']=true;
+				// if($lastwupper[0][1]['w']==','&&$lastwupper[0][0][1]['w']=='һәм'){
+					// echo'OK';
+				// }
 			}
 			$s2=$s2[0];
+			*/
 			//echo'OK2:';show_tree_3($lastwupper);
 		}
 		/*
@@ -694,12 +706,6 @@ function translate_single_main_part(&$simbl,&$s2){
 		//$s2[1]['w']=$words[$simbl[1]['w']];
 	}elseif($simbl[1]['w']=='s-pl'){
 		$s2[1]['w']='лар';
-	// }elseif($simbl[1]['w']=='v-re'){
-		// $s2[1]['w']='алар';
-	// }elseif($simbl[1]['w']=='v-0'){
-		// $s2[1]['w']='й';
-	// }elseif($simbl[1]['w']=='v-s'){
-		// $s2[1]['w']='й';
 	}elseif($simbl[1]['w']=='nor'){
 		$s2[1]['w']='һәм түгел';
 	}
@@ -716,68 +722,117 @@ function translate_single_main_part(&$simbl,&$s2){
 
 
 function apply_fixes_after_1(&$simbl,&$s2){
-	//global $words,$dic,$recursionlevel,$mwdic,$nounlikes;
 	global $dic,$nounlikes,$verbs;
-	//unset($mainw);
-	//if($simbl[1]===null)echo'!!!';
+	//need to check:
+	//1: simple
+	//0 ... go 1 s
+	//0 ... (... go) 1 s
+	//2: inner logical
+	//0:( 0:(... and) 1:go) 1:( s)
+	//0:( 0:( 0( ... go) 1:and) 1:( 0 ... 1:go) ) 1:( s)
+	//0:(0:... 1:( 0:( 0( ... go) 1:and) 1:( 0 ... 1:go) )) 1:( s)
+	//0:(0:... 1:(0:... 1:( 0:( 0( ... go) 1:and) 1:( 0 ... 1:go) ))) 1:( s)
+	//3: inner verb suffixes
+	//0 he 1 (0(0 (walk ed) 1 and) 1(go s))
+	if($s2[1]['w']=='э'||$s2[1]['w']=='элар'){
+		//i cannot check for the 3rd case here, because i cannot refer/point to upper levels of array
+		//and i need not, seems 3rd case is almost same as 1st case for my task
+		//so i just need to check for comma or logical block inside verb block
+		$v1mu=&get_main_word_upper_ref($s2[0][1]);
+		//need to search for logical block, logical or comma can be at 001, 0101, 01101, 011101 etc
+		$code='';
+		eval('$elem=$s2[0]'.$code.'[0][1];');
+		if($elem['w']==','){
+			eval('$inner=$s2[0]'.$code.'[0][0][1];');
+			if($inner['w']=='һәм'){
+				eval('$v2=&$s2[0]'.$code.'[0][0][0];');
+				$v2mu=&get_main_word_upper_ref($v2);
+				goto enough;
+			}
+		}
+		for($i=0;$i<5;$i++){
+			$code.='[1]';
+			eval('$elem=$s2[0]'.$code.'[0][1];');
+			if($elem['w']==','){
+				eval('$inner=$s2[0]'.$code.'[0][0][1];');
+				if($inner['w']=='һәм'){
+					// echo'OK';
+					eval('$v2=&$s2[0]'.$code.'[0][0][0];');
+					$v2mu=&get_main_word_upper_ref($v2);
+					// show_tree_3($v2);
+					// show_tree_3($v2mu);
+					break;
+				}
+			}
+		}
+		enough:{
+			if($v1mu[1]['w']=='бул'){
+				$v1mu=$v1mu[0];
+			}
+			if($v2mu[1]['w']=='тот'){
+				// echo'OK';
+				$v2mu=$v2mu[0];
+				// show_tree_3($v2mu);
+			}
+			$s2=$s2[0];
+			//assume first part is subject
+			$s2[1]['dash']=true;
+		}
+	}
 	$mainw=get_main_word($simbl[1]);
-	//echo'ok';
 	//if($recursionlevel==8){echo 'OK<pre>' ; var_dump($mainw); echo'</pre>'; }
 	if($mainw['w']=='successor'||$mainw['w']=='predecessor'){
-		//global $jjj;$jjj++;if($jjj==1){echo 'OK';echo '<pre>';print_r($simbl);exit;}
-		//$mainw['tr']='югары';//echo 'OK';exit;
-		if(isset($simbl[0][1]['w'])&&$simbl[0][1]['w']=='to'){
+		if($simbl[0][1]['w']=='to'){
 			//echo'level '.$recursionlevel.'<pre>';var_dump($simbl);echo'</pre>';echo'*';
 			$s2[0][0]=$s2[0];
 			$s2[0][1]=array('w'=>'карата');
 		}
 	}
-	if(isset($simbl[1]['w'])){
+	if(
+		$simbl[1]['w']=='s'||$simbl[1]['w']=='ed'||$simbl[1]['w']=='pr-si'
+		||$simbl[1]['w']=='v-0'||$simbl[1]['w']=='v-s'||$simbl[1]['w']=='v-re'
+	){
+		if(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='i'){
+			$new_s2=array();
+			$new_s2[0]=$s2;
+			$new_s2[1]['w']='м';
+			$s2=$new_s2;
+			unset($new_s2);
+		}elseif(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='we'){
+			$new_s2=array();
+			$new_s2[0]=$s2;
+			$new_s2[1]['w']='быз';
+			$s2=$new_s2;
+			unset($new_s2);
+		}
+		/*
 		if(
-			$simbl[1]['w']=='s'||$simbl[1]['w']=='ed'||$simbl[1]['w']=='pr-si'
+			$simbl[1]['w']=='pr-si'||$simbl[1]['w']=='s'
 			||$simbl[1]['w']=='v-0'||$simbl[1]['w']=='v-s'||$simbl[1]['w']=='v-re'
 		){
-			if(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='i'){
-				$new_s2=array();
-				$new_s2[0]=$s2;
-				$new_s2[1]['w']='м';
-				$s2=$new_s2;
-				unset($new_s2);
-			}elseif(isset($simbl[0][0]['w'])&&$simbl[0][0]['w']=='we'){
-				$new_s2=array();
-				$new_s2[0]=$s2;
-				$new_s2[1]['w']='быз';
-				$s2=$new_s2;
-				unset($new_s2);
+			//i was going to fix йөреа to йөри but have found important order bug
+			//that is fixed. continue
+			if(isset($simbl[0][1][1]['w'])&&$simbl[0][1][1]['w']=='walk'){
+				$s2[1]['w']='й';
 			}
-			if(
-				$simbl[1]['w']=='pr-si'||$simbl[1]['w']=='s'
-				||$simbl[1]['w']=='v-0'||$simbl[1]['w']=='v-s'||$simbl[1]['w']=='v-re'
-			){
-				//i was going to fix йөреа to йөри but have found important order bug
-				//that is fixed. continue
-				if(isset($simbl[0][1][1]['w'])&&$simbl[0][1][1]['w']=='walk'){
-					$s2[1]['w']='й';
-				}
-				
-			}
+			
 		}
-		else
-		if(
-			isset($simbl[1]['thisisabbreviation'])
-			&&substr($simbl[0]['w'],-1)=='s'
-		){
-			$s2[1]=array($s2[1],array('w'=>'ы'));
-		}else
-		if($simbl[1]['w']=='.'){//top of sentence
-			//echo'*';
-			if(isset($simbl[0][1][1]['w'])&&isset($dic[$simbl[0][1][1]['w']])&&$dic[$simbl[0][1][1]['w']]['type']=='verb'){
-				$s2[0][0]=array($s2[0][0],$s2[0][1]);
-				$s2[0][1]=array('w'=>'гыз');
-			}
+		*/
+	}
+	else
+	if(
+		isset($simbl[1]['thisisabbreviation'])
+		&&substr($simbl[0]['w'],-1)=='s'
+	){
+		$s2[1]=array($s2[1],array('w'=>'ы'));
+	}else
+	if($simbl[1]['w']=='.'){//top of sentence
+		//echo'*';
+		if(isset($simbl[0][1][1]['w'])&&isset($dic[$simbl[0][1][1]['w']])&&$dic[$simbl[0][1][1]['w']]['type']=='verb'){
+			$s2[0][0]=array($s2[0][0],$s2[0][1]);
+			$s2[0][1]=array('w'=>'гыз');
 		}
 	}
-	//if($simbl[1]===null)echo'!!!';
 	$sb0mainword=get_main_word($simbl[0]);
 	if($simbl[1][1]['w']=='s-pl'){
 		$sb1mainword=get_main_word($simbl[1][0]);
@@ -968,13 +1023,13 @@ function apply_fixes_after_1(&$simbl,&$s2){
 		//echo'OK:<pre>';print_r($lastwupper);echo'</pre>';
 		$lastwupper[0]=array($lastwupper[0],array('w'=>'лар'));
 	}
+	/*
 	if($s2[1]['w']=='а'){
+		//echo'OK';exit;
 		if($s2[0][1][0][1]['w']=='һәм'){
-			/*
-			$s2[0][1][0][0]=array($s2[0][1][0][0],array('w'=>'а'));
-			$s2[0][1][1]=array($s2[0][1][1],array('w'=>'а'));
-			$s2=$s2[0];
-			*/
+			// $s2[0][1][0][0]=array($s2[0][1][0][0],array('w'=>'а'));
+			// $s2[0][1][1]=array($s2[0][1][1],array('w'=>'а'));
+			// $s2=$s2[0];
 			$lastw=get_tr_last_word($s2[0][1][0][0]);
 			if($lastw['w']=='бул'||$lastw['w']=='тот'){
 				$s2[0][1][0][0]=$s2[0][1][0][0][0];
@@ -992,6 +1047,7 @@ function apply_fixes_after_1(&$simbl,&$s2){
 		$s2=$s2[0];
 		$s2[1]['dash']=true;
 	}
+	*/
 	if($s2[1]['w']=='лгән'){
 		$lastw=get_tr_last_word($s2[0]);
 		if($lastw['w']=='бул'){

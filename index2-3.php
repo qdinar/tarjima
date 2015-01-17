@@ -186,7 +186,7 @@ echo nstd_to_str_2($result);
 
 //=== new order function ===
 $show_trees_3=true;
-//$show_trees_3_tr=true;
+$show_trees_3_tr=true;
 
 
 include 'explode_3.php';

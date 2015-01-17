@@ -53,8 +53,17 @@ header('Content-Type: text/html; charset=utf-8');
 // print_r( $arr[0]['up'] );
 
 
-preg_match('/([әеиөү])[бвгджҗзйклмнпрстфхцчшщ]*$/ui','төр',$lastvowel);
-echo'<pre>';
-print_r($lastvowel);
+// preg_match('/([әеиөү])[бвгджҗзйклмнпрстфхцчшщ]*$/ui','төр',$lastvowel);
+// echo'<pre>';
+// print_r($lastvowel);
+
+// $arr=array('a','b','c',array('da','db',array('dca','dcb'),'dd'),'e','f');
+// $ref=$arr[3][2];
+// $ref=&$arr[3][2];
+// $ref[]='dcc';
+// echo'<pre>';
+// print_r($arr);
+// echo'</pre>';
+
 
 ?>

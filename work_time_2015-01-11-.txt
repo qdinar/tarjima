@@ -70,7 +70,7 @@ but should be "(ddr4 sdram) chips"
 now the problem with lar , see line 54, has disappeared, it should be easy now
 and i should not use the way i tried at night, it probably would not work correctly, i think, because translation and english trees would be inconsistent. now i have edited english tree inside translate function.
 and now even if i moved lar upper , it then "automatically" moved back by later code:
-(... микросхема) лар
+( ... (микросхема сы) ) лар
 ->
 ... ((микросхема лар) ы)
 this fact of tatar language shows that it is also technically is not "(... микросхема) лар" as i did it ... but "... (микросхема лар)" as i have started to do in english. i will try same way in tatar.
@@ -82,7 +82,7 @@ this fact of tatar language shows that it is also technically is not "(... ми�
 -1938
 
 2308-
-same way as i moved plural s suffix into inner level, i am not sure about article position now in "an abbreviation for double data rate type three synchronous dynamic random access memory":
+same way as i moved plural s (see line 76) suffix into inner level, i am not sure about article position now in "an abbreviation for double data rate type three synchronous dynamic random access memory":
 it is now and was:
 an (abbreviation for double data rate type three synchronous dynamic random access memory)
 but maybe  i should make it
@@ -95,8 +95,90 @@ jan15
 
 1615-
 commit
-
+737c8be16e50d8541d273910308cbd3b6532176e
 1 more example is done, 5th started with order_3
+-1626-
+-1632-
+-1635
+
+1913-
+also i am not sure about precedence of top verb suffix now, as i am not sure about plural suffix and article, see line 85
+i used to "order"
+DDR3 SDRAM is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007
+as:
+(
+	(DDR3 SDRAM)
+	(
+		(be a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface)
+		(, and (have been in use since 2007))
+	)
+)
+s
+
+maybe i should make it other way. example:
+(DDR3 SDRAM)
+(
+	(is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface)
+	(, and (has been in use since 2007))
+)
+
+i change my mind back
+i feel it as "(zur kitap) lar", "(big book) s" ; " (sdram be ... ) s " ; but "(an abbreviation) (for ...)" is ok, i think, but if it is with "the" it should be "the (abbreviation (for ...) )" . also making "an (abbreviation (for ...) )" is also ok. so i change my mind back.
+now i am going to change "sdram chips" to "(sdram chip) s".
+-2001
+
+jan16
+
+1012-1015
+1018-
+i have moved plural s upper but it stays as it was in "different signaling voltages, timings"
+maybe i will make it functional in both cases (of location of s)
+-1
+-1038
+
+1048-1050
+
+1052-
+-1127
+
+1302-
+i am going to use 1 verb suffix at upper level if it is same for 2 sides of logical, and left them in 2 sides of logical, if one is present simple and second is past simple
+-1327
+
+1418-
+-3
+be in use since 2007
+i think i made it in previous order function as:
+(be in use) (since 2007)
+i think now it should be:
+be ( (in use) (since 2007) )
+but i think first is also ok and i am going to leave that way, it is standard flow, precedence, last preposition block are separated firstly
+-1505
+
+1810-
+i made quotes as "" but i should use not a level but an "attribute", as i did.
+1813: done.
+-1824
+
+1905-
+19:18 : i see "DDR3 SDRAM is neither forward ..." is not correctly ordered now.
+19:27 : fixed.
+-2
+-2011
+
+2116-2120
+
+jan17
+
+2355-
+i had commentted out verb ending and dash codes in translation, now i need to write correct program again, what i did previously does not work correctly, maybe because order is changed.
+0153: i have added dashes in tatar translation, removed is and has
+commit
+
+the 5 sentences about ddr3 are ready
+
+
+
 
 
 

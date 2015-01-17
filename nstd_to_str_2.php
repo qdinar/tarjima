@@ -154,7 +154,7 @@ function nstd_to_str_2($nstd){
 			&&$word!='рәк'&&$word!='лар'&&$word!='а'
 			&&$word!='ның'&&$word!='дәге'&&$word!='ган'
 			&&$word!='учы'
-			&&$word!='intro'
+			&&$word!='intro_comma'
 		){
 			//кушымчалардан башкаларын айырып язасы
 			$result.=' ';
@@ -208,12 +208,13 @@ function nstd_to_str_2($nstd){
 			}
 		}
 		elseif($word=='ле'){
-			if($prev_w_sc=='ы'){
-				$word='нле';
-			}else{
-				if(!is_soft($prev_w)){
-					$word='лы';
-				}
+			//if($prev_w_sc=='ы'){
+			//бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлеге") -ле
+			if($main['w']=='ы'){
+				$result.='н';
+			}
+			if(!is_soft($prev_w)){
+				$word='лы';
 			}
 		}
 		elseif($word=='у'){
@@ -280,7 +281,7 @@ function nstd_to_str_2($nstd){
 				$word='ны';
 			}
 		}
-		elseif($word=='intro'){
+		elseif($word=='intro_comma'){
 			$word=',';
 		}		
 		elseif($word=='лар'){

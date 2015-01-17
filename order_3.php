@@ -3,7 +3,7 @@
 
 function order_a_sentence_3($inparr){
 	if(is_last_dot_3($inparr)){
-		$outparr=sep_last_dot_3($inparr);
+		$outparr=sep_last_dot_or_suf_3($inparr);
 		$outparr[0]=order_a_sent_without_last_dot($outparr[0]);
 	}else{
 		//no last dot
@@ -34,20 +34,33 @@ function order_a_sent_without_last_dot($inparr){
 
 function o_intro_3($inparr){
 	//last should be comma
-	$comma=array_splice($inparr,-1);
-	$outparr[]=$inparr;
-	if(count($outparr[0])==1){
-		$outparr[0]=$outparr[0][0];
-	}
-	$outparr[]=$comma[0];
+	//$comma=array_splice($inparr,-1);
+	array_splice($inparr,-1);
+	$outparr[]=fix_one_element_in_array($inparr);
+	// if(count($outparr[0])==1){
+		// $outparr[0]=$outparr[0][0];
+	// }
+	//$outparr[]=$comma[0];
+	$outparr[]=array('w'=>'intro_comma');
 	return $outparr;
 }
 
 function o_s_no_lastdot_intro_3($inparr){
 	$tmp=top_verb_suf_pos_3($inparr);
 	if($tmp!==null){
+		$pos=first_log_with_comm_pos_3($inparr);
+		//2 verbs joined with comma and logical operator are checked and second one's top suffix also should be separated
+		//assume for now it is only one and does not belong to depenent clause
+		//... n , n+1 and n+2 be n+3 s n+4 ...
+		if( $pos!==null && $pos>$tmp && is_verb_suf($inparr[$pos+3])){
+			array_splice($inparr,$pos+3,1);
+			//assume it is same suffix as of verb at left side of logical
+			//if the 2 suffixes are present simple one and past simple other, they should not be separated here
+		}
 		$outparr=sep_top_verb_suf_3($inparr,$tmp);
 		$tmp=$tmp-1;
+		//0 A 1 be 2 s
+		//tmp=2 -> get 2-1 elements from 0
 		$outparr[0]=sep_top_subj_3($outparr[0],$tmp);
 		$outparr[0][0]=order_a_complex_noun_3($outparr[0][0]);
 		$outparr[0][1]=order_a_complex_verb_3($outparr[0][1]);
@@ -56,6 +69,14 @@ function o_s_no_lastdot_intro_3($inparr){
 		$outparr=order_a_complex_noun_3($inparr);
 	}
 	return $outparr;
+}
+
+function first_log_with_comm_pos_3($inparr){
+	for($i=1;$i<count($inparr);$i++){
+		if(is_logical_3($inparr[$i])&&$inparr[$i-1]['w']==','){
+			return $i-1;
+		}
+	}
 }
 
 function first_comma_pos_3($inparr){
@@ -70,6 +91,16 @@ function order_a_complex_noun_3($inparr){
 	if(is_simple_or_ordered_3($inparr)){
 		return $inparr;
 	}
+	//need to check for quotes
+	if(
+		$inparr[0]['w']=='"'
+		&&$inparr[count($inparr)-1]['w']=='"'
+	){
+		$outparr=sep_quotes_3($inparr);
+		$outparr=order_a_complex_noun_3($outparr);
+		return $outparr;
+	}
+	//else
 	//- separate at ", and" first
 	//example: different signal ing voltage s , timing s , and other factor s
 	$pos=last_logical_with_comma_pos_3($inparr);
@@ -98,7 +129,18 @@ function order_a_complex_noun_3($inparr){
 	return $outparr;
 }
 
-function o_parenth_bl_3($inparr){
+function sep_quotes_3($inparr){
+	//see also sep_parentheses_3
+	//1st and last elements should be "
+	//works but i should make it other way
+	// $outparr[]=fix_one_element_in_array(array_slice($inparr,1,count($inparr)-2));
+	// $outparr[]=array('w'=>'""');
+	$outparr=fix_one_element_in_array(array_slice($inparr,1,count($inparr)-2));
+	$outparr['inquotes']=true;
+	return $outparr;
+}
+
+function sep_parentheses_3($inparr){
 	//1st and last elements should be ( and )
 	$outparr[]=array_slice($inparr,1,count($inparr)-2);
 	if(count($outparr[0])==1){
@@ -285,6 +327,8 @@ function o_n_bl_no_ar_dc_comm_log_3($inparr){
 }
 
 function o_c_n_no_ar_dc_comlog_pr_3($inparr){
+	//need to separate plural s suffix at end
+	//i am going to do that in o_n_no_ar_dc_pr_comlog_parenth_3
 	//need to check for parentheses block
 	//example:
 	//DDR4 synchronous dynamic random access memory (SDRAM) chips
@@ -362,7 +406,7 @@ function o_c_n_no_ar_dc_comlog_pr_3($inparr){
 		$pos=op_parenth_for_3($inparr,count($inparr)-1);
 		if($pos!==null){
 			$outparr=sep_last_parenth_bl_3($inparr,$pos);
-			$outparr[0]=o_parenth_bl_3($outparr[0]);
+			$outparr[0]=sep_parentheses_3($outparr[0]);
 			$outparr[1]=o_n_no_ar_dc_pr_comlog_parenth_3($outparr[1]);
 		}else{
 			//opening parentheses is not found
@@ -388,8 +432,9 @@ function o_parenthesed_3($inparr){
 	$pos=op_parenth_for_3($inparr,count($inparr)-1);
 	if($pos!==null){
 		$outparr=sep_last_parenth_bl_3($inparr,$pos);
-		$outparr[0]=o_parenth_bl_3($outparr[0]);
+		$outparr[0]=sep_parentheses_3($outparr[0]);
 		$outparr[1]=o_n_no_ar_dc_pr_comlog_parenth_3($outparr[1]);
+		$outparr[0][0]=order_a_complex_noun_3($outparr[0][0]);
 	}else{
 		//opening parentheses is not found
 	}
@@ -429,7 +474,7 @@ function o_c_n_no_ar_dc_pr_3($inparr){
 		$pos=op_parenth_for_3($inparr,count($inparr)-1);
 		if($pos!==null){
 			$outparr=sep_last_parenth_bl_3($inparr,$pos);
-			$outparr[0]=o_parenth_bl_3($outparr[0]);
+			$outparr[0]=sep_parentheses_3($outparr[0]);
 		}else{
 			//opening parentheses is not found
 		}
@@ -492,6 +537,21 @@ function join_last_block_3($inparr,$pos){
 }
 
 function o_n_no_ar_dc_pr_comlog_parenth_3($inparr){
+	if(is_simple_or_ordered_3($inparr)){
+		return $inparr;
+	}
+	//need to separate plural s suffix at end, example:
+	//DDR4 synchronous dynamic random access memory (SDRAM) chips
+	if($inparr[count($inparr)-1]['w']=='s-pl'){
+		$outparr=sep_last_dot_or_suf_3($inparr);
+		$outparr[0]=o_n_no_ar_dc_pr_comlog_par_lastpl_3($outparr[0]);
+	}else{
+		$outparr=o_n_no_ar_dc_pr_comlog_par_lastpl_3($inparr);
+	}
+	return $outparr;
+}
+
+function o_n_no_ar_dc_pr_comlog_par_lastpl_3($inparr){
 	if(is_simple_or_ordered_3($inparr)){
 		return $inparr;
 	}
@@ -750,6 +810,10 @@ function is_article_3($elem){
 
 function sep_first_word_3($inparr){
 	$outparr[]=$inparr[0];
+	if(isset($inparr['inquotes'])){
+		$outparr['inquotes']=$inparr['inquotes'];
+		unset($inparr['inquotes']);
+	}
 	$outparr[]=array_slice($inparr,1);
 	if(count($outparr[1])==1){
 		$outparr[1]=$outparr[1][0];
@@ -762,7 +826,40 @@ function order_a_complex_verb_3($inparr){
 		//this is simple verb
 		return $inparr;
 	}
-	//2 verbs should be separated here
+	//if there are 2 verbs , without "top suffixes", joined with comma or logical operator, should be separated.
+	//need to check:
+	//be neither forward nor backward compatible with any earlier type of random access memory (RAM) due to different signaling voltages, timings, and other factors
+	$pos=last_logical_with_comma_pos_3($inparr);
+	//assume for now it does not belong to depenent clause
+	//... n , n+1 and n+2 be n+3 ...
+	if( $pos!==null && is_verb_3($inparr[$pos+2])){
+		//almost same 'code' is in order_a_complex_noun_3 function
+		//separate comma part out
+		$outparr=sep_comma_or_logical_bl_3($inparr,$pos);
+		//get comma out
+		$outparr[0]=o_logic_bl_norecurs_3($outparr[0]);
+		//get logical out
+		$outparr[0][0]=o_logic_bl_norecurs_3($outparr[0][0]);
+		//return $outparr;
+		$outparr[0][0][0]=order_a_complex_verb_3($outparr[0][0][0]);
+		//main part
+		$outparr[1]=order_a_complex_verb_3($outparr[1]);
+		return $outparr;
+	}
+	//else
+	//2 verbs should be separated here, i mean "have been" etc
+	if(
+		$inparr[0]['w']=='have'
+		&&$inparr[1]['w']=='be'
+		&&$inparr[2]['w']=='ed-pp'
+	){
+		$outparr=sep_first_main_3($inparr);
+		// 0 be ed in use ... 1 have
+		$outparr[0]=sep_top_verb_suf_3($outparr[0],1);
+		$outparr[0][0]=order_a_complex_verb_3($outparr[0][0]);
+		return $outparr;
+	}
+	//else
 	$pos=verb_last_c_adv_or_prep_pos_3($inparr);
 	if($pos!==null){
 		$outparr=sep_last_c_adv_or_prep_bl_3($inparr,$pos);
@@ -816,6 +913,32 @@ function order_a_complex_verb_3($inparr){
 		*/
 	}
 	return $outparr;
+}
+
+function is_verb_3($elem){
+	global $verbs;
+	//if($elem['w']=='be'){
+	if(isset($verbs[$elem['w']])){
+		return true;
+	}
+}
+
+function sep_first_main_3($inparr){
+	$main=array_splice($inparr,0,1);
+	$outparr[]=fix_one_element_in_array($inparr);
+	$outparr[]=$main[0];
+	return $outparr;
+}
+
+function fix_one_element_in_array($inparr){
+	//inparr should be
+	//array(array('w'=>'...'))
+	//or
+	//array(array('w'=>'...'),array('w'=>'...'),)
+	if(count($inparr)==1){
+		$inparr=$inparr[0];
+	}
+	return $inparr;
 }
 
 function o_c_prep_bl_3($inparr){
@@ -992,6 +1115,7 @@ function is_prep_3($elem){
 		||$elem['w']=='of'
 		||$elem['w']=='in'
 		||$elem['w']=='for'
+		||$elem['w']=='since'
 	){
 		return true;
 	}
@@ -1005,7 +1129,7 @@ function is_last_dot_3($inparr){
 	}
 }
 
-function sep_last_dot_3($inparr){
+function sep_last_dot_or_suf_3($inparr){
 	$dot=array_splice($inparr,-1);
 	$outparr[]=$inparr;
 	$outparr[]=$dot[0];
@@ -1020,7 +1144,7 @@ function is_conj($elem){
 
 function is_verb_suf($elem){
 	if(
-		$elem['w']=='v-0'//present plural (they go, we go, you go) or 1st or 2nd person singular (i go, thou go)
+		$elem['w']=='v-0'//present plural (they go, we go, you go) or 1st or 2nd person singular (i go, thou go) or 3d person singular (he will, he may, he can)
 		||$elem['w']=='v-s'//3d person present singular (he goes)
 		||$elem['w']=='v-re'//strictly present plural (they are, you are, we are)
 	){
