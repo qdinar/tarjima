@@ -95,6 +95,10 @@ function &tr_simple_block_2(&$simbl){
 		// $simbl=array($simbl,$spl);
 	// }
 	//if($simbl[1]['w']=='successor'){echo'ok';show_tree_3($simbl);}
+	if($simbl[0]['w']=='an'&&$simbl[1][0][1]['w']=='for'){
+		$simbl[1][1]=array($simbl[0],$simbl[1][1]);
+		$simbl=$simbl[1];
+	}
 	//---------------------------------------------------------------------translate 1 of 2
 	if(!isset($simbl[0]['w'])){
 		//if($simbl[1]['w']=='successor'){echo'ok';show_tree_3($simbl);}
@@ -249,6 +253,18 @@ function translate_single_modifier_part(&$simbl,&$s2){
 function apply_fixes_after_0(&$simbl,&$s2){
 	//global $words,$dic,$recursionlevel,$mwdic,$nounlikes;
 	global $nounlikes,$verbs,$dic;
+	// if(
+		// $simbl[0][0]['w']=='the'
+		// &&true!=used_in_current_paragraph($mainw)
+	// ){
+		// if($simbl[1]['w']==',,'){
+			// show_tree_3($s2);
+			// $s2[0][0]['w']='теге';
+			// $s2=$s2[0];
+		// }else{
+			// $s2[0]=$s2[0][1];
+		// }
+	// }
 	//add не
 	if(
 		//((isset($simbl[1][1]['w'])&&$simbl[1][1]['w']=='read')||(isset($simbl[1]['w'])&&$simbl[1]['w']=='read'))
@@ -698,16 +714,19 @@ function translate_single_main_part(&$simbl,&$s2){
 			$s2[0]=array($num,array('w'=>'нче'));
 			//$s2[1]['w']='төрдәге';//instead of төр
 		}
-	}elseif($simbl[1]['w']==',,'){
-		if($simbl[0][0]['w']=='the'){
-			$s2=$s2[0];
-		}
+	//}elseif($simbl[1]['w']==',,'){
+		//removes ",," / "булган"
+		// if($simbl[0][0]['w']=='the'){
+			// $s2=$s2[0];
+		// }
 	//}else{
 		//$s2[1]['w']=$words[$simbl[1]['w']];
 	}elseif($simbl[1]['w']=='s-pl'){
 		$s2[1]['w']='лар';
 	}elseif($simbl[1]['w']=='nor'){
 		$s2[1]['w']='һәм түгел';
+	}elseif($simbl[1]['w']=='th'){
+		$s2[1]['w']='нче';
 	}
 	//if($recursionlevel==13){echo'level '.$recursionlevel.'<pre>';var_dump($simbl);echo'</pre>';echo'*';}
 	//should not test simbl0 and simbl1 here because this place do not work if they are complex
@@ -734,6 +753,13 @@ function apply_fixes_after_1(&$simbl,&$s2){
 	//0:(0:... 1:(0:... 1:( 0:( 0( ... go) 1:and) 1:( 0 ... 1:go) ))) 1:( s)
 	//3: inner verb suffixes
 	//0 he 1 (0(0 (walk ed) 1 and) 1(go s))
+	if(
+		$s2[0]['w']=='шул'
+		&&true!=used_in_current_paragraph($mainw)
+	){
+		//show_tree_3($s2);
+		// $s2=$s2[1];
+	}
 	if($s2[1]['w']=='э'||$s2[1]['w']=='элар'){
 		//i cannot check for the 3rd case here, because i cannot refer/point to upper levels of array
 		//and i need not, seems 3rd case is almost same as 1st case for my task
@@ -928,9 +954,7 @@ function apply_fixes_after_1(&$simbl,&$s2){
 		//if($trynin['w']=='ның'){
 		//if(isset($simbl[0]['w'])&&$simbl[0]['w']=='the'&&used_in_the_paragraph($mainw)){
 		//just remove 'the'
-		if($simbl[0]['w']=='the'&&!used_in_current_paragraph($mainw)){
-			$s2=$s2[1];
-		}
+		//if($simbl[0]['w']=='the'&&!used_in_current_paragraph($mainw)){
 	}
 	else
 	//if(!isset($simbl[0]['w']))
@@ -1053,6 +1077,16 @@ function apply_fixes_after_1(&$simbl,&$s2){
 		if($lastw['w']=='бул'){
 			$s2[1]['w']='ган';
 		}
+	}
+	if(
+		(
+			$simbl[0][1]['w']=='mix'
+			||$simbl[0][1]['w']=='version'
+			||$simbl[0][1]['w']=='type'
+		)
+		&&$simbl[0][0][1]['w']=='th'
+	){
+		$s2=array($s2[1],array($s2[0],array('w'=>'ы')));
 	}
 }
 

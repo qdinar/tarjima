@@ -184,14 +184,20 @@ show_trees($result);
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
 
-//=== new order function ===
+
+
+
 $show_trees_3=true;
 $show_trees_3_tr=true;
-
-
+//=== new order function ===
 include 'explode_3.php';
-$engtext2=explode_3($engtext);
 include 'order_3.php';
+//=== new translate and nested-to-string functions ===
+include 'function_tr_simple_block_3.php';
+include 'nstd_to_str_3.php';
+
+//The actual DRAM arrays that store the data are similar to earlier types, with similar performance.
+$engtext2=explode_3($engtext);
 $engtext2=order_a_sentence_3($engtext2);
 echo '<br>',$engtext;
 show_tree_3($engtext2);
@@ -199,6 +205,23 @@ $result=tr_simple_block_2($engtext2);
 show_tree_3_tr($result);
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
+
+$suf_prep['from']=array('tt'=>'тан');
+$suf_prep['with']=array('tt'=>'белән');
+$suf_prep['v-0']=array('tt'=>'элар');
+$suf_prep['v-re']=array('tt'=>'элар');
+$suf_prep['that']=array('tt'=>'теге');
+$suf_prep['s-pl']=array('tt'=>'лар');
+$suf_prep['to']=array('tt'=>'кә');
+$suf_prep[',,']=array('tt'=>'булган');
+$nounlikes['the']=array('tt'=>'шул');
+$nounlikes['free']=array('tt'=>'бушлай');
+$nounlikes['encyclopedia']=array('tt'=>'энциклопедия');
+$nounlikes['wikipedia']=array('tt'=>'википедия');
+$verbs['be']=array('tt'=>'бул');
+tr_simple_block_3($engtext2);
+show_tree_3($engtext2);
+echo s_tr_to_str_3($engtext2);
 
 //prev. ex. with new order function
 $engtext='DDR3 is a DRAM interface specification.';
@@ -233,8 +256,6 @@ show_tree_3_tr($result);
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
 
-
-
 //$multiwords[]=array('double','data','rate');
 $engtext='In computing, DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory, is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007.';
 //$engtext='DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory, is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007.';
@@ -254,13 +275,60 @@ show_tree_3_tr($result);
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
 
+$verbs['see']=array('tt'=>'кара');
+$engtext='For the video game, see Dance Dance Revolution 3rdMix.';
+echo '<br><br>',$engtext;
+$engtext2=explode_3($engtext);
+// show_tree_3($engtext2);
+$engtext2=order_a_sentence_3($engtext2);
+show_tree_3($engtext2);
+$result=tr_simple_block_2($engtext2);
+show_tree_3_tr($result);
+$nstd_to_str_2_firstwordisready=false;
+echo nstd_to_str_2($result);
 
+$nounlikes['GDDR3']=array('tt'=>'GDDR3','type'=>'noun');
+$engtext='For graphics DDR3, see GDDR3.';
+echo '<br><br>',$engtext;
+$engtext2=explode_3($engtext);
+// show_tree_3($engtext2);
+$engtext2=order_a_sentence_3($engtext2);
+show_tree_3($engtext2);
+$result=tr_simple_block_2($engtext2);
+show_tree_3_tr($result);
+$nstd_to_str_2_firstwordisready=false;
+echo nstd_to_str_2($result);
 
+$engtext='This article is about DDR3 SDRAM.';
+echo '<br><br>',$engtext;
+$engtext2=explode_3($engtext);
+// show_tree_3($engtext2);
+$engtext2=order_a_sentence_3($engtext2);
+show_tree_3($engtext2);
+$result=tr_simple_block_2($engtext2);
+show_tree_3_tr($result);
+$nstd_to_str_2_firstwordisready=false;
+echo nstd_to_str_2($result);
 
+$engtext='From Wikipedia, the free encyclopedia';
+echo '<br><br>',$engtext;
+$engtext2=explode_3($engtext);
+// show_tree_3($engtext2);
+$engtext2=order_a_sentence_3($engtext2);
+show_tree_3($engtext2);
+// $result=tr_simple_block_2($engtext2);
+// show_tree_3_tr($result);
+// echo s_nstd_to_str_3($result);
 
+function s_nstd_to_str_3($nstd){
+	global $nstd_to_str_2_firstwordisready;
+	$nstd_to_str_2_firstwordisready=false;
+	return nstd_to_str_2($nstd);
+}
 
-
-
+tr_simple_block_3($engtext2);
+show_tree_3($engtext2);
+echo s_tr_to_str_3($engtext2);
 
 
 

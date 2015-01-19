@@ -14,9 +14,18 @@ function nstd_to_str_2($nstd){
 		$result.='"';
 	}
 	if(isset($nstd['w'])){
-		$result.=$nstd['w'];
+		$word=$nstd['w'];
+		if(
+			$nstd['firstiscapital']==true
+			||!$nstd_to_str_2_firstwordisready
+		){
+			$word=mb_strtoupper(mb_substr($word,0,1)).mb_substr($word,1);
+		}
+		//$result.=$nstd['w'];
+		$result.=$word;
 		$prev_w=$nstd['w'];
 		$prev_w_sc=$nstd['w'];
+		$nstd_to_str_2_firstwordisready=true;
 		goto ret_res;
 	}
 	if(isset($nstd[0][1]['w'])){
@@ -105,7 +114,10 @@ function nstd_to_str_2($nstd){
 		$result.=nstd_to_str_2($nstd[0]);
 	}else{
 		$word=$nstd[0]['w'];
-		if(isset($nstd[0]['firstiscapital'])&&$nstd[0]['firstiscapital']==true||!$nstd_to_str_2_firstwordisready){
+		if(
+			$nstd[0]['firstiscapital']==true
+			||!$nstd_to_str_2_firstwordisready
+		){
 			$word=mb_strtoupper(mb_substr($word,0,1)).mb_substr($word,1);
 		}
 		if(isset($nstd[1]['w'])&&$nstd[1]['w']=='ы'&&$word=='тизлек'){
@@ -138,7 +150,10 @@ function nstd_to_str_2($nstd){
 	}else{
 		//echo '*',$prev_w;
 		$word=$nstd[1]['w'];
-		if(isset($nstd[1]['firstiscapital'])&&$nstd[1]['firstiscapital']==true||!$nstd_to_str_2_firstwordisready){
+		if(
+			$nstd[1]['firstiscapital']==true
+			||!$nstd_to_str_2_firstwordisready
+		){
 			$word=mb_strtoupper(mb_substr($word,0,1)).mb_substr($word,1);
 		}
 		//if($word=='ле'){echo'OK';exit;}

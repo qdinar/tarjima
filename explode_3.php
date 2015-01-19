@@ -2,7 +2,8 @@
 
 //explode string/sentence into grammatical morphemes
 function explode_3($engtext){
-	$engtext=preg_split('/(?=[^a-zA-Z0-9])|(?<=[^a-zA-Z0-9])/',$engtext);
+	// $engtext=preg_split('/(?=[^a-zA-Z0-9])|(?<=[^a-zA-Z0-9])/',$engtext);
+	$engtext=preg_split('/(?=[^a-zA-Z0-9])|(?<=[^a-zA-Z0-9])|(?=[A-Z0-9])(?<=[a-z])/',$engtext);//|(?=[a-z])(?<=[0-9])
 	foreach($engtext as $key=>$word){
 		if(
 			$word==' '||//may be i will need fix this for " - "
@@ -50,7 +51,7 @@ function explode_3($engtext){
 				$firstiscapital=false;
 			}
 		}
-
+		/*
 		for($wi=0,$lowercaseisfound=false,$upperafterlower=false;$wi<strlen($word);$wi++){
 			if(ctype_lower(substr($word,$wi,1))){
 				$lowercaseisfound=true;
@@ -61,7 +62,7 @@ function explode_3($engtext){
 				break;
 			}
 		}
-		
+		*/
 		if(!$thisisabbreviation&&($firstiscapital==true||$key==0)){
 			$word=strtolower($word);
 		}
@@ -162,8 +163,8 @@ function explode_3($engtext){
 					// $engtext2[]=$ordinalnumber;
 					$engtext2[]=$trynumber;
 					$engtext2[]='th';
-					$i=count($engtext2);
-					continue;
+					// $i=count($engtext2);
+					// continue;
 				}else{
 					$engtext2[]=$word;
 				}
@@ -199,7 +200,13 @@ function explode_3($engtext){
 		){
 			$engtext2[]=$word;
 			//$engtext2[]='pr-si';//present simple <-comment this out, i think it should be in order function
-			if( count($engtext2)>1 && $engtext2[count($engtext2)-1]!='"' ){
+			if(
+				count($engtext2)>1
+				//&& $engtext2[count($engtext2)-1]!='"'//why is this
+				&& $engtext2[count($engtext2)-2]['w']!=','
+			){
+				//echo $word;
+				//print_r ($engtext2[count($engtext2)-2]);
 				$engtext2[]='v-0';
 			}
 		}
@@ -207,13 +214,17 @@ function explode_3($engtext){
 			$engtext2[]='be';
 			$engtext2[]='v-re';//present simple plural
 		}
+		/*
 		elseif($upperafterlower){
-			$separated=preg_split('/(?=[A-Z0-9])(?<=[a-z])/',$word);
-			$separated=explode_into_morphemes($separated);
-			$engtext2[]=$separated;
+			//$separated=preg_split('/(?=[A-Z0-9])(?<=[a-z])/',$word);
+			$separated=preg_split('/(?=[A-Z0-9])(?<=[a-z])|(?=[a-z])(?<=[0-9])/',$word);
+			// $separated=explode_3($separated);
+			//$engtext2[]=$separated;
+			$engtext2=array_merge($engtext2,$separated);
 			//$i=count($engtext2);
 			//continue;
 		}
+		*/
 		// elseif($word=='-'){//for "high er-comp - speed"
 			// $engtext2[$i-1]=array($engtext2[$i-1],array('w'=>$engtext[$key+1]));
 			// $thenextwordisused=true;

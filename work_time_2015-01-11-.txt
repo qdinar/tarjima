@@ -174,13 +174,81 @@ jan17
 i had commentted out verb ending and dash codes in translation, now i need to write correct program again, what i did previously does not work correctly, maybe because order is changed.
 0153: i have added dashes in tatar translation, removed is and has
 commit
-
+0baf0943a8b3a2be6e8768cd01799b38f17953ef
 the 5 sentences about ddr3 are ready
 
+commit to "master"
+73faa1b8497201087118617d3812ca01052e26b4
+the 5 sentences about ddr3 are ready
+
+-0206-
+-0211-
+but i was a little wrong, the latest example translation is not very ready, because "an" position in tatar, it is very long away from "abbreviation":
+бер өченче төрдәге икекатлы мәгълүмат тизлегенле синхрон динамик теләсә-ничек керүле хәтер өчен аббревиатура
+-0216
+
+jan18
+
+2217-
+move the "an" in translation
+-2221-
+next example, going from end to beginning,
+"For the video game, see Dance Dance Revolution 3rdMix."
+-2232
+
+2235-
+-3
+-3
+0002: almost ready: "Видео уен өчен, 3-нче Болгатма Бию Бию Революция карагыз."
+0028: ready: Видео уен өчен, "Бию Бию Революция 3-нче Болгатмасы"-н карагыз.
+
+start "For graphics DDR3, see GDDR3."
+0040: ready: "Графика DDR3-е өчен, GDDR3-не карагыз."
+
+start "This article is about DDR3 SDRAM."
+0042: ready: "Бу мәкалә — DDR3 SDRAM-ы турында."
+
+start "From Wikipedia, the free encyclopedia"
+-0044
+0100-
+0129: ready or almost ready: "Бушлай энциклопедия Википедиядан"
+-0133-
+-0138-
+so, 4 more examples are done, they are first 4 sentences of the text about ddr3
+-0141
+
+0324-
+-0326
+
+0404-
+do not forget about:
+higher-speed successor to DDR and DDR2 ...
+and
+predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips
+-0405
+
+jan19
+
+0939-
+-7
+1019: ready: "Теге бушлай энциклопедия Википедиядан"
+but other sentenses has become wrong and i am trying to fix them
+-1047
 
 
 
+1056-
+-1108
 
+1126-
+making translation tree structure other than original makes it mess...
+i want to try to make new translate function
+trying new translate and nested-to-string functions
+-1213-
+commit
+
+4 more examples are ordered
+trying to make new translate and nested-to-string functions
 
 
 

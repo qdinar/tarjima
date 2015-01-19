@@ -17,10 +17,17 @@ function order_a_sent_without_last_dot($inparr){
 	if(is_prep_3($inparr[0])){
 		$pos=first_comma_pos_3($inparr);
 		if($pos!==null){
-			$outparr=sep_first_several_3($inparr,$pos+1);
-			$outparr[1]=o_s_no_lastdot_intro_3($outparr[1]);
-			$outparr[0]=o_intro_3($outparr[0]);
-			$outparr[0][0]=o_c_prep_bl_3($outparr[0][0]);
+			//need to check for case comma is in introduction, example:
+			//From Wikipedia, the free encyclopedia
+			//try to check with "the" for now
+			if(is_article_3($inparr[$pos+1])){
+				$outparr=o_c_prep_bl_3($inparr);
+			}else{
+				$outparr=sep_first_several_3($inparr,$pos+1);
+				$outparr[1]=o_s_no_lastdot_intro_3($outparr[1]);
+				$outparr[0]=o_intro_3($outparr[0]);
+				$outparr[0][0]=o_c_prep_bl_3($outparr[0][0]);
+			}
 		}else{
 			//example
 			//in a book.
@@ -61,12 +68,25 @@ function o_s_no_lastdot_intro_3($inparr){
 		$tmp=$tmp-1;
 		//0 A 1 be 2 s
 		//tmp=2 -> get 2-1 elements from 0
-		$outparr[0]=sep_top_subj_3($outparr[0],$tmp);
-		$outparr[0][0]=order_a_complex_noun_3($outparr[0][0]);
-		$outparr[0][1]=order_a_complex_verb_3($outparr[0][1]);
+		//in case no subject, example, "see v-0 ...": 0 see 1 v-0 ; tmp=1; tmp-1=0; subj. length=0;
+		//fixed no subject in sep_top_subj_3; and this example should not come here, should not have v-0;
+		if($tmp>=0){
+			$outparr[0]=sep_top_subj_3($outparr[0],$tmp);
+			$outparr[0][0]=order_a_complex_noun_3($outparr[0][0]);
+			$outparr[0][1]=order_a_complex_verb_3($outparr[0][1]);
+		}else{
+			//strange
+			$outparr=$inparr;
+		}
 	}else{
 		//top verb suffix is not found
-		$outparr=order_a_complex_noun_3($inparr);
+		//need to check for it is verb
+		if(is_verb_3($inparr[0])){
+			//echo 'OK';
+			$outparr=order_a_complex_verb_3($inparr);
+		}else{
+			$outparr=order_a_complex_noun_3($inparr);
+		}
 	}
 	return $outparr;
 }
@@ -151,7 +171,7 @@ function sep_parentheses_3($inparr){
 }
 
 function sep_last_parenth_bl_3($inparr,$pos){
-	return sep_dep_clause_3($inparr,$pos);
+	return sep_last_dep_bl_3($inparr,$pos);
 }
 
 function op_parenth_for_3($inparr,$cl_p_pos){
@@ -241,11 +261,19 @@ function o_c_n_noart_nodepcl_3($inparr){
 		//need to check for explanation block with 2 commas around
 		//example:
 		//DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory,
+		//need to check for
+		//Wikipedia, the free encyclopedia
 		if($pos==count($inparr)-1 && $inparr[$pos]['w']==','){
 			$inparr=del_last_el_3($inparr);
 			$begin_comma_pos=last_comm_pos_3($inparr);
-			$outparr=sep_comma_or_logical_bl_3($inparr,$begin_comma_pos+1);
-			$outparr[1]=del_last_el_3($outparr[1]);
+			$outparr=sep_last_dep_bl_3($inparr,$begin_comma_pos+1);
+			$outparr[1]=del_last_el_3($outparr[1]);//it is a comma
+			$outparr[0]=array($outparr[0],array('w'=>',,'));
+			$outparr[0][0]=order_a_complex_noun_3($outparr[0][0]);
+		}elseif(is_article_3($inparr[$pos+1])){
+			$begin_comma_pos=last_comm_pos_3($inparr);
+			$outparr=sep_last_dep_bl_3($inparr,$begin_comma_pos+1);
+			$outparr[1]=del_last_el_3($outparr[1]);//it is a comma: "wikipedia ,"
 			$outparr[0]=array($outparr[0],array('w'=>',,'));
 			$outparr[0][0]=order_a_complex_noun_3($outparr[0][0]);
 		}elseif($inparr[count($inparr)-1]['w']==$inparr[$pos-1]['w']){
@@ -302,7 +330,7 @@ function o_c_n_noart_nodepcl_3($inparr){
 
 function del_last_el_3($inparr){
 	unset($inparr[count($inparr)-1]);
-	return $inparr;
+	return fix_one_element_in_array($inparr);
 }
 
 function last_comm_pos_3($inparr){
@@ -590,16 +618,29 @@ function o_n_no_ar_dc_pr_comlog_par_lastpl_3($inparr){
 		find_neither_bl_first_last_3($inparr,$first,$last);
 		$outparr=join_neither_bl_3($inparr,$first,$last);
 	}elseif(
-		is_there_a_type_num_bl($inparr,$type_pos,$end_pos)
-		&&$end_pos!=count($inparr)-1
+		is_there_a_type_num_bl_3($inparr,$type_pos,$end_pos)
+		//&&$end_pos!=count($inparr)-1//hm it works without this check now
 	){
 		$outparr=sep_first_several_3($inparr,$end_pos+1);
-		$outparr[0]=sep_dep_clause_3($outparr[0],$type_pos);
+		$outparr[0]=sep_last_dep_bl_3($outparr[0],$type_pos);
 		//$outparr[0]: 0 type three 1 d d r
 		$outparr[0][0]=o_logic_bl_norecurs_3($outparr[0][0]);
 		//$outparr[0][0]: 0 three 1 type
 		$outparr[0][1]=o_n_no_ar_dc_pr_comlog_parenth_3($outparr[0][1]);
 		$outparr[1]=o_n_no_ar_dc_pr_comlog_parenth_3($outparr[1]);
+	}elseif(
+		is_there_a_num_vers_bl_3($inparr,$begin_pos,$end_pos)//&&$end_pos!=count($inparr)-1
+	){
+		if($end_pos!=count($inparr)-1){
+			//$outparr=sep_first_several_3($inparr,$end_pos+1);
+		}else{
+			if(all_words_begin_with_capital_letter_3($inparr)){
+				$inparr['thisisheader']=true;
+			}
+			$outparr=sep_last_dep_bl_3($inparr,$begin_pos);
+			$outparr[1]=o_n_no_ar_dc_pr_comlog_parenth_3($outparr[1]);
+			$outparr[0]=sep_first_several_3($outparr[0],2);
+		}
 	}else{
 		//need to check for multiwords
 		//example: random access memory
@@ -620,7 +661,40 @@ function o_n_no_ar_dc_pr_comlog_par_lastpl_3($inparr){
 	return $outparr;
 }
 
-function is_there_a_type_num_bl($inparr,&$type_pos,&$end_pos){
+function all_words_begin_with_capital_letter_3($inparr){
+	foreach($inparr as $elem){
+		if(
+			!(
+				true==$elem['firstiscapital']
+				||is_num_3($elem)
+				||$elem['w']=='th'
+			)
+		){
+			return false;
+		}
+	}
+	return true;
+}
+
+function is_there_a_num_vers_bl_3($inparr,&$type_pos,&$end_pos){
+	foreach($inparr as $pos=>$elem){
+		if(
+			is_num_3($elem)
+			&&$inparr[$pos+1]['w']=='th'
+			&&(
+				$inparr[$pos+2]['w']=='mix'
+				||$inparr[$pos+2]['w']=='version'
+				||$inparr[$pos+2]['w']=='type'
+			)
+		){
+			$type_pos=$pos;
+			$end_pos=$pos+2;
+			return true;
+		}
+	}
+}
+
+function is_there_a_type_num_bl_3($inparr,&$type_pos,&$end_pos){
 	foreach($inparr as $pos=>$elem){
 		if(
 			$elem['w']=='type'
@@ -636,6 +710,7 @@ function is_there_a_type_num_bl($inparr,&$type_pos,&$end_pos){
 function is_num_3($elem){
 	if(
 		$elem['w']=='three'
+		||preg_match('/\d+/',$elem['w'])
 	){
 		return true;
 	}
@@ -719,7 +794,7 @@ function o_logic_bl_norecurs_3($inparr){
 }
 
 function sep_comma_or_logical_bl_3($inparr,$pos){
-	return sep_dep_clause_3($inparr,$pos);
+	return sep_last_dep_bl_3($inparr,$pos);
 }
 
 function last_comm_or_logic_pos_3($inparr){
@@ -731,7 +806,7 @@ function last_comm_or_logic_pos_3($inparr){
 }
 
 function sep_n_prep_bl_3($inparr,$pos){
-	return sep_dep_clause_3($inparr,$pos);
+	return sep_last_dep_bl_3($inparr,$pos);
 }
 
 function c_n_1st_prep_3($inparr){
@@ -787,12 +862,23 @@ function get_first_conj_pos_3($inparr){
 
 function sep_dep_clause_3($inparr,$pos){
 	//separate dependent clause out of parent phrase
-	$dep_cl=array_splice($inparr,$pos);
-	$outparr[]=$dep_cl;
-	$outparr[]=$inparr;
-	if(count($outparr[1])==1){
-		$outparr[1]=$outparr[1][0];
+	// $dep_cl=array_splice($inparr,$pos);
+	// $outparr[]=$dep_cl;
+	// $outparr[]=$inparr;
+	// if(count($outparr[1])==1){
+		// $outparr[1]=$outparr[1][0];
+	// }
+	// return $outparr;
+	return sep_last_dep_bl_3($inparr,$pos);
+}
+
+function sep_last_dep_bl_3($inparr,$pos){
+	if(isset($inparr['thisisheader'])){
+		$outparr['thisisheader']=$inparr['thisisheader'];
+		unset($inparr['thisisheader']);
 	}
+	$outparr[]=fix_one_element_in_array(array_splice($inparr,$pos));
+	$outparr[]=fix_one_element_in_array($inparr);
 	return $outparr;
 }
 
@@ -823,8 +909,11 @@ function sep_first_word_3($inparr){
 
 function order_a_complex_verb_3($inparr){
 	if(is_simple_or_ordered_3($inparr)){
-		//this is simple verb
-		return $inparr;
+		//need to check for inordered block, example: "see GDDR3"
+		if(!is_verb_3($inparr[0])){
+			//this is simple verb
+			return $inparr;
+		}
 	}
 	//if there are 2 verbs , without "top suffixes", joined with comma or logical operator, should be separated.
 	//need to check:
@@ -1116,6 +1205,7 @@ function is_prep_3($elem){
 		||$elem['w']=='in'
 		||$elem['w']=='for'
 		||$elem['w']=='since'
+		||$elem['w']=='about'
 	){
 		return true;
 	}
@@ -1176,6 +1266,9 @@ function sep_top_verb_suf_3($inparr,$pos){
 }
 
 function sep_top_subj_3($inparr,$quant){
+	if($quant==0){
+		return $inparr;
+	}
 	$subj=array_splice($inparr,0,$quant);
 	if(count($subj)==1){
 		$subj=$subj[0];
