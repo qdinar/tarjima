@@ -189,12 +189,13 @@ echo nstd_to_str_2($result);
 
 $show_trees_3=true;
 $show_trees_3_tr=true;
+$show_invis_chars=true;
 //=== new order function ===
 include 'explode_3.php';
 include 'order_3.php';
 //=== new translate and nested-to-string functions ===
-include 'function_tr_simple_block_3.php';
-include 'nstd_to_str_3.php';
+// include 'function_tr_simple_block_3.php';
+// include 'nstd_to_str_3.php';
 
 //The actual DRAM arrays that store the data are similar to earlier types, with similar performance.
 $engtext2=explode_3($engtext);
@@ -219,9 +220,9 @@ $nounlikes['free']=array('tt'=>'бушлай');
 $nounlikes['encyclopedia']=array('tt'=>'энциклопедия');
 $nounlikes['wikipedia']=array('tt'=>'википедия');
 $verbs['be']=array('tt'=>'бул');
-tr_simple_block_3($engtext2);
-show_tree_3($engtext2);
-echo s_tr_to_str_3($engtext2);
+// tr_simple_block_3($engtext2);
+// show_tree_3($engtext2);
+// echo s_tr_to_str_3($engtext2);
 
 //prev. ex. with new order function
 $engtext='DDR3 is a DRAM interface specification.';
@@ -316,9 +317,9 @@ $engtext2=explode_3($engtext);
 // show_tree_3($engtext2);
 $engtext2=order_a_sentence_3($engtext2);
 show_tree_3($engtext2);
-// $result=tr_simple_block_2($engtext2);
-// show_tree_3_tr($result);
-// echo s_nstd_to_str_3($result);
+$result=tr_simple_block_2($engtext2);
+show_tree_3_tr($result);
+echo s_nstd_to_str_3($result);
 
 function s_nstd_to_str_3($nstd){
 	global $nstd_to_str_2_firstwordisready;
@@ -326,9 +327,9 @@ function s_nstd_to_str_3($nstd){
 	return nstd_to_str_2($nstd);
 }
 
-tr_simple_block_3($engtext2);
-show_tree_3($engtext2);
-echo s_tr_to_str_3($engtext2);
+// tr_simple_block_3($engtext2);
+// show_tree_3($engtext2);
+// echo s_tr_to_str_3($engtext2);
 
 
 

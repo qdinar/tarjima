@@ -2,6 +2,26 @@
 
 
 function &tr_simple_block_2(&$simbl){
+	//The (actual DRAM arrays that store the data)
+	//->
+	//(The actual DRAM arrays) (that store the data)
+	if(
+		$simbl[0]['w']=='the'
+		&&$simbl[1][0][0][0]['w']=='that'
+	){
+		//copy "the"
+		//$simbl[1][1]=array($simbl[0],$simbl[1][1]);
+		//delete original "the"
+		//$simbl=$simbl[1];
+	}
+	if($simbl[0][0]['w']=='the'){
+		if($simbl[1]['w']==',,'){
+			$simbl[0][0]['donotremove']=true;
+		}
+	}
+	if($simbl[1]['w']==',,'){
+		$simbl=$simbl[0];
+	}
 
 	global $words,$dic,$recursionlevel,$mwdic,$nounlikes,$verbs;
 	$recursionlevel++;
@@ -742,6 +762,13 @@ function translate_single_main_part(&$simbl,&$s2){
 
 function apply_fixes_after_1(&$simbl,&$s2){
 	global $dic,$nounlikes,$verbs;
+	if($simbl[0]['w']=='the'){
+		if($simbl[0]['donotremove']!=true){
+			$s2=$s2[1];
+		}else{
+			$s2[0]['w']='теге';
+		}
+	}
 	//need to check:
 	//1: simple
 	//0 ... go 1 s

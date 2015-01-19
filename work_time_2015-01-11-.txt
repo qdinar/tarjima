@@ -246,17 +246,25 @@ i want to try to make new translate function
 trying new translate and nested-to-string functions
 -1213-
 commit
-
+8ab3b6afc3dc8edfd83e8dc7c3d2041b9776bd4f
 4 more examples are ordered
 trying to make new translate and nested-to-string functions
+-1220
 
+1319-
+i think not to change tree is not good approach
+-1347-
+but i continue
+-1356
 
+1418-
+i do not continue to make new translate and nstd to str functions
+all examples' translations are fixed
+-1500-
+commit
 
-
-
-
-
-
+translations are fixed
+the new new translate and nested-to-string functions are not continued, continue to use/develop old versions
 
 
 
