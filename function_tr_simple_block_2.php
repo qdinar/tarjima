@@ -289,9 +289,10 @@ function apply_fixes_after_0(&$simbl,&$s2){
 	if(
 		//((isset($simbl[1][1]['w'])&&$simbl[1][1]['w']=='read')||(isset($simbl[1]['w'])&&$simbl[1]['w']=='read'))
 		(
-			$dic[$simbl[1][1]['w']]['type']=='verb'
+			//$dic[$simbl[1][1]['w']]['type']=='verb'
 			//&&$simbl[1][1]['w']!='be'
-			||$dic[$simbl[1]['w']]['type']=='verb'
+			//||
+			$dic[$simbl[1]['w']]['type']=='verb'
 			//&&$simbl[1]['w']!='be'
 			||isset($verbs[$simbl[1]['w']])
 		)
@@ -762,13 +763,6 @@ function translate_single_main_part(&$simbl,&$s2){
 
 function apply_fixes_after_1(&$simbl,&$s2){
 	global $dic,$nounlikes,$verbs;
-	if($simbl[0]['w']=='the'){
-		if($simbl[0]['donotremove']!=true){
-			$s2=$s2[1];
-		}else{
-			$s2[0]['w']='теге';
-		}
-	}
 	//need to check:
 	//1: simple
 	//0 ... go 1 s
@@ -833,6 +827,15 @@ function apply_fixes_after_1(&$simbl,&$s2){
 		}
 	}
 	$mainw=get_main_word($simbl[1]);
+	if($simbl[0]['w']=='the'){
+		if($simbl[0]['donotremove']){
+			//from wikipedia, the ...
+			$s2[0]['w']='теге';
+		//}else{
+		}elseif(!used_in_current_paragraph($mainw)){
+			$s2=$s2[1];
+		}
+	}
 	//if($recursionlevel==8){echo 'OK<pre>' ; var_dump($mainw); echo'</pre>'; }
 	if($mainw['w']=='successor'||$mainw['w']=='predecessor'){
 		if($simbl[0][1]['w']=='to'){

@@ -2,12 +2,19 @@
 
 
 function order_a_sentence_3($inparr){
+	if($inparr['firstletterofsentenceissmall']){
+		$firstletterofsentenceissmall=true;
+		unset($inparr['firstletterofsentenceissmall']);
+	}
 	if(is_last_dot_3($inparr)){
 		$outparr=sep_last_dot_or_suf_3($inparr);
 		$outparr[0]=order_a_sent_without_last_dot($outparr[0]);
 	}else{
 		//no last dot
 		$outparr=order_a_sent_without_last_dot($inparr);
+	}
+	if($firstletterofsentenceissmall){
+		$outparr['firstletterofsentenceissmall']=true;
 	}
 	return $outparr;
 }
@@ -59,7 +66,7 @@ function o_s_no_lastdot_intro_3($inparr){
 		//2 verbs joined with comma and logical operator are checked and second one's top suffix also should be separated
 		//assume for now it is only one and does not belong to depenent clause
 		//... n , n+1 and n+2 be n+3 s n+4 ...
-		if( $pos!==null && $pos>$tmp && is_verb_suf($inparr[$pos+3])){
+		if( $pos!==null && $pos>$tmp && is_verb_suf_3($inparr[$pos+3])){
 			array_splice($inparr,$pos+3,1);
 			//assume it is same suffix as of verb at left side of logical
 			//if the 2 suffixes are present simple one and past simple other, they should not be separated here
@@ -80,8 +87,17 @@ function o_s_no_lastdot_intro_3($inparr){
 		}
 	}else{
 		//top verb suffix is not found
+		//check "whom we have v-0 meet ed-pp"
+		//first "whom"
+		//i see "whom" is not named "conjunction" in grammar but let it stay so for now in my code
+		if($inparr[0]['w']=='whom'){
+			$outparr=sep_first_word_3($inparr);
+			$outparr[1]=order_a_complex_verb_3($outparr[1]);
+			return $outparr;
+		}
+		//else
 		//need to check for it is verb
-		if(is_verb_3($inparr[0])){
+		if(is_verb_3($inparr[0])){//this check will not work if first (index 0) word is adverb
 			//echo 'OK';
 			$outparr=order_a_complex_verb_3($inparr);
 		}else{
@@ -355,6 +371,9 @@ function o_n_bl_no_ar_dc_comm_log_3($inparr){
 }
 
 function o_c_n_no_ar_dc_comlog_pr_3($inparr){
+	if(is_simple_or_ordered_3($inparr)){
+		return $inparr;
+	}
 	//need to separate plural s suffix at end
 	//i am going to do that in o_n_no_ar_dc_pr_comlog_parenth_3
 	//need to check for parentheses block
@@ -591,6 +610,7 @@ function o_n_no_ar_dc_pr_comlog_par_lastpl_3($inparr){
 		$inparr[1]['w']=='er-comp'
 		//signal ing voltage s , timing s
 		||$inparr[1]['w']=='ing'
+		||$inparr[1]['w']=='ed-pp'
 		// ||(
 			// $inparr[0]['w']=='type'
 			// &&$inparr[1]['w']=='three'
@@ -641,6 +661,13 @@ function o_n_no_ar_dc_pr_comlog_par_lastpl_3($inparr){
 			$outparr[1]=o_n_no_ar_dc_pr_comlog_parenth_3($outparr[1]);
 			$outparr[0]=sep_first_several_3($outparr[0],2);
 		}
+	}elseif(
+		is_first_adj_verb_ed_bl_3($inparr)//,$begin_pos,$end_pos
+		&&count($inparr)>3
+	){
+		$outparr=sep_first_several_3($inparr,3);
+		$outparr[0]=o_n_no_ar_dc_pr_comlog_par_lastpl_3($outparr[0]);
+		$outparr[1]=o_n_no_ar_dc_pr_comlog_par_lastpl_3($outparr[1]);
 	}else{
 		//need to check for multiwords
 		//example: random access memory
@@ -659,6 +686,25 @@ function o_n_no_ar_dc_pr_comlog_par_lastpl_3($inparr){
 		//$outparr=$inparr;
 	}
 	return $outparr;
+}
+
+function is_first_adj_verb_ed_bl_3($inparr){//,$begin_pos,$end_pos
+	if(
+		is_adj_3($inparr[0])
+		&&is_verb_3($inparr[1])
+		&&'ed-pp'==$inparr[2]['w']
+	){
+		// $begin_pos=0;
+		// $end_pos=2;
+		return true;
+	}
+}
+
+function is_adj_3($elem){
+	global $nounlikes;
+	if($nounlikes[$elem['w']]['type']=='adj'){
+		return true;
+	}
 }
 
 function all_words_begin_with_capital_letter_3($inparr){
@@ -824,6 +870,20 @@ function order_dep_cl_3($inparr){
 	$tmp=verb_suf_pos_3($inparr);
 	if($tmp!==null){
 		$outparr=sep_verb_suf_3($inparr,$tmp);
+		// return $outparr;
+		//check "whom we have meet ed-pp"
+		//first "whom"
+		// 0 whom 1 we 2 have 3 v-0
+		if($outparr[0][0]['w']=='whom'){
+			$outparr[0]=sep_first_word_3($outparr[0]);
+			$tmp=$tmp-2;
+			$outparr[0][1]=sep_subj_3($outparr[0][1],$tmp);
+			$outparr[0][1][0]=order_a_complex_noun_3($outparr[0][1][0]);
+			$outparr[0][1][1]=order_a_complex_verb_3($outparr[0][1][1]);
+			return $outparr;
+		}
+		//else
+		// 0 that 1 go 2 es
 		$tmp=$tmp-1;
 		$outparr[0]=sep_subj_3($outparr[0],$tmp);
 		$outparr[0][0]=order_a_complex_noun_3($outparr[0][0]);
@@ -842,7 +902,7 @@ function sep_subj_3($inparr,$quantity){
 
 function verb_suf_pos_3($inparr){
 	foreach($inparr as $pos=>$elem){
-		if(is_verb_suf($elem)){
+		if(is_verb_suf_3($elem)){
 			return $pos;
 		}
 	}
@@ -854,7 +914,7 @@ function sep_verb_suf_3($inparr,$pos){
 
 function get_first_conj_pos_3($inparr){
 	foreach($inparr as $pos=>$elem){
-		if(is_conj($elem)){
+		if(is_conj_3($elem)){
 			return $pos;
 		}
 	}
@@ -938,8 +998,12 @@ function order_a_complex_verb_3($inparr){
 	//else
 	//2 verbs should be separated here, i mean "have been" etc
 	if(
-		$inparr[0]['w']=='have'
-		&&$inparr[1]['w']=='be'
+		(
+			$inparr[0]['w']=='have'
+			||$inparr[0]['w']=='be'
+		)
+		//&&$inparr[1]['w']=='be'
+		&&is_verb_3($inparr[1])
 		&&$inparr[2]['w']=='ed-pp'
 	){
 		$outparr=sep_first_main_3($inparr);
@@ -1226,17 +1290,19 @@ function sep_last_dot_or_suf_3($inparr){
 	return $outparr;
 }
 
-function is_conj($elem){
-	if($elem['w']=='that'){
+function is_conj_3($elem){
+	if(
+		$elem['w']=='that'
+		||$elem['w']=='whom'
+	){
 		return true;
 	}
 }
 
-function is_verb_suf($elem){
+function is_verb_suf_3($elem){
 	if(
-		$elem['w']=='v-0'//present plural (they go, we go, you go) or 1st or 2nd person singular (i go, thou go) or 3d person singular (he will, he may, he can)
-		||$elem['w']=='v-s'//3d person present singular (he goes)
-		||$elem['w']=='v-re'//strictly present plural (they are, you are, we are)
+		is_top_verb_suf_3($elem)
+		||$elem['w']=='ed-pp'
 	){
 		return true;
 	}
@@ -1247,9 +1313,9 @@ function top_verb_suf_pos_3($inparr){
 	$conj=0;//conjunction
 	$top_suf=0;//top verb suffix
 	foreach($inparr as $pos=>$elem){
-		if(is_conj($elem)){
+		if(is_conj_3($elem)){
 			$conj++;
-		}elseif(is_verb_suf($elem)){
+		}elseif(is_top_verb_suf_3($elem)){
 			$top_suf++;
 		}
 		if($top_suf-$conj==1){
@@ -1258,9 +1324,21 @@ function top_verb_suf_pos_3($inparr){
 	}
 }
 
+function is_top_verb_suf_3($elem){
+	//see is_verb_suf_3
+	if(
+		$elem['w']=='v-0'//present plural (they go, we go, you go) or 1st or 2nd person singular (i go, thou go) or 3d person singular (he will, he may, he can)
+		||$elem['w']=='v-s'//3d person present singular (he goes)
+		||$elem['w']=='v-re'//strictly present plural (they are, you are, we are)
+		||$elem['w']=='ed'//past simple
+	){
+		return true;
+	}
+}
+
 function sep_top_verb_suf_3($inparr,$pos){
 	$suf=array_splice($inparr,$pos,1);
-	$outparr[]=$inparr;
+	$outparr[]=fix_one_element_in_array($inparr);
 	$outparr[]=$suf[0];
 	return $outparr;
 }

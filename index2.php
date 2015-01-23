@@ -3,6 +3,7 @@
 mb_internal_encoding('UTF-8');
 header('Content-Type: text/html; charset=utf-8');
 ini_set('display_errors', '1');
+ini_set('max_execution_time', '5');
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
 //$show_trees=true;
 
@@ -352,7 +353,7 @@ echo nstd_to_str($test);
 echo'<br/>';
 
 //$words['ed-pp']='енгән';
-
+//last known
 $test=array($test,'ed-pp');
 $result=tr_simple_block($test);
 echo nstd_to_str($result);
@@ -360,6 +361,7 @@ echo nstd_to_str($result);
 echo'<br/>';
 
 $words['bug']='баг';
+//last known bug
 $test=array($test,'bug');
 $result=tr_simple_block($test);
 echo nstd_to_str($result);
@@ -368,16 +370,19 @@ echo'<br/>';
 
 $words['read']='укы';
 $test2=array($test,'read');
+//read last known bug
 $result=tr_simple_block($test2);
 echo nstd_to_str($result);
 
 echo'<br/>';
 $test=array('the',$test);
+//the last known bug
 $result=tr_simple_block($test);
 echo nstd_to_str($result);
 
 echo'<br/>';
 $test3=array($test,'read');
+//read the last known bug
 $result=tr_simple_block($test3);
 echo nstd_to_str($result);
 
@@ -388,19 +393,24 @@ echo nstd_to_str($result);
 
 echo'<br/>';
 $test2=array($test2,'have');
+//have read
 $result=tr_simple_block($test2);
 echo nstd_to_str($result);
 
 echo'<br/>';
 $test3=array($test3,'ed-pp');
+//read-ed the last known bug
 $test3=array($test3,'have');
+//have read-ed the last known bug
 $result=tr_simple_block($test3);
 echo nstd_to_str($result);
 
 echo'<br/>';
 $words['he']='ул';
 $test3=array('he',$test3);
+//he have read-ed the last known bug
 $test3=array($test3,'s');
+//he have-s read-ed the last known bug
 //echo'<pre>';
 //print_r($test3);
 //echo'</pre>';
@@ -889,7 +899,7 @@ $words['pr-si']='а';
 $words['teach']='укыт';
 $words['er']='учы';
 $words['that']='кайсы';
-$words['mention']='искәал';
+$words['mention']='искә ал';
 $words['be']='бул';
 $words['ed']='ды';
 $words['meet']='очрат';

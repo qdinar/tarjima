@@ -10,14 +10,14 @@ function explode_into_morphemes($engtext){
 			unset($engtext[$key]);
 		}
 	}
-	global $dic,$firstletterofsentenceiscapital,$nounlikes,$verbs;
+	global $dic,$nounlikes,$verbs;//$firstletterofsentenceiscapital
 	//global $thereisdotatendofsentence;
 	$engtext2=array();
 	$i=0;
 	//$thereiscomma=false;
 	//$thereisdot=false;
 	$firstiscapital=false;
-	$firstletterofsentenceiscapital=true;
+	//$firstletterofsentenceiscapital=true;
 	$thisisabbreviation=false;
 	$thenextwordisused=false;
 	foreach($engtext as $key=>$word){
@@ -43,6 +43,9 @@ function explode_into_morphemes($engtext){
 		if(ctype_upper(substr($word,0,1))){
 			if($key>0){
 				$firstiscapital=true;
+			}else{
+				$firstletterofsentenceiscapital=true;
+				//$engtext2['firstletterofsentenceiscapital']=true;
 			}
 			if(ctype_upper(substr($word,1,1))){
 				$thisisabbreviation=true;
@@ -250,6 +253,9 @@ function explode_into_morphemes($engtext){
 		}
 		$i=count($engtext2);
 	}
+	if($firstletterofsentenceiscapital){
+		//$engtext2['firstletterofsentenceiscapital']=true;
+	}
 	return $engtext2;
 }
 
@@ -257,9 +263,17 @@ function explode_into_morphemes($engtext){
 
 
 function set_w_keys($engtext2,$i){
+	$c=0;
+	//show_tree_3($engtext2);
+	//echo'OK',$i;
+	//var_dump($engtext2);
 	for($j=$i;$j<count($engtext2);$j++){
 		if(!is_array($engtext2[$j])){
 			$engtext2[$j]=array('w'=>$engtext2[$j]);
+			// var_dump($engtext2);
+			// echo '<br>';
+			// $c++;
+			// if($c==10){exit;}
 		}
 		else{
 			$engtext2[$j]=set_w_keys($engtext2[$j],0);

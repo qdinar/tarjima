@@ -186,10 +186,10 @@ echo nstd_to_str_2($result);
 
 
 
-
-$show_trees_3=true;
-$show_trees_3_tr=true;
-$show_invis_chars=true;
+echo'<br><br>=== new order function ===';
+// $show_trees_3=true;
+// $show_trees_3_tr=true;
+$show_invis_chars=true;//this is for a discontinued new function
 //=== new order function ===
 include 'explode_3.php';
 include 'order_3.php';
@@ -198,14 +198,7 @@ include 'order_3.php';
 // include 'nstd_to_str_3.php';
 
 //The actual DRAM arrays that store the data are similar to earlier types, with similar performance.
-$engtext2=explode_3($engtext);
-$engtext2=order_a_sentence_3($engtext2);
-echo '<br>',$engtext;
-show_tree_3($engtext2);
-$result=tr_simple_block_2($engtext2);
-show_tree_3_tr($result);
-$nstd_to_str_2_firstwordisready=false;
-echo nstd_to_str_2($result);
+sh_trees_and_result($engtext);
 
 $suf_prep['from']=array('tt'=>'тан');
 $suf_prep['with']=array('tt'=>'белән');
@@ -226,41 +219,22 @@ $verbs['be']=array('tt'=>'бул');
 
 //prev. ex. with new order function
 $engtext='DDR3 is a DRAM interface specification.';
-$engtext2=explode_3($engtext);
-$engtext2=order_a_sentence_3($engtext2);
-echo '<br><br>',$engtext;
-show_tree_3($engtext2);
-$result=tr_simple_block_2($engtext2);
-show_tree_3_tr($result);
-$nstd_to_str_2_firstwordisready=false;
-echo nstd_to_str_2($result);
+sh_trees_and_result($engtext);
 
 $engtext='DDR3 SDRAM is neither forward nor backward compatible with any earlier type of random access memory (RAM) due to different signaling voltages, timings, and other factors.';
-$engtext2=explode_3($engtext);
-$engtext2=order_a_sentence_3($engtext2);
-echo '<br><br>',$engtext;
-show_tree_3($engtext2);
-$result=tr_simple_block_2($engtext2);
-show_tree_3_tr($result);
-$nstd_to_str_2_firstwordisready=false;
-echo nstd_to_str_2($result);
+sh_trees_and_result($engtext);
 //show_tree_3(order_a_sentence_3(explode_3('different signaling voltages, timings, and other factors')));
 
 $multiwords[]=array('DDR4','SDRAM');
 $engtext='It is the higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips.';
-$engtext2=explode_3($engtext);
-$engtext2=order_a_sentence_3($engtext2);
-echo '<br><br>',$engtext;
-show_tree_3($engtext2);
-$result=tr_simple_block_2($engtext2);
-show_tree_3_tr($result);
-$nstd_to_str_2_firstwordisready=false;
-echo nstd_to_str_2($result);
+sh_trees_and_result($engtext);
 
 //$multiwords[]=array('double','data','rate');
 $engtext='In computing, DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory, is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007.';
 //$engtext='DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory, is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007.';
 //$engtext='DDR3 SDRAM is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007.';
+sh_trees_and_result($engtext);
+/*
 echo '<br><br>',$engtext;
 $engtext2=explode_3($engtext);
 //show_tree_3($engtext2);
@@ -275,43 +249,22 @@ $result=tr_simple_block_2($engtext2);
 show_tree_3_tr($result);
 $nstd_to_str_2_firstwordisready=false;
 echo nstd_to_str_2($result);
+*/
 
 $verbs['see']=array('tt'=>'кара');
 $engtext='For the video game, see Dance Dance Revolution 3rdMix.';
-echo '<br><br>',$engtext;
-$engtext2=explode_3($engtext);
-// show_tree_3($engtext2);
-$engtext2=order_a_sentence_3($engtext2);
-show_tree_3($engtext2);
-$result=tr_simple_block_2($engtext2);
-show_tree_3_tr($result);
-$nstd_to_str_2_firstwordisready=false;
-echo nstd_to_str_2($result);
+sh_trees_and_result($engtext);
 
 $nounlikes['GDDR3']=array('tt'=>'GDDR3','type'=>'noun');
 $engtext='For graphics DDR3, see GDDR3.';
-echo '<br><br>',$engtext;
-$engtext2=explode_3($engtext);
-// show_tree_3($engtext2);
-$engtext2=order_a_sentence_3($engtext2);
-show_tree_3($engtext2);
-$result=tr_simple_block_2($engtext2);
-show_tree_3_tr($result);
-$nstd_to_str_2_firstwordisready=false;
-echo nstd_to_str_2($result);
+sh_trees_and_result($engtext);
 
 $engtext='This article is about DDR3 SDRAM.';
-echo '<br><br>',$engtext;
-$engtext2=explode_3($engtext);
-// show_tree_3($engtext2);
-$engtext2=order_a_sentence_3($engtext2);
-show_tree_3($engtext2);
-$result=tr_simple_block_2($engtext2);
-show_tree_3_tr($result);
-$nstd_to_str_2_firstwordisready=false;
-echo nstd_to_str_2($result);
+sh_trees_and_result($engtext);
 
 $engtext='From Wikipedia, the free encyclopedia';
+sh_trees_and_result($engtext);
+/*
 echo '<br><br>',$engtext;
 $engtext2=explode_3($engtext);
 // show_tree_3($engtext2);
@@ -320,10 +273,15 @@ show_tree_3($engtext2);
 $result=tr_simple_block_2($engtext2);
 show_tree_3_tr($result);
 echo s_nstd_to_str_3($result);
+*/
 
 function s_nstd_to_str_3($nstd){
-	global $nstd_to_str_2_firstwordisready;
+	global $nstd_to_str_2_firstwordisready,$firstletterofsentenceissmall;
 	$nstd_to_str_2_firstwordisready=false;
+	if($nstd['firstletterofsentenceissmall']){
+		$firstletterofsentenceissmall=true;
+		unset($nstd['firstletterofsentenceissmall']);
+	}
 	return nstd_to_str_2($nstd);
 }
 
@@ -331,12 +289,59 @@ function s_nstd_to_str_3($nstd){
 // show_tree_3($engtext2);
 // echo s_tr_to_str_3($engtext2);
 
+$engtext='good school';
+sh_trees_and_result($engtext);
 
+function sh_trees_and_result($engtext){
+	global $firstletterofsentenceissmall;
+	echo '<br><br>',$engtext;
+	$engtext2=explode_3($engtext);
+	show_tree_3($engtext2);
+	/*
+	if($engtext2['firstletterofsentenceissmall']){
+		$firstletterofsentenceissmall=true;
+		//unset($engtext2['firstletterofsentenceissmall']);
+	}
+	*/
+	$engtext2=order_a_sentence_3($engtext2);
+	show_tree_3($engtext2);
+	$result=tr_simple_block_2($engtext2);
+	show_tree_3_tr($result);
+	echo '<br>',s_nstd_to_str_3($result);
+}
 
+$nounlikes['last']=array('tt'=>'соңгы','type'=>'adj');
+$verbs['know']=array('tt'=>'бел');
+$verbs['read']=array('tt'=>'укы');
+$verbs['mention']=array('tt'=>'искә ал');
+$verbs['meet']=array('tt'=>'очрат');
 
+// $engtext='last know';
+// sh_trees_and_result($engtext);
 
+// $engtext='last known';
+// sh_trees_and_result($engtext);
 
+// $engtext='last known bug';
+// sh_trees_and_result($engtext);
 
+$engtext='read last known bug';
+sh_trees_and_result($engtext);
+
+$engtext='read the last known bug';
+sh_trees_and_result($engtext);
+
+// $engtext='have read';
+// sh_trees_and_result($engtext);
+
+$engtext='he has read the last known bug';
+sh_trees_and_result($engtext);
+
+$engtext='the teacher whom we have met has read the bug that was mentioned';
+//$engtext='be mentioned';
+//$engtext='whom we have met';
+//$engtext='teacher whom we have met';
+sh_trees_and_result($engtext);
 
 
 

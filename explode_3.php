@@ -12,14 +12,14 @@ function explode_3($engtext){
 			unset($engtext[$key]);
 		}
 	}
-	global $dic,$firstletterofsentenceiscapital,$nounlikes,$verbs;
+	global $dic,$nounlikes,$verbs;//$firstletterofsentenceiscapital
 	//global $thereisdotatendofsentence;
 	$engtext2=array();
 	$i=0;
 	//$thereiscomma=false;
 	//$thereisdot=false;
 	$firstiscapital=false;
-	$firstletterofsentenceiscapital=true;
+	//$firstletterofsentenceiscapital=true;
 	$thisisabbreviation=false;
 	$thenextwordisused=false;
 	foreach($engtext as $key=>$word){
@@ -49,6 +49,10 @@ function explode_3($engtext){
 			if(ctype_upper(substr($word,1,1))){
 				$thisisabbreviation=true;
 				$firstiscapital=false;
+			}
+		}else{
+			if($key==0&&ctype_lower(substr($word,1,1))){
+				$firstletterofsentenceissmall=true;
 			}
 		}
 		/*
@@ -126,7 +130,13 @@ function explode_3($engtext){
 		}
 		elseif(mb_substr($word,-2,2)=='ed'&&$word!='speed'){
 			$engtext2[]=mb_substr($word,0,mb_strlen($word)-2);
-			if(isset($engtext2[count($engtext2)-3])&&($engtext2[count($engtext2)-3]=='be'||$engtext2[count($engtext2)-3]=='have')){
+			// echo'*';
+			// show_tree_3($engtext2);
+			// exit;
+			if(
+				$engtext2[count($engtext2)-3]['w']=='be'
+				||$engtext2[count($engtext2)-3]['w']=='have'
+			){
 				$engtext2[]='ed-pp';
 			}else{
 				$engtext2[]='ed';
@@ -170,7 +180,7 @@ function explode_3($engtext){
 				}
 		}
 		elseif(mb_substr($word,-1)=='d'){
-			if(mb_substr($word,0,mb_strlen($word)-1)=='rea'){
+			if(mb_substr($word,0,mb_strlen($word)-1)=='rea'&&$key>0){
 				$engtext2[]='read';
 				$engtext2[]='ed-pp';
 			}else{
@@ -260,6 +270,9 @@ function explode_3($engtext){
 			$engtext2[$i]['thisisabbreviation']=true;
 		}
 		$i=count($engtext2);
+	}
+	if($firstletterofsentenceissmall){
+		$engtext2['firstletterofsentenceissmall']=true;
 	}
 	return $engtext2;
 }

@@ -94,9 +94,10 @@ echo nstd_to_str_2($result);
 
 echo'<br/>';
 $engtext='For graphics DDR3, see GDDR3.';
-$engtext=explode(' ', $engtext);
+//$engtext=explode(' ', $engtext);
 //$dic['buy']['type']='verb';
-$engtext2=explode_words_into_morphemes_2($engtext);
+//$engtext2=explode_words_into_morphemes_2($engtext);
+$engtext2=explode_into_morphemes($engtext);
 print_r($engtext2);
 $dic['see']['type']='verb';
 $engtext2=order_2($engtext2);
@@ -750,6 +751,14 @@ function last_conson($s){
 	}
 	return false;
 }
+function last_l($s){
+	if(mb_substr($s,-1)=='л'){
+		return true;
+	}
+	return false;
+}
+
+
 //after some fixes i have:
 //Компьютер гыйлеме эчендә , өченче төрдәге икекатлы мәгълүмат тизлеке ле синхрон динамик теләсә-ничек керү ле хәтер өчен бер аббревиатура булган DDR3 SDRAM — бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлеке") ле интерфейс лы динамик теләсә-ничек керү ле хәтер (DRAM) нең бер яңа төр е һәм — 2007 таналып кулланылыш эчендә.
 //(also a ның->нең is fixed)
@@ -1021,6 +1030,9 @@ echo nstd_to_str_2($result);
 //i have named it "main part"
 //multiword assign with detecting main word is done
 function used_in_current_paragraph($word){
+	if($word['w']=='bug'){
+		return true;
+	}
 	return false;
 }
 function get_tr_last_word($tr_bl){

@@ -6,6 +6,7 @@ function nstd_to_str_2($nstd){
 	// show_tree_3($nstd);
 	// $result='';
 	//global $firstletterofsentenceiscapital;
+	global $firstletterofsentenceissmall;
 	global $nstd_to_str_2_firstwordisready;
 	if(isset($nstd['dash'])){
 		$result.=' — ';
@@ -17,7 +18,13 @@ function nstd_to_str_2($nstd){
 		$word=$nstd['w'];
 		if(
 			$nstd['firstiscapital']==true
-			||!$nstd_to_str_2_firstwordisready
+			||
+			(
+				!$nstd_to_str_2_firstwordisready
+				//&&$firstletterofsentenceiscapital
+				//&&$nstd['firstletterofsentenceiscapital']
+				&&!$firstletterofsentenceissmall
+			)
 		){
 			$word=mb_strtoupper(mb_substr($word,0,1)).mb_substr($word,1);
 		}
@@ -116,7 +123,13 @@ function nstd_to_str_2($nstd){
 		$word=$nstd[0]['w'];
 		if(
 			$nstd[0]['firstiscapital']==true
-			||!$nstd_to_str_2_firstwordisready
+			||
+			(
+				!$nstd_to_str_2_firstwordisready
+				//&&$firstletterofsentenceiscapital
+				//&&$nstd['firstletterofsentenceiscapital']
+				&&!$firstletterofsentenceissmall
+			)
 		){
 			$word=mb_strtoupper(mb_substr($word,0,1)).mb_substr($word,1);
 		}
@@ -152,7 +165,12 @@ function nstd_to_str_2($nstd){
 		$word=$nstd[1]['w'];
 		if(
 			$nstd[1]['firstiscapital']==true
-			||!$nstd_to_str_2_firstwordisready
+			||(
+				!$nstd_to_str_2_firstwordisready
+				//&&$firstletterofsentenceiscapital
+				//&&$nstd['firstletterofsentenceiscapital']
+				&&!$firstletterofsentenceissmall
+			)
 		){
 			$word=mb_strtoupper(mb_substr($word,0,1)).mb_substr($word,1);
 		}
@@ -168,7 +186,7 @@ function nstd_to_str_2($nstd){
 			&&$word!='п'&&$word!='кә'&&$word!='у'
 			&&$word!='рәк'&&$word!='лар'&&$word!='а'
 			&&$word!='ның'&&$word!='дәге'&&$word!='ган'
-			&&$word!='учы'
+			&&$word!='учы'&&$word!='лгән'&&$word!='де'
 			&&$word!='intro_comma'
 		){
 			//кушымчалардан башкаларын айырып язасы
@@ -302,6 +320,42 @@ function nstd_to_str_2($nstd){
 		elseif($word=='лар'){
 			if(is_soft($prev_w)){
 				$word='ләр';
+			}
+		}
+		elseif($word=='лгән'){
+			if(is_soft($prev_w)){
+				if(last_conson($prev_w)){
+					$result.='е';
+				}
+				if(last_l($prev_w)){
+						$word='нгән';
+				}
+			}else{
+				$word='лган';
+				if(last_conson($prev_w)){
+					$result.='ы';
+				}
+				if(last_l($prev_w)){
+						$word='нган';
+				}
+			}
+		}
+		elseif($word=='де'){
+			if(!is_soft($prev_w)){
+				$word='ды';
+			}
+		}
+		elseif($word=='ган'){
+			if(is_soft($prev_w)){
+				if(is_breath($prev_w)){
+					$word='кән';
+				}else{
+					$word='гән';
+				}
+			}else{
+				if(is_breath($prev_w)){
+					$word='кан';
+				}
 			}
 		}
 		$result.=$word;
