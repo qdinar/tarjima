@@ -186,11 +186,17 @@ echo nstd_to_str_2($result);
 
 
 
-echo'<br><br>=== new order function ===';
-// $show_trees_3=true;
-// $show_trees_3_tr=true;
-$show_invis_chars=true;//this is for a discontinued new function
+
+
+
+
 //=== new order function ===
+
+
+echo'<br><br>=== new order function ===';
+//$show_trees_3=true;
+//$show_trees_3_tr=true;
+//$show_invis_chars=true;//this is for a discontinued new function
 include 'explode_3.php';
 include 'order_3.php';
 //=== new translate and nested-to-string functions ===
@@ -222,8 +228,10 @@ $engtext='DDR3 is a DRAM interface specification.';
 sh_trees_and_result($engtext);
 
 $engtext='DDR3 SDRAM is neither forward nor backward compatible with any earlier type of random access memory (RAM) due to different signaling voltages, timings, and other factors.';
+//$engtext='be neither forward nor backward compatible with any earlier type of random access memory (RAM)';
 sh_trees_and_result($engtext);
 //show_tree_3(order_a_sentence_3(explode_3('different signaling voltages, timings, and other factors')));
+//exit;
 
 $multiwords[]=array('DDR4','SDRAM');
 $engtext='It is the higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips.';
@@ -343,11 +351,32 @@ $engtext='the teacher whom we have met has read the bug that was mentioned';
 //$engtext='teacher whom we have met';
 sh_trees_and_result($engtext);
 
+//$show_trees_3=true;
+//$show_trees_3_tr=true;
 
+$nounlikes['every']=array('tt'=>'һәр','type'=>'adv');
+$engtext='i go to school every day';
+sh_trees_and_result($engtext);
 
+$engtext='we go from park every morning';
+sh_trees_and_result($engtext);
 
+$engtext='they walk through park that is built last year';
+sh_trees_and_result($engtext);
 
+//$show_trees_3_tr=true;
+$engtext='the boy that bought a bicycle walks through park';
+sh_trees_and_result($engtext);
 
+$engtext='last year';
+sh_trees_and_result($engtext);
+
+$engtext='they walk through park';
+sh_trees_and_result($engtext);
+
+//$show_trees_3_tr=true;
+$engtext='they walked through park last year';
+sh_trees_and_result($engtext);
 
 
 

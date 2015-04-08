@@ -152,6 +152,13 @@ function order_a_complex_noun_3($inparr){
 		//main part
 		$outparr[1]=order_a_complex_noun_3($outparr[1]);
 	}else{
+		//check for participle:
+		//build ed-pp last year
+		if($inparr[1]['w']=='ed-pp'){
+			$outparr=sep_verb_suf_3($inparr,1);
+			$outparr[0]=order_a_complex_verb_3($outparr[0]);
+			return $outparr;
+		}
 		//no ", and"
 		//wrong place for last parentheses: example:
 		//neither forward nor backward compatible with any earlier type of random access memory (RAM)
@@ -1013,11 +1020,37 @@ function order_a_complex_verb_3($inparr){
 		return $outparr;
 	}
 	//else
-	$pos=verb_last_c_adv_or_prep_pos_3($inparr);
+	//need to join here complex nouns that include prepositions and adverbs
+	//examples:
+	//be neither forward nor backward compatible with any earlier type of random access memory (RAM)
+	//walk through park that is built last year
+	//be a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface
+	//i see separating "neither ... nor ..." as adverb of verb also possible
+	//so i should attach it to "compatible" like a multiword
+	//in case of "be", i think, adverb is very rarely used to specify "be"
+	//but there are some cases...: is rarely
+	$pos=v_last_conj_p_3($inparr);
 	if($pos!==null){
+		// $inparr=join_last_block_3($inparr,$pos);
+		// $inparr[count($inparr)-1]=order_dep_cl_3($inparr[count($inparr)-1]);
+		$pos=verb_last_c_adv_or_prep_before_pos_3($inparr,$pos-1);
+	}else{
+		$pos=verb_last_c_adv_or_prep_pos_3($inparr);
+	}
+	if($pos!==null){
+		//need to check for
+		//be neither forward nor backward compatible with any earlier type of random access memory (RAM)
+		//there is adverb and logical before it
+		//but the logical is not even important
+		//they do nor belong to the verb
+		//similar issue with compatible with is temporarily fixed in verb_last_c_adv_or_prep_pos_3
+		//i have also fixed "backward" but then have problem with "forward"
+		//i see separating "neither ... nor ..." as adverb of verb also possible
+		//so i should attach it to "compatible" earlier like a multiword
 		$outparr=sep_last_c_adv_or_prep_bl_3($inparr,$pos);
 		//0 prep bl 1 verb
 		if(!is_comma_or_logical_3($inparr[$pos-1])){
+			//return $outparr;
 			//normal prepositional block
 			// outparr[0] is last prep block
 			$outparr[0]=o_c_prep_bl_3($outparr[0]);
@@ -1047,7 +1080,7 @@ function order_a_complex_verb_3($inparr){
 		}
 	}else{
 		//no preposition nor adverb block
-		$outparr=o_c_verb_without_prep_and_adv_3($inparr);
+		$outparr=o_c_v_no_commlog_2v_prep_adv_3($inparr);
 		/*
 		//find simple adverb
 		$pos=first_adv_pos_3($inparr);
@@ -1057,15 +1090,23 @@ function order_a_complex_verb_3($inparr){
 			$outparr=sep_an_adv_3($inparr,$pos);
 			//no adverb here:
 			//example: take a book
-			$outparr[1]=o_c_verb_without_prep_and_adv_3($outparr[1]);
+			$outparr[1]=o_c_v_no_commlog_2v_prep_adv_3($outparr[1]);
 		}else{
 			//no adverb
 			//example: take a book
-			$outparr=o_c_verb_without_prep_and_adv_3($inparr);
+			$outparr=o_c_v_no_commlog_2v_prep_adv_3($inparr);
 		}
 		*/
 	}
 	return $outparr;
+}
+
+function v_last_conj_p_3($inparr){
+	for($i=count($inparr)-1;$i>0;$i--){
+		if(is_conj_3($inparr[$i])){
+			return $i;
+		}
+	}
 }
 
 function is_verb_3($elem){
@@ -1098,6 +1139,11 @@ function o_c_prep_bl_3($inparr){
 	if(is_simple_or_ordered_3($inparr)){
 		if(is_prep_3($inparr[1])){
 			return $inparr;
+		}elseif(
+			is_adv_3($inparr[0])
+			||is_adj_3($inparr[0])//last year
+		){
+			return $inparr;
 		}
 	}
 	if(is_prep_3($inparr[0])){
@@ -1126,10 +1172,12 @@ function o_c_prep_bl_3($inparr){
 	return $outparr;
 }
 
-function o_c_verb_without_prep_and_adv_3($inparr){
+function o_c_v_no_commlog_2v_prep_adv_3($inparr){
 	//order complex verb without prepostion blocks and without adverbs but with object and may be something else strange
 	//find object
 	//example: take a book
+	//need to check:
+	//be build ed-pp last year
 	$pos=first_c_nounlike_pos_3($inparr);
 	if($pos!==null){
 		$outparr=sep_object_3($inparr,$pos);
@@ -1180,6 +1228,9 @@ function first_c_nounlike_pos_3($inparr){
 	foreach($inparr as $pos=>$elem){
 		if(is_nounlike_3($elem)||is_article_3($elem)){
 			return $pos;
+		}elseif($elem['w']=='ed-pp'&&$pos==2){
+			//be build ed
+			return $pos-1;
 		}
 	}
 }
@@ -1206,15 +1257,17 @@ function is_noun_3($elem){
 }
 
 function sep_last_c_adv_or_prep_bl_3($inparr,$pos){
-	$prep_bl=array_splice($inparr,$pos);
-	if(count($prep_bl)==1){
-		$prep_bl=$prep_bl[0];
-	}
-	if(count($inparr)==1){
-		$inparr=$inparr[0];
-	}
-	$outparr[]=$prep_bl;
-	$outparr[]=$inparr;
+	// $prep_bl=array_splice($inparr,$pos);
+	// if(count($prep_bl)==1){
+		// $prep_bl=$prep_bl[0];
+	// }
+	// if(count($inparr)==1){
+		// $inparr=$inparr[0];
+	// }
+	// $outparr[]=$prep_bl;
+	// $outparr[]=$inparr;
+	$outparr[]=fix_one_element_in_array(array_splice($inparr,$pos));
+	$outparr[]=fix_one_element_in_array($inparr);
 	return $outparr;
 }
 
@@ -1228,7 +1281,12 @@ function is_comma_or_logical_3($elem){
 }
 
 function verb_last_c_adv_or_prep_pos_3($inparr){
-	for($i=count($inparr)-1;$i>=0;$i--){
+	return verb_last_c_adv_or_prep_before_pos_3($inparr,count($inparr)-1);
+}
+
+function verb_last_c_adv_or_prep_before_pos_3($inparr,$pos){
+//function verb_last_c_adv_or_prep_pos_3($inparr){
+	for($i=$pos;$i>=0;$i--){
 		if(is_prep_3($inparr[$i])&&$inparr[$i]['w']!='of'){
 			if(
 				$inparr[$i-1]['w']=='due'
@@ -1252,10 +1310,22 @@ function verb_last_c_adv_or_prep_pos_3($inparr){
 					)
 				){
 					//default return false
+				}elseif($inparr[$i]['w']=='with'&&$inparr[$i-1]['w']==')'){
+					//temporary fix
 				}else{
 					return $i;
 				}
 			}
+		}elseif(is_adv_3($inparr[$i])){
+			if(is_adj_3($inparr[$i+1])){
+				//... backward compatible with ...
+			}elseif(is_comma_or_logical_3($inparr[$i+1])){
+				//... forward nor backward compatible ...
+			}else{
+				return $i;
+			}
+		}elseif($inparr[$i]['w']=='last'&&$inparr[$i+1]['w']=='year'){
+			return $i;
 		}
 	}
 }
@@ -1270,6 +1340,7 @@ function is_prep_3($elem){
 		||$elem['w']=='for'
 		||$elem['w']=='since'
 		||$elem['w']=='about'
+		||$elem['w']=='through'
 	){
 		return true;
 	}

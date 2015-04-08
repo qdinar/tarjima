@@ -187,7 +187,8 @@ function nstd_to_str_2($nstd){
 			&&$word!='рәк'&&$word!='лар'&&$word!='а'
 			&&$word!='ның'&&$word!='дәге'&&$word!='ган'
 			&&$word!='учы'&&$word!='лгән'&&$word!='де'
-			&&$word!='intro_comma'
+			&&$word!='intro_comma'&&$word!='э'&&$word!='м'
+			&&$word!='быз'&&$word!='гән'
 		){
 			//кушымчалардан башкаларын айырып язасы
 			$result.=' ';
@@ -356,6 +357,17 @@ function nstd_to_str_2($nstd){
 				if(is_breath($prev_w)){
 					$word='кан';
 				}
+			}
+		}
+		elseif($word=='э'){
+			if(last_conson($prev_w)){
+				if(is_soft($prev_w)){
+					$word='ә';
+				}else{
+					$word='а';
+				}
+			}else{
+				$word='й';
 			}
 		}
 		$result.=$word;

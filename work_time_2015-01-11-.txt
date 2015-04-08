@@ -317,6 +317,7 @@ jan20
 1450-
 -1453
 
+
 jan22
 
 1056-
@@ -394,22 +395,178 @@ also other examples have changed:
 -2334
 
 jan23
+
 1004-
 -1
 -1
 commit
-
+bb780a3ab53588cbb06bc70c0e3be3018a50bbd0
 several old examples
+-1035
+
+2259-
+-2312
+
+1309-
+-3
+need to join complex nouns that include prepositions and adverbs
+example:
+neither forward nor backward compatible with any earlier type of random access memory (RAM)
+in "be neither ..."
+in case of "be" thing after "be" usually belong to object of "be"
+but there are some cases when adverb specifies "be" itself: is rarely
+-1401
+
+jan26
+
+2100-
+-2111
+
+jan29
++10
+
+jan31
++3
+
+feb 5
+
+nearly 1830-
+i go to school every day
+is ready:
+мин һәр көн мәктәпкә барам
+
+we go from park every morning
+is ready:
+без һәр иртә парк тарафыннан барабыз
+
+-1901
+
+1907-
+-1910
+
+2027-
+-2034
+
+2201-
+i should make:
+walk through park that is built last year
+and maybe these, they are somewhat temporarily fixed:
+be the higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips
+be neither forward nor backward compatible with any earlier type of random access memory (RAM)
+how can i make:
+walk through park that be v-s build ed-pp (last year)
+walk through park (that be v-s build ed-pp last year)
+i want to try to join blocks with 'that'. but i have fixed it other way.
+need to fix:
+(be build ed-pp) (last year)
+should be:
+be ((build last year) ed-pp)
+or:
+be ((build ed-pp) (last year))
+i select first
+they walk through park that is built last year
+is ready:
+алар узган ел төзелгән парк аша йөрей
+next examples:
+the boy that bought a bicycle walks through park
+last year
+they walk through park
+they walked through park last year
+next is almost ready:
+велосипед сатып алган малай парк аша йөрей
+translation of 'the' should be fixed
+-2327
 
 
+march 29:
+
+http://arxiv.org/abs/1503.06733
+Yara Parser
+
+http://www.phontron.com/travatar/
+Travatar
+
+some parsers
+http://nlp.stanford.edu/software/stanford-dependencies.shtml#Methods
 
 
+http://faculty.washington.edu/dillon/GramResources/
+The Stanford NLP Group has put up java-based maximum entropy POS tagger ...
+
+2015 april 1
+
+1335-
+i do not fix the "the" for now, go to next examples.
+
+nearly -8
+
+result: узган ел; алар парк аша йөрей; алар узган ел парк аша йөре ды
+-1420
 
 
+apr2
 
+900-
+there are evident and nonevident forms of past verb in tatar.
+i think nonevident is default and change to it,
+i.e. it was де, i change it to гән.
+result:
+алар узган ел парк аша йөрегән
 
+check previous translations errors and find:
+In computing, ...
+Компьютер гыйлеме эчендә, өченче төрдәге икекатлы мәгълүмат тизлегенле синхрон динамик теләсә-ничек керүле хәтер өчен бер аббревиатура — DDR3 SDRAM-ы.
 
+-914
 
++1
 
+apr3
+1248-
+-1322
+1722-1741
 
+apr4
+1046-1055
+
+apr8
+1315-
+-7
+-2
+13:56 i have fixed the "in computing, ..." bug.
+i see i should not translate
+with ... interface
+as ... интерфейс белән
+but as ... интерфейслы
+-1358
+1519-
+интерфейслы is temporarily fixed
+now i see
+бер ((...-ле интерфейслы ... хәтер -ның) яңа төре)
+should be transformed to
+((...-ле интерфейслы ... хәтер -ның) бер яңа төре)
+or even ordered that way in english, but as i remember, i specially ordered it this way.
+done, changed in tatar.
+so:
+
+DDR3 is a DRAM interface specification.
+DDR3 — DRAM интерфейсы бер спецификациясе.
+
+In computing, DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory, is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007.
+Компьютер гыйлеме эчендә, өченче төрдәге икекатлы мәгълүмат тизлегенле синхрон динамик теләсә-ничек керүле хәтер өчен бер аббревиатура DDR3 SDRAM-ы — бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлеге") -ле интерфейслы динамик теләсә-ничек керүле хәтер (DRAM) -ның бер яңа төре, һәм 2007-дән алып кулланылыш эчендә булган.
+
+going to commit.
+i have made all examples but some parts are done very weakly. it is complex nouns with inner prepositions in complex verbs, their prepositions could be separated at verb level but i need to leave them to be separated only inside a noun. they or some of them are:
+
+be neither forward nor backward compatible with any earlier type of random access memory (RAM)
+it is not "be with", it is "compatible with".
+it is not "be of", it is "type of".
+it is not "be backward compatible", it is "forward nor backward".
+
+walk through park that is built last year
+it is not "walk that", it is "park that".
+
+be a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface
+it is not "be with ... interface", it is "... memory with ... interface".
+it is not "be of", it is "type of".
 

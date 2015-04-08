@@ -637,8 +637,11 @@ function translate_single_main_part(&$simbl,&$s2){
 				)*/
 				$s2[0]=$s2[0][1];
 				$s2[1]=$simbl[1];
-				//$s2[1]['w']='ган';
-				$s2[1]['w']='учы';
+				if($simbl[1]['w']=='ed'){
+					$s2[1]['w']='ган';
+				}else{
+					$s2[1]['w']='учы';
+				}
 				if($simbl[0][1][0][0]['w']=='a'){
 					$s2[0][0]=$s2[0][0][1];
 					/*Array
@@ -781,22 +784,36 @@ function apply_fixes_after_1(&$simbl,&$s2){
 		//show_tree_3($s2);
 		// $s2=$s2[1];
 	}
+	
+	//0(Мәгълүматны саклаучы асыл DRAM массивлар иртәрәк төрләргә охшаш, охшаш җитештерүчәнлек белән бул) 1(элар)
 	if($s2[1]['w']=='э'||$s2[1]['w']=='элар'){
 		//i cannot check for the 3rd case here, because i cannot refer/point to upper levels of array
 		//and i need not, seems 3rd case is almost same as 1st case for my task
 		//so i just need to check for comma or logical block inside verb block
 		$v1mu=&get_main_word_upper_ref($s2[0][1]);
+		//0//0(Мәгълүматны саклаучы асыл DRAM массивлар) 1(иртәрәк төрләргә охшаш, охшаш җитештерүчәнлек белән бул)
+		//өченче төрдәге икекатлы мәгълүмат тизлегенле синхрон динамик теләсә-ничек керүле хәтер өчен бер аббревиатура DDR3 SDRAM-ы
+		//
+		//00//1, 0(1һәм 0(2007-дән алып кулланылыш эчендә булган тот))
+		//01//бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлеге") -ле интерфейс белән бер динамик теләсә-ничек керүле хәтер (DRAM) -ның яңа төре бул
+		//1э
 		//need to search for logical block, logical or comma can be at 001, 0101, 01101, 011101 etc
 		$code='';
 		eval('$elem=$s2[0]'.$code.'[0][1];');
+		//0//0(0(0Мәгълүматны 1саклаучы) 1(асыл DRAM массивлар)) 1(иртәрәк төрләргә охшаш, охшаш җитештерүчәнлек белән бул)
 		if($elem['w']==','){
 			eval('$inner=$s2[0]'.$code.'[0][0][1];');
 			if($inner['w']=='һәм'){
 				eval('$v2=&$s2[0]'.$code.'[0][0][0];');
+				//0000:2007-дән алып кулланылыш эчендә булган тот
 				$v2mu=&get_main_word_upper_ref($v2);
+				//2007-дән алып кулланылыш эчендә булган тот
 				goto enough;
 			}
 		}
+		//0
+		//0(Мәгълүматны саклаучы асыл DRAM массивлар)
+		//1(0(1(иртәрәк төрләргә охшаш)0(1(,) 0(охшаш җитештерүчәнлек белән))) 1бул)
 		for($i=0;$i<5;$i++){
 			$code.='[1]';
 			eval('$elem=$s2[0]'.$code.'[0][1];');
@@ -813,19 +830,29 @@ function apply_fixes_after_1(&$simbl,&$s2){
 			}
 		}
 		enough:{
+			//0
+			//0(Мәгълүматны саклаучы асыл DRAM массивлар)
+			//1(0(иртәрәк төрләргә охшаш, охшаш җитештерүчәнлек белән) 1бул)
 			if($v1mu[1]['w']=='бул'){
 				$v1mu=$v1mu[0];
+				// $s2=$s2[0];
+				//assume first part is subject
+				// $s2[1]['dash']=true;
 			}
 			if($v2mu[1]['w']=='тот'){
 				// echo'OK';
 				$v2mu=$v2mu[0];
 				// show_tree_3($v2mu);
+				// $s2=$s2[0];
+				//assume first part is subject
+				// $s2[1]['dash']=true;
 			}
 			$s2=$s2[0];
 			//assume first part is subject
 			$s2[1]['dash']=true;
 		}
 	}
+	
 	$mainw=get_main_word($simbl[1]);
 	if($simbl[0]['w']=='the'){
 		if($simbl[0]['donotremove']){
@@ -842,6 +869,14 @@ function apply_fixes_after_1(&$simbl,&$s2){
 			//echo'level '.$recursionlevel.'<pre>';var_dump($simbl);echo'</pre>';echo'*';
 			$s2[0][0]=$s2[0];
 			$s2[0][1]=array('w'=>'карата');
+		}
+	}
+	elseif($mainw['w']=='memory'){
+		if($simbl[0][1]['w']=='with'){
+			$simbl00mainw=get_main_word($simbl[0][0]);
+			if($simbl00mainw['w']=='interface'){
+				$s2[0][1]['w']='ле';
+			}
 		}
 	}
 	if(
@@ -1076,6 +1111,13 @@ function apply_fixes_after_1(&$simbl,&$s2){
 		$lastwupper=&get_main_word_upper_ref($s2);
 		//echo'OK:<pre>';print_r($lastwupper);echo'</pre>';
 		$lastwupper[0]=array($lastwupper[0],array('w'=>'лар'));
+	}
+	//$s2_1_main=get_main_word($s2[1]);
+	//if($s2[0]['w']=='бер'&&$s2_1_main['w']=='ы'){
+	if($s2[0]['w']=='бер'&&$s2[1][1][1]['w']=='ы'){
+		//$s2[1][0]=array(array('w'=>'бер'),$s2[1][0]);
+		$s2[1][1][0]=array($s2[0],$s2[1][1][0]);
+		$s2=$s2[1];
 	}
 	/*
 	if($s2[1]['w']=='а'){
