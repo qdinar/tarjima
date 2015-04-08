@@ -753,6 +753,7 @@ next example, going backward
 DDR3 SDRAM is neither forward nor backward compatible with any earlier type of random access memory (RAM) due to different signaling voltages, timings, and other factors.
 order_2 was not giving good results after changes for latest example, may be i should fix it, revert, no, i will not lose time, its old state is not lost anyway.
 may be i will try kickstarter or boomstarter or other site
+> 2015-2-28 : i have known out that it is possible to start k. campaign only for usa residents <
 i do not know, make it proprietary or open source...
 probably open source and free to reuse then...
 and kickstarter is ok because most of work here is for order function which is for english language
@@ -1185,6 +1186,8 @@ n -> n*(n+1)/2
 
 i do not know, how the 2 statistical parsers work, which i mentioned in comments
 i want to know it...
+> 2015 april 8: http://faculty.washington.edu/dillon/GramResources/ : The Stanford NLP Group has put up java-based maximum entropy POS tagger ... <
+
 
 -0018-
 commit
