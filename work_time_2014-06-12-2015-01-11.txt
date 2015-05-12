@@ -94,7 +94,7 @@ dec6
 -10
 -2
 -1413
-unpublished closed source started here
+unpublished proprietary started here
 1814-1906
 1939-1955
 
@@ -152,7 +152,7 @@ space before comma removed
 -2207 interr 2210-
 add ы for this case
 -2222-
-removed була an i get:
+removed була and i get:
 DDR3 SDRAM төрле ишарәләү вольтажлары, вакытланышлары һәм башка факторларга күрә теләсә-ничек керүле хәтер (RAM) ның теләсә-кайсы иртәрәк төре белән артка таба да алга таба да яраучы түгел.
 -2305
 
@@ -176,7 +176,7 @@ commit
 
 how much time this example has taken?
 but i have not fixed any errors which have appeared in the previous example yet
-it is
+it is now
 Ул — DDR һәм DDR2-га карата югарырәк тизлекле соңрак килүче һәм DDR4 синхрон динамик теләсә-ничек керүле хәтер (SDRAM) -ле микросхемаларга карата алдан килүче.
 it was
 Ул — DDR һәм DDR2-гә карата югарырак тизлекле соңрак килүче һәм DDR4 синхрон динамик теләсә-ничек керүле хәтер (SDRAM) микросхемаларына карата алдан килүче.
@@ -379,6 +379,8 @@ commit b92c57bceedacb58c231544cfa806f5f66313fbe
 -3-1
 
 how much time has taken the latest example?
+dec2
++5+24+38+16+32+12
 dec3
 +11+6+27
 dec5
@@ -415,16 +417,33 @@ dec30
 dec3-dec30:
 +11+6+27+7+60+34+60+13-14+16+36+21-5+25+2+19-2+20+30+67+50+37+15+23+9+6+23+19-3+41+60+21+17+5+8+23+12+2+27+7+50+5+9+7+1+39+54+9-2+15+63+4+15+3+6+41+6+17+3+14+3+43+43+18+23+6+6+9+13+28+41+44+51+1+6+2+21+2+18+1+19+26-1
 =1617 minutes
+fix: +5+24+38+16+32+12+1617=1744
 how much price for programming i could be paid?
 if 5 rubles per minute than it is
 5*60=300 rubles per hour
 5*1617=8085 rubles for the last sentence addition
 in usd it is , with 56 rubles per usd, 8085/56=144
 300 rub/h is 300/56=5.36 usd/h
+fix:
+5*1744=8720 rubles
+
+>
+2015 april 17 :
+how much is 5 rubles per minutes if counted as per month price?
+if 20 days at 1 months;
+4 weeks * 7 = 28;
+31-28=3; +2 or 3 days maybe holydays;
+if 5 days are work days every week, 5*7 is 20;
+if 8 hours every day but if i would count only 4 hours of them because i count only writing and reading time;
+4*20=80 hours
+80*300 = 24000 rubles
+<
 
 -2003-
 1617 minutes are 1617/60=26.95 hours
+fix: 1744/60=29.067 hours
 how many days really:
+0dec2
 1dec3
 2dec5
 3dec6
@@ -441,9 +460,10 @@ how many days really:
 14dec28
 15dec29
 16dec30
--16 days
+-17 days
 if 4 hours per day it would be
 26.95/4=6.7 days
+fix: 29,067/4=7,267 days
 -2008
 
 dec31
@@ -493,6 +513,7 @@ DDR3 SDRAM-ы — төрле ишарәләү вольтажлары, вакыт
 DDR3 — бер DRAM интерфейсы спецификациясы.
 -2028
 
+>2015-04-17: ^ they was not ready all, the last is not here.<
 
 2159-
 commit b92c57bceedacb58c231544cfa806f5f66313fbe
@@ -620,7 +641,7 @@ noun phrases are left inordered:
 "actual dram array s"
 "similar performance" (ready)
 "early er type s"
-i can translate these ones as they are, without ordering, because morphem order is same in tatar
+i can translate these ones as they are, without ordering, because morpheme order is same in tatar
 -2134-
 commit to closed source
 a0e7ce6b09c72c368584817aaa3be038c032f16b
@@ -747,7 +768,7 @@ need to remove space before dot
 -1231
 
 1247-
-the dot is removed
+the space is removed
 -1252-
 next example, going backward
 DDR3 SDRAM is neither forward nor backward compatible with any earlier type of random access memory (RAM) due to different signaling voltages, timings, and other factors.
@@ -1299,7 +1320,7 @@ if so it should be
 (different (signaling (voltage , timing)))s
 is this right?
 in one hand this example shows that i was right when i wanted to start to make "actual ((dram array)s)" see line 929
-i think it is right in english though in tatar may be setting "lar" at more top level is probably more correct
+i think it is right in english though in tatar may be setting "lar" at more high level is probably more correct
 -2035
 
 2038-
