@@ -835,21 +835,21 @@ function apply_fixes_after_1(&$simbl,&$s2){
 			//1(0(иртәрәк төрләргә охшаш, охшаш җитештерүчәнлек белән) 1бул)
 			if($v1mu[1]['w']=='бул'){
 				$v1mu=$v1mu[0];
-				// $s2=$s2[0];
+				$s2=$s2[0];
 				//assume first part is subject
-				// $s2[1]['dash']=true;
+				$s2[1]['dash']=true;
 			}
 			if($v2mu[1]['w']=='тот'){
 				// echo'OK';
 				$v2mu=$v2mu[0];
 				// show_tree_3($v2mu);
-				// $s2=$s2[0];
+				//$s2=$s2[0];
 				//assume first part is subject
-				// $s2[1]['dash']=true;
+				//$s2[1]['dash']=true;
 			}
-			$s2=$s2[0];
+			//$s2=$s2[0];
 			//assume first part is subject
-			$s2[1]['dash']=true;
+			//$s2[1]['dash']=true;
 		}
 	}
 	

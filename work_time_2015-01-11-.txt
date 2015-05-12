@@ -171,7 +171,7 @@ i made quotes as "" but i should use not a level but an "attribute", as i did.
 jan17
 
 2355-
-i had commentted out verb ending and dash codes in translation, now i need to write correct program again, what i did previously does not work correctly, maybe because order is changed.
+i had commented out verb ending and dash codes in translation, now i need to write correct program again, what i did previously does not work correctly, maybe because order is changed.
 0153: i have added dashes in tatar translation, removed is and has
 commit
 0baf0943a8b3a2be6e8768cd01799b38f17953ef
@@ -294,7 +294,7 @@ last year
 they walk through park
 they walked through park last year
 
-this is not true: then 2 examples are left of ddr3 text
+this is not true: "then 2 examples are left of ddr3 text"
 -1635
 
 1739-
@@ -569,4 +569,325 @@ it is not "walk that", it is "park that".
 be a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface
 it is not "be with ... interface", it is "... memory with ... interface".
 it is not "be of", it is "type of".
+
+new commit
+all examples with new order function
+a4c405343f27e166c051eb8448a082bb03779387
+new commit to master
+-1649
+
+
+
+april 17
+
+count work times
+the sentence "DDR3 SDRAM is neither forward ..." was added dec2-dec30, 29.067 hours, with old "order" function.
+
+next example "DDR3 is a DRAM interface specification":
+2014dec31
++15+20+31+27+29+4+13+43+3+1+20+20+20+9+8+4+25+28+1+18
+=339 minutes
+
+next , the latest ddr3 example "The actual DRAM arrays ...":
+dec31
++9+4+10
+2015jan1
++1
+jan2
++10+4+60+18
+jan3
++10+52+7+12+49+51+14+20
+jan4
++23+4
+this example is not completed with old order function.
++9+4+10+1+10+4+60+18+10+52+7+12+49+51+14+20+23+4
+=358 minutes
+
+new order function
+
+starting with the latest ddr3 example "The actual DRAM arrays ..."
+jan4
++14+60+38+23+46+11-1+60+46+8+30+10
+jan5
++59+20+5+8+13+17+26
+jan7
++4+8+5+3+3+6+6+13
+total for it
++14+60+38+23+46+11-1+60+46+8+30+10+59+20+5+8+13+17+26+4+8+5+3+3+6+6+13
+=541 minutes
+
+
+previous to latest example, "DDR3 is a DRAM interface specification"
+jan7
++4+2+31+10+3+2
+=52 minutes
+
+next example backward, "DDR3 SDRAM is neither ..."
+jan7
++8+33+50
+jan8
++8+21+32+17+57+4+22-1(+59+49)+5-5+60+21+35+34+60+25
+jan9
++13+19
+jan11
++40+60+19+33+22+60+28
+jan12
++12
+total for it
++8+33+50+8+21+32+17+57+4+22-1+59+49+5-5+60+21+35+34+60+25+13+19+40+60+19+33+22+60+28+12
+=900 minutes
+
+
+seems new example, "It is the higher-speed ...", started here (with new order f.):
+jan12 14:27
++5+22+9+24+12-1+60+24
+jan13
++22-1+48+4+53+24+28-1+16+31+60+54+3
+jan14
++4+9+46
+total for it
++5+22+9+24+12-1+60+24+22-1+48+4+53+24+28-1+16+31+60+54+3+4+9+46
+=555 minutes
+
+
+seems new example, "In computing, ...", started here (with new order f.):
+jan14 18:52
++8+38+52+51
+jan15
++20+47+1
+jan16
++3+20-1+2+8+27+25+42-3+5+14+55+11-2+4
+jan17
++5+60+60+16
+jan18
++4
+total for it
++8+38+52+51+20+47+1+3+20-1+2+8+27+25+42-3+5+14+55+11-2+4+5+60+60+16+4
+=572 minutes
+
+new: "For the video game, ...":
+start at jan18 22:21
++11+25-3-3+60+28
+=118 minutes
+
+new: "For graphics DDR3, ..."
+start at jan19 00:28
++2+10
+=12
+
+next backward: "This article is about ..."
+start at jan19 00:40
++2
+=2
+
+"From Wikipedia, ..."
+start at jan19 00:42
++2+41+2+1+21-7+47+4+8+34+20+11+26+42+16
+=268
+
+"good school" etc
+"last know"
+"last known"
+start at jan19 16:18
++12+5+1+11
+jan20
++3
+jan22
++4+58+25+8
+tot.
++12+5+1+11+3+4+58+25+8
+=127
+
+"last known bug"
+"read last known bug"
+"the last known bug"
+"read the last known bug"
+start at jan22 14:20
++40-3+16+19
+=72
+
+"read"
+"have read"
+"read-ed the last known bug"
+"have read-ed the last known bug"
+"he have read-ed the last known bug"
+"he have-s read-ed the last known bug"
+start at jan22 17:00 , count from 20:02
++29-2
+=27
+
+"the teacher whom we have met has read the bug that was mentioned"
+"i go to school every day"
+"we go from park every morning"
+start at jan22 20:29
++31+6+11+7+15+60+34
+jan23
++31-2+1+12
+jan?
++51-3+1
+jan26
++11
+jan29
++10
+jan31
++3
+feb5
++31+3+7
+tot.
++31+6+11+7+15+60+34+31-2+1+12+51-3+1+11+10+3+31+3+7
+=320
+
+"walk through park that is built last year"
+"the boy that bought a bicycle walks through park"
+start at feb5 22:01
++59+27
+=86
+
+"last year"
+"they walk through park"
+"they walked through park last year"
+start at apr1 13:35
++25-8+20
+apr2
++14+1
+apr3
++12+22+8+11
+apr4
++4+5
+apr8
++15-7-2+28+41+49
+tot.
++25-8+20+14+1+12+22+8+11+4+5+15-7-2+28+41+49
+=238
+
+so, i have spent
+
++339+358
+=697 min
+for 2 examples with old order function
+
+then
++541+52+900+555+572+118+12+2+268+127+72+27+320+86+238
+=3890 min
+for all examples with new order func.
+
+the last example was not completed with old func so i can say last example has taken
++358+3890=4248 minutes
+
+3890min*5rubpmin=19450rub so i can say it took almost 20000 rubles work to make new order func;
+or 64.83 hours, or, /4= 16.21 days.
+really i made it from jan4 to apr8
+
+2 examples with old func are
+697*5=3485
+
+sum of 3 parts i counted:
+rubles:8720+3485+19450=31655
+minutes:1744+697+3890=6331
+
+
+apr18
+903-
+read
+https://github.com/yahoo/YaraParser
+http://ilk.uvt.nl/conll/
+https://en.wikipedia.org/wiki/Brown_clustering
+https://github.com/percyliang/brown-cluster
+https://www.coursera.org/course/ml
+https://class.coursera.org/ml-005/lecture/preview
+https://class.coursera.org/ml-005/lecture
+https://www.coursera.org/learn/machine-learning
+https://catalog.ldc.upenn.edu/LDC99T42
+-1146
+
+1222-
+read
+https://github.com/emilmont/pyStatParser
+http://nlp.stanford.edu/software/lex-parser.shtml
+http://www.nltk.org/
+http://www.cs.columbia.edu/~mcollins/courses/nlp2011/notes/pcfgs.pdf
+-5
+-5
+-5
+-5
+-5
+http://stackoverflow.com/questions/8949517/is-there-any-treebank-for-free
+http://ufal.mff.cuni.cz/pedt2.0/
+https://code.google.com/p/copenhagen-dependency-treebank/
+-3
+-1615
+
+1735-
+-2
+-2
+-1759
+
+1912-1924
+1931-1948
+1951-
+(read)
+-3
+-2
+-2
+-2041 just dont count this part; watching video lecture
+
+apr22
+1047-
+read
+-1136
+1220-1239
+1247-1336
+1456-1516
+2309-0008
+
+http://www3.nd.edu/~dchiang/teaching/nlp/
+http://www.cs.columbia.edu/~mcollins/
+do not write some times
+
+
+apr28
+counted work times, do not count this work nor write times
+
+
+may 12
+
+make
+https://vk.com/tarjima
+no people yet, only written text
+this is mainly in tatar language
+
+2149-
+i see some mistakes: apr8 13:56 was not fixed completely
+-5
+-4
+temporarily fixed the mistake.
+-2239
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

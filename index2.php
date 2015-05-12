@@ -1443,6 +1443,7 @@ echo nstd_to_str($result);
     // (. .)))
 //wrong at "dram arrays", "store the ...", "data are"
 
+//>2014-april-18 i think it did not work because it does not have full penn treebank and has a question treebank ... <
 
 //2014dec10 : seems i have found another statistical parser: http://nlp.stanford.edu/software/lex-parser.shtml , i should check/try it.
 //dec12 01:00 : i have tried it, some part, by first command in its readme.txt, results with my examples , i will write them upwards...
