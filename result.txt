@@ -1,0 +1,99 @@
+﻿әйбәтмәктәп
+соңгыбел
+соңгыбеленгән
+соңгыбеленгәнбаг
+соңгыбеленгәнбагукы
+тегесоңгыбеленгәнбаг
+тегесоңгыбеленгәнбагныукы
+укылган
+укыпкуй
+тегесоңгыбеленгәнбагныукыпкуй
+ултегесоңгыбеленгәнбагныукыды
+Array ( [0] => he [1] => have [2] => s [3] => read [4] => ed-pp [5] => the [6] => last [7] => know [8] => ed-pp [9] => bug )
+hethelastknowed-ppbugreaded-pphaves
+ултегесоңгыбеленгәнбагныукыды
+Array ( [0] => the [1] => teach [2] => er [3] => whom [4] => we [5] => have [6] => pr-si [7] => meet [8] => ed-pp [9] => have [10] => s [11] => read [12] => ed-pp [13] => the [14] => bug [15] => that [16] => be [17] => ed [18] => mention [19] => ed-pp )
+тегебезочратканукытучытегеискә алынганбагныукыды
+Array ( [0] => i [1] => go [2] => pr-si [3] => to [4] => school [5] => every [6] => day ) минһәркөнмәктәпкәбарам
+Array ( [0] => we [1] => go [2] => pr-si [3] => from [4] => park [5] => every [6] => morning ) безһәриртәпарктарафыннанбарабыз
+Array ( [0] => they [1] => walk [2] => pr-si [3] => through [4] => park [5] => that [6] => be [7] => pr-si [8] => build [9] => ed-pp [10] => last [11] => year ) аларузганелтөзелгәнпаркашайөрей
+Array ( [0] => the [1] => boy [2] => that [3] => buy [4] => ed [5] => a [6] => bicycle [7] => walk [8] => s [9] => through [10] => park ) тегевелосипедсатып алганмалайпаркашайөрей
+Array ( [0] => last [1] => year ) узганел
+Array ( [0] => they [1] => walk [2] => pr-si [3] => through [4] => park ) аларпаркашайөрей
+Array ( [0] => they [1] => walk [2] => ed [3] => through [4] => park [5] => last [6] => year ) аларузганелпаркашайөрегән
+Array ( [0] => Array ( [w] => from ) [1] => Array ( [w] => wikipedia [firstiscapital] => 1 ) [2] => Array ( [w] => , ) [3] => Array ( [w] => the ) [4] => Array ( [w] => free ) [5] => Array ( [w] => encyclopedia ) ) Теге бушлай энциклопедия Википедиядан
+Array ( [0] => Array ( [w] => this ) [1] => Array ( [w] => article ) [2] => Array ( [w] => be ) [3] => Array ( [w] => pr-si ) [4] => Array ( [w] => about ) [5] => Array ( [w] => DDR3 [thisisabbreviation] => 1 ) [6] => Array ( [w] => SDRAM [thisisabbreviation] => 1 ) [7] => Array ( [w] => . ) )
+Warning: Invalid argument supplied for foreach() in C:\xampp\htdocs\tarjima\function_order_2.php on line 318
+Бу мәкалә бул а турында DDR3 SDRAMы.
+Array ( [0] => Array ( [w] => for ) [1] => Array ( [w] => graphics ) [2] => Array ( [w] => DDR3 [thisisabbreviation] => 1 ) [3] => Array ( [w] => , ) [4] => Array ( [w] => see ) [5] => Array ( [w] => GDDR3 [thisisabbreviation] => 1 ) [6] => Array ( [w] => . ) ) Графика DDR3-е өчен intro кара GDDR3-.
+Array ( [0] => Array ( [w] => for ) [1] => Array ( [w] => the ) [2] => Array ( [w] => video ) [3] => Array ( [w] => game ) [4] => Array ( [w] => , ) [5] => Array ( [w] => see ) [6] => Array ( [w] => dance [firstiscapital] => 1 ) [7] => Array ( [w] => dance [firstiscapital] => 1 ) [8] => Array ( [w] => revolution [firstiscapital] => 1 ) [9] => Array ( [0] => Array ( [0] => Array ( [w] => 3 ) [1] => Array ( [w] => rd ) [ordnum] => 1 ) [1] => Array ( [w] => mix [firstiscapital] => 1 ) ) [10] => Array ( [w] => . ) ) Видео уен өчен intro кара Бию бию революция.
+Компьютер гыйлеме эчендә intro бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлеге") -ле интерфейслы динамик теләсә-ничек керүле хәтер (DRAM) -ның DDR3 SDRAM-ы бул а бер яңа төрtypeсы һәм 2007-дән алып кулланылыш эчендә тота булed-pp.
+DDR һәм DDR2-гә карата ул бул а шул биекрәк - тизлексоңрак килүче һәм DDR4 синхрон динамик теләсә-ничек керүле хәтер (SDRAM) микросхемаларына карата алдан килүче.
+Теләсә-ничек керү хәтер ( RAM ) күрә кә төрле ишарәләү вольтажларының теләсә-кайсы иртә рәк төре, вакытланышлар белән DDR3 SDRAM-ы бул а түгел алга таба nor артка табаярашучы һәм башка факторлар.
+DDR3 бул а бер DRAM интерфейсы спецификациясе.
+Иртә рәк төрләргә асыл DRAM массивлары кайсы сакла а шул мәгълүмат бул аохшаш, охшаш җитештерүчәнлек белән.
+
+=== new order function ===
+
+The actual DRAM arrays that store the data are similar to earlier types, with similar performance.
+Мәгълүматны саклаучы асыл DRAM массивлар — иртәрәк төрләргә охшаш, охшаш җитештерүчәнлек белән.
+
+DDR3 is a DRAM interface specification.
+DDR3 — DRAM интерфейсы бер спецификациясе.
+
+DDR3 SDRAM is neither forward nor backward compatible with any earlier type of random access memory (RAM) due to different signaling voltages, timings, and other factors.
+DDR3 SDRAM-ы — төрле ишарәләү вольтажлары, вакытланышлары, һәм башка факторларга күрә теләсә-ничек керүле хәтер (RAM) -ның теләсә-кайсы иртәрәк төре белән артка таба да алга таба да ярашучы түгел.
+
+It is the higher-speed successor to DDR and DDR2 and predecessor to DDR4 synchronous dynamic random access memory (SDRAM) chips.
+Ул — DDR һәм DDR2-гә карата югарырак тизлекле соңрак килүче һәм DDR4 синхрон динамик теләсә-ничек керүле хәтер (SDRAM) -ы микросхемаларына карата алдан килүче.
+
+In computing, DDR3 SDRAM, an abbreviation for double data rate type three synchronous dynamic random access memory, is a modern type of dynamic random access memory (DRAM) with a high bandwidth ("double data rate") interface, and has been in use since 2007.
+Компьютер гыйлеме эчендә, өченче төрдәге икекатлы мәгълүмат тизлегенле синхрон динамик теләсә-ничек керүле хәтер өчен бер аббревиатура DDR3 SDRAM-ы — бер югары үткәрүчәнлек ("икекатлы мәгълүмат тизлеге") -ле интерфейслы динамик теләсә-ничек керүле хәтер (DRAM) -ның бер яңа төре, һәм 2007-дән алып кулланылыш эчендә булган.
+
+For the video game, see Dance Dance Revolution 3rdMix.
+Видео уен өчен, "Бию Бию Революция 3-нче Болгатмасы"-н карагыз.
+
+For graphics DDR3, see GDDR3.
+Графика DDR3-е өчен, GDDR3-не карагыз.
+
+This article is about DDR3 SDRAM.
+Бу мәкалә — DDR3 SDRAM-ы турында.
+
+From Wikipedia, the free encyclopedia
+Теге бушлай энциклопедия Википедиядан
+
+good school
+әйбәт мәктәп
+
+read last known bug
+соңгы беленгән баг укы
+
+read the last known bug
+шул соңгы беленгән багны укы
+
+he has read the last known bug
+ул шул соңгы беленгән багны укыды
+
+the teacher whom we have met has read the bug that was mentioned
+без очраткан укытучы шул искә алынган багны укыды
+
+i go to school every day
+мин һәр көн мәктәпкә барам
+
+we go from park every morning
+без һәр иртә парк тарафыннан барабыз
+
+they walk through park that is built last year
+алар узган ел төзегән парк аша йөрей
+
+the boy that bought a bicycle walks through park
+велосипед сатып алган малай парк аша йөрей
+
+last year
+узган ел
+
+they walk through park
+алар парк аша йөрей
+
+they walked through park last year
+алар узган ел парк аша йөрегән
