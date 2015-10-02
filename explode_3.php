@@ -1,7 +1,9 @@
 <?php
+
 //explode string/sentence into grammatical morphemes
-function explode_into_morphemes($engtext){
-	$engtext=preg_split('/(?=[^a-zA-Z0-9])|(?<=[^a-zA-Z0-9])/',$engtext);
+function explode_3($engtext){
+	// $engtext=preg_split('/(?=[^a-zA-Z0-9])|(?<=[^a-zA-Z0-9])/',$engtext);
+	$engtext=preg_split('/(?=[^a-zA-Z0-9])|(?<=[^a-zA-Z0-9])|(?=[A-Z0-9])(?<=[a-z])/',$engtext);//|(?=[a-z])(?<=[0-9])
 	foreach($engtext as $key=>$word){
 		if(
 			$word==' '||//may be i will need fix this for " - "
@@ -43,16 +45,17 @@ function explode_into_morphemes($engtext){
 		if(ctype_upper(substr($word,0,1))){
 			if($key>0){
 				$firstiscapital=true;
-			}else{
-				$firstletterofsentenceiscapital=true;
-				//$engtext2['firstletterofsentenceiscapital']=true;
 			}
 			if(ctype_upper(substr($word,1,1))){
 				$thisisabbreviation=true;
 				$firstiscapital=false;
 			}
+		}else{
+			if($key==0&&ctype_lower(substr($word,1,1))){
+				$firstletterofsentenceissmall=true;
+			}
 		}
-
+		/*
 		for($wi=0,$lowercaseisfound=false,$upperafterlower=false;$wi<strlen($word);$wi++){
 			if(ctype_lower(substr($word,$wi,1))){
 				$lowercaseisfound=true;
@@ -63,7 +66,7 @@ function explode_into_morphemes($engtext){
 				break;
 			}
 		}
-		
+		*/
 		if(!$thisisabbreviation&&($firstiscapital==true||$key==0)){
 			$word=strtolower($word);
 		}
@@ -71,19 +74,19 @@ function explode_into_morphemes($engtext){
 			$remaining=mb_substr($word,0,mb_strlen($word)-1);
 			if($remaining=='ha'){
 				$engtext2[]='have';
-				$engtext2[]='pr-si';
+				$engtext2[]='v-s';
 			}elseif($remaining=='wa'){
 				$engtext2[]='be';
 				$engtext2[]='ed';
 			}elseif($remaining=='i'){
 				$engtext2[]='be';
-				$engtext2[]='pr-si';
+				$engtext2[]='v-s';
 			}else{
 				//$tryverb=mb_substr($word,0,mb_strlen($word)-1);
 				$tryverb=$remaining;
 				if(isset($dic[$tryverb])&&$dic[$tryverb]['type']=='verb'){
 					$engtext2[]=$tryverb;
-					$engtext2[]='pr-si';
+					$engtext2[]='v-s';
 				}
 				elseif(isset($nounlikes[$tryverb])){
 					$engtext2[]=$tryverb;
@@ -127,7 +130,13 @@ function explode_into_morphemes($engtext){
 		}
 		elseif(mb_substr($word,-2,2)=='ed'&&$word!='speed'){
 			$engtext2[]=mb_substr($word,0,mb_strlen($word)-2);
-			if(isset($engtext2[count($engtext2)-3])&&($engtext2[count($engtext2)-3]=='be'||$engtext2[count($engtext2)-3]=='have')){
+			// echo'*';
+			// show_tree_3($engtext2);
+			// exit;
+			if(
+				$engtext2[count($engtext2)-3]['w']=='be'
+				||$engtext2[count($engtext2)-3]['w']=='have'
+			){
 				$engtext2[]='ed-pp';
 			}else{
 				$engtext2[]='ed';
@@ -164,14 +173,14 @@ function explode_into_morphemes($engtext){
 					// $engtext2[]=$ordinalnumber;
 					$engtext2[]=$trynumber;
 					$engtext2[]='th';
-					$i=count($engtext2);
-					continue;
+					// $i=count($engtext2);
+					// continue;
 				}else{
 					$engtext2[]=$word;
 				}
 		}
 		elseif(mb_substr($word,-1)=='d'){
-			if(mb_substr($word,0,mb_strlen($word)-1)=='rea'){
+			if(mb_substr($word,0,mb_strlen($word)-1)=='rea'&&$key>0){
 				$engtext2[]='read';
 				$engtext2[]='ed-pp';
 			}else{
@@ -201,22 +210,31 @@ function explode_into_morphemes($engtext){
 		){
 			$engtext2[]=$word;
 			//$engtext2[]='pr-si';//present simple <-comment this out, i think it should be in order function
-			if( count($engtext2)>1 && $engtext2[count($engtext2)-1]!='"' ){
-				$engtext2[]='pr-si';
+			if(
+				count($engtext2)>1
+				//&& $engtext2[count($engtext2)-1]!='"'//why is this
+				&& $engtext2[count($engtext2)-2]['w']!=','
+			){
+				//echo $word;
+				//print_r ($engtext2[count($engtext2)-2]);
+				$engtext2[]='v-0';
 			}
 		}
 		elseif($word=='are'){
 			$engtext2[]='be';
-			$engtext2[]='pr-si';//present simple
-			//$engtext2[]='pr-pl';//present simple plural
+			$engtext2[]='v-re';//present simple plural
 		}
+		/*
 		elseif($upperafterlower){
-			$separated=preg_split('/(?=[A-Z0-9])(?<=[a-z])/',$word);
-			$separated=explode_into_morphemes($separated);
-			$engtext2[]=$separated;
+			//$separated=preg_split('/(?=[A-Z0-9])(?<=[a-z])/',$word);
+			$separated=preg_split('/(?=[A-Z0-9])(?<=[a-z])|(?=[a-z])(?<=[0-9])/',$word);
+			// $separated=explode_3($separated);
+			//$engtext2[]=$separated;
+			$engtext2=array_merge($engtext2,$separated);
 			//$i=count($engtext2);
 			//continue;
 		}
+		*/
 		// elseif($word=='-'){//for "high er-comp - speed"
 			// $engtext2[$i-1]=array($engtext2[$i-1],array('w'=>$engtext[$key+1]));
 			// $thenextwordisused=true;
@@ -242,7 +260,7 @@ function explode_into_morphemes($engtext){
 			}
 		}
 		*/
-		$engtext2=set_w_keys($engtext2,$i);
+		$engtext2=set_w_keys_3($engtext2,$i);
 		if($firstiscapital){
 			$firstiscapital=false;
 			$engtext2[$i]['firstiscapital']=true;
@@ -253,8 +271,8 @@ function explode_into_morphemes($engtext){
 		}
 		$i=count($engtext2);
 	}
-	if($firstletterofsentenceiscapital){
-		//$engtext2['firstletterofsentenceiscapital']=true;
+	if($firstletterofsentenceissmall){
+		$engtext2['firstletterofsentenceissmall']=true;
 	}
 	return $engtext2;
 }
@@ -262,18 +280,10 @@ function explode_into_morphemes($engtext){
 
 
 
-function set_w_keys($engtext2,$i){
-	$c=0;
-	//show_tree_3($engtext2);
-	//echo'OK',$i;
-	//var_dump($engtext2);
+function set_w_keys_3($engtext2,$i){
 	for($j=$i;$j<count($engtext2);$j++){
 		if(!is_array($engtext2[$j])){
 			$engtext2[$j]=array('w'=>$engtext2[$j]);
-			// var_dump($engtext2);
-			// echo '<br>';
-			// $c++;
-			// if($c==10){exit;}
 		}
 		else{
 			$engtext2[$j]=set_w_keys($engtext2[$j],0);

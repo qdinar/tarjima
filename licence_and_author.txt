@@ -1,0 +1,11 @@
+
+tarjima
+https://github.com/qdinar/tarjima
+
+author (and copyright holder): dinar qurbanov
+author contact addresses:
+qdinar@gmail.com , qdb@yandex.ru , d-84@bk.ru
+twitter.com/qdinar , facebook.com/qdinar , vk.com/qdinar
+
+licence:
+all rights reserved
