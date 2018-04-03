@@ -8,4 +8,6 @@ qdinar@gmail.com , qdb@yandex.ru , d-84@bk.ru
 twitter.com/qdinar , facebook.com/qdinar , vk.com/qdinar
 
 licence:
-all rights reserved
+agpl3
+
+but generally this is just an experimental code, it is not intended for real work/ "production".
